@@ -9,7 +9,8 @@ workflows:
       xcode: latest
       cocoapods: default
       vars:
-        BUNDLE_ID: "com.yourcompany.veo3another" # Change this!
+        # App identifiers
+        BUNDLE_ID: "com.bdhshakil.veo3" # Unique bundle ID
         APP_NAME: "Veo3 Another"
     
     scripts:
@@ -37,7 +38,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - your-email@example.com # Change this!
+          - bdhshakilbd@gmail.com
         notify:
           success: true
           failure: true
@@ -95,7 +96,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - your-email@example.com # Change this!
+          - bdhshakilbd@gmail.com
         notify:
           success: true
           failure: true
@@ -149,7 +150,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - your-email@example.com # Change this!
+          - bdhshakilbd@gmail.com
         notify:
           success: true
           failure: true
