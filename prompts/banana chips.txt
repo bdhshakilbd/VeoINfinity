@@ -1,0 +1,562 @@
+[
+  {
+    "scene_id": 1,
+    "section": "Opening Summary",
+    "visual_prompt": "Cinematic montage: A high-speed composite shot showing a mechanical harvester arm, a rotary blade slicing a banana in slow motion, and chips falling into boiling oil. 8K resolution, high contrast lighting, rapid cuts.",
+    "audio_prompt": "Heavy industrial rhythmic thrumming, sharp metallic 'schwing' of a blade, followed by the roar of boiling oil.",
+    "voice_over_cue": "In a world of precision engineering, the journey of the banana chip is a symphony of automated speed and perfect timing."
+  },
+  {
+    "scene_id": 2,
+    "section": "Opening Summary",
+    "visual_prompt": "Cinematic montage: Close-up macro shot of golden seasoning powder exploding onto chips, cut to a robotic arm stacking boxes. Dramatic backlighting, photorealistic textures, dynamic motion.",
+    "audio_prompt": "Whoosh of air pressure, mechanical servo whirring, heavy thud of boxes being stacked.",
+    "voice_over_cue": "From the rugged plantation fields to the pristine factory floor, advanced robotics dictate every step of production."
+  },
+  {
+    "scene_id": 3,
+    "section": "Opening Summary",
+    "visual_prompt": "Cinematic montage: Overhead view of a massive conveyor belt network carrying green bananas, transitioning rapidly to a view of golden chips flowing like a river. 8K, cinematic teal and orange grade.",
+    "audio_prompt": "Layered conveyor belt hum, creating a continuous industrial drone.",
+    "voice_over_cue": "Raw green fruit is transformed into a global snack phenomenon through a process defined by rigorous mechanical control."
+  },
+  {
+    "scene_id": 4,
+    "section": "Opening Summary",
+    "visual_prompt": "Cinematic montage: Extreme close-up of a digital control panel flashing green data lights, cut to a stainless steel piston firing rapidly. 8K, sharp focus, lens flare.",
+    "audio_prompt": "Digital beeping data stream sounds mixed with pneumatic piston hisses.",
+    "voice_over_cue": "Human hands are replaced by sensory data and hydraulic power, ensuring consistency that biology simply cannot match."
+  },
+  {
+    "scene_id": 5,
+    "section": "Opening Summary",
+    "visual_prompt": "Cinematic montage: A sealed bag of chips sliding down a chute, cut to a truck door slamming shut. Final shot of the factory exterior at twilight. 8K, wide angle, majestic lighting.",
+    "audio_prompt": "Crinkle of packaging, heavy metal slam of a truck door, echoing into silence.",
+    "voice_over_cue": "Witness the mesmerizing efficiency of the modern food industry, where steel and steam create the ultimate crunch sensation."
+  },
+  {
+    "scene_id": 6,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "Wide shot of a massive specialized tractor moving through a banana plantation. The vehicle has high clearance and hydraulic arms. 8K, photorealistic, dusty atmosphere, morning light.",
+    "audio_prompt": "Deep rumble of a heavy diesel engine, crunching of tires on soil.",
+    "voice_over_cue": "The process begins in the grove, where massive specialized tractors navigate the rows with computerized navigation systems."
+  },
+  {
+    "scene_id": 7,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "Close-up of a hydraulic clamp extending from the tractor. The metal claw grips a thick banana bunch stem firmly but without bruising. 8K, metallic textures, hydraulic fluid sheen.",
+    "audio_prompt": "High-pitched whine of hydraulic fluid, metallic clank of the clamp engaging.",
+    "voice_over_cue": "Hydraulic manipulators extend with calculated force, gripping the heavy stalks securely to prevent any damage to the fruit."
+  },
+  {
+    "scene_id": 8,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "A mechanical circular saw mounted on the robotic arm extends and slices through the thick banana stem in one clean motion. Sawdust flies. Slow motion. 8K, sharp focus.",
+    "audio_prompt": "Sharp, high-RPM buzz of a circular saw cutting through dense plant fiber.",
+    "voice_over_cue": "Automated cutters sever the connection to the tree in milliseconds, a task that once required intense manual labor."
+  },
+  {
+    "scene_id": 9,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "The robotic arm rotates smoothly, lowering the heavy bunch onto a padded mobile field conveyor belt running alongside the tractor. 8K, smooth mechanical motion.",
+    "audio_prompt": "Servo motor whine, soft thud of bananas landing on rubber padding.",
+    "voice_over_cue": "The harvested bunches are gently transferred to mobile field conveyors, ensuring a continuous flow from tree to transport."
+  },
+  {
+    "scene_id": 10,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "Tracking shot following the green bananas moving along the field conveyor system towards a large collection bin. Sunlight glints off the green skin. 8K, dynamic camera movement.",
+    "audio_prompt": "Rhythmic squeak and hum of the conveyor belt rollers.",
+    "voice_over_cue": "This synchronized system eliminates downtime, keeping the harvest moving at a constant pace regardless of the terrain."
+  },
+  {
+    "scene_id": 11,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "A mechanical lift mechanism raises a full crate of bananas and tilts it into a large transport truck. 8K, heavy machinery aesthetic, steel structures.",
+    "audio_prompt": "Heavy mechanical groaning of the lift, cascading sound of bunches settling.",
+    "voice_over_cue": "Once collected, the fruit is consolidated into bulk transport units, designed to maximize volume while protecting integrity."
+  },
+  {
+    "scene_id": 12,
+    "section": "Mechanized Harvesting",
+    "visual_prompt": "Close-up of the truck's locking mechanism securing the cargo container. Steel bolts slide into place automatically. 8K, macro details, grease and metal.",
+    "audio_prompt": "Loud metallic clack-clack of locking bolts engaging.",
+    "voice_over_cue": "Automated locking systems secure the load, preparing the raw material for its high-speed journey to the processing plant."
+  },
+  {
+    "scene_id": 13,
+    "section": "Factory Introduction",
+    "visual_prompt": "Wide drone shot of the industrial truck entering the factory docking bay. Massive steel gates open automatically. 8K, industrial architecture, cold lighting.",
+    "audio_prompt": "Air brakes hissing, backup alarm beeping, rumble of the truck engine.",
+    "voice_over_cue": "Arriving at the facility, the raw material enters a strictly controlled environment designed for hygiene and efficiency."
+  },
+  {
+    "scene_id": 14,
+    "section": "Factory Introduction",
+    "visual_prompt": "The truck bed tilts hydraulically, dumping the banana bunches into a massive stainless steel receiving hopper. 8K, avalanche of green fruit, volumetric lighting.",
+    "audio_prompt": "Loud, deep rumbling of fruit tumbling into the metal hopper.",
+    "voice_over_cue": "Gravity feeds the intake systems as ton after ton of green bananas are deposited into the primary receiving hoppers."
+  },
+  {
+    "scene_id": 15,
+    "section": "Factory Introduction",
+    "visual_prompt": "Inside the hopper, a heavy-duty auger screw turns slowly, pushing the bunches forward without crushing them. 8K, metallic reflections, slow power.",
+    "audio_prompt": "Low-frequency grinding sound of the large auger turning.",
+    "voice_over_cue": "Massive augers regulate the flow, spacing out the intake to ensure the downstream machines are never overwhelmed."
+  },
+  {
+    "scene_id": 16,
+    "section": "Factory Introduction",
+    "visual_prompt": "A robotic de-handing machine uses laser guides to identify the stem of each bunch. Red laser lines scan the green fruit. 8K, sci-fi industrial aesthetic.",
+    "audio_prompt": "Digital scanning trills, quick pneumatic puffs.",
+    "voice_over_cue": "Advanced optical scanners map the geometry of each bunch, identifying the precise cutting points for the de-handing process."
+  },
+  {
+    "scene_id": 17,
+    "section": "Factory Introduction",
+    "visual_prompt": "A high-pressure water jet cutter slices the individual bananas from the main stalk. Water sprays and mist. 8K, slow motion water physics.",
+    "audio_prompt": "Sharp hiss of high-pressure water cutting, splashing sounds.",
+    "voice_over_cue": "Water jets sever the fruit from the stalk with surgical precision, separating them into individual units for processing."
+  },
+  {
+    "scene_id": 18,
+    "section": "Factory Introduction",
+    "visual_prompt": "Individual green bananas fall into a turbulent water channel (flume). Bubbles and currents move them forward. 8K, underwater camera angle looking up.",
+    "audio_prompt": "Bubbling water, rushing current sounds.",
+    "voice_over_cue": "The separated fruit plunges into a flume system, using water currents to transport and pre-wash the bananas simultaneously."
+  },
+  {
+    "scene_id": 19,
+    "section": "Industrial Processing",
+    "visual_prompt": "The bananas move up a cleated conveyor belt out of the water, passing through a curtain of high-pressure spray nozzles. 8K, mist, wet surfaces.",
+    "audio_prompt": "Loud spraying noise, water hitting metal and fruit.",
+    "voice_over_cue": "High-pressure spray tunnels blast away any field debris, ensuring that only the cleanest fruit proceeds to the next stage."
+  },
+  {
+    "scene_id": 20,
+    "section": "Industrial Processing",
+    "visual_prompt": "Bananas enter a steam-peeling chamber. Thick white steam fills the frame, obscuring the machinery briefly. 8K, atmospheric, industrial heat.",
+    "audio_prompt": "Loud hiss of steam injection, metal expanding.",
+    "voice_over_cue": "Inside thermal chambers, bursts of high-pressure steam loosen the tough green skins without cooking the fruit inside."
+  },
+  {
+    "scene_id": 21,
+    "section": "Industrial Processing",
+    "visual_prompt": "The bananas exit the steam chamber and enter a rubber-roller friction machine. The skins are pinched and pulled off mechanically. 8K, detailed texture of peeling.",
+    "audio_prompt": "Squeaking rubber rollers, wet slapping sounds of skins being removed.",
+    "voice_over_cue": "Friction rollers grip the loosened peels, stripping them away instantly to reveal the firm, pale fruit beneath the surface."
+  },
+  {
+    "scene_id": 22,
+    "section": "Industrial Processing",
+    "visual_prompt": "Naked bananas slide down a stainless steel chute onto an inspection belt. An air jet blasts a rejected banana off the line. 8K, fast motion, precision.",
+    "audio_prompt": "Short, sharp compressed air blast 'pshhht'.",
+    "voice_over_cue": "Automated vision systems detect any imperfections, using precise blasts of air to reject fruit that fails quality standards."
+  },
+  {
+    "scene_id": 23,
+    "section": "Industrial Processing",
+    "visual_prompt": "The peeled bananas are aligned by guide rails into single file lines, heading towards the slicer. 8K, symmetry, stainless steel lines.",
+    "audio_prompt": "Rhythmic clinking of metal guides, conveyor hum.",
+    "voice_over_cue": "Mechanical guides align the fruit into perfect single-file columns, preparing them for the high-speed slicing apparatus."
+  },
+  {
+    "scene_id": 24,
+    "section": "Industrial Processing",
+    "visual_prompt": "Close-up of a rotary slicer head spinning at high RPM. The blades are a blur of steel. 8K, motion blur, danger aesthetic.",
+    "audio_prompt": "High-pitched whine of a motor spinning at top speed.",
+    "voice_over_cue": "The heart of the operation is the rotary slicer, a marvel of engineering capable of thousands of revolutions per minute."
+  },
+  {
+    "scene_id": 25,
+    "section": "Industrial Processing",
+    "visual_prompt": "Ultra slow-motion: A banana hits the spinning blades. Perfectly thin, round slices erupt from the machine. 8K, detailed physics.",
+    "audio_prompt": "Slowed-down chopping sound, deep 'thwack-thwack-thwack'.",
+    "voice_over_cue": "In a fraction of a second, the solid fruit is transformed into hundreds of uniform wafers, each measuring barely millimeters."
+  },
+  {
+    "scene_id": 26,
+    "section": "Industrial Processing",
+    "visual_prompt": "The raw slices fall directly into a bath of yellow turmeric water. Ripples expand as they land. 8K, vibrant yellow color, splashing.",
+    "audio_prompt": "Light splashing sounds, liquid agitation.",
+    "voice_over_cue": "Slices fall immediately into a treatment bath, where natural additives prevent oxidation and enhance the signature golden color."
+  },
+  {
+    "scene_id": 27,
+    "section": "Industrial Processing",
+    "visual_prompt": "Agitation paddles gently stir the slices in the yellow water to ensure even coating. 8K, hypnotic swirling motion.",
+    "audio_prompt": "Swishing water sounds, rhythmic paddle motor hum.",
+    "voice_over_cue": "Gentle agitation ensures that every single slice receives an equal coating, guaranteeing uniformity in the final product."
+  },
+  {
+    "scene_id": 28,
+    "section": "Industrial Processing",
+    "visual_prompt": "A mesh conveyor lifts the yellow-tinted slices out of the bath. Water drains through the mesh. 8K, wet textures, glistening surfaces.",
+    "audio_prompt": "Dripping water, conveyor belt squeak.",
+    "voice_over_cue": "As they emerge from the bath, the slices are carried upward, allowing excess liquid to drain away before the frying stage."
+  },
+  {
+    "scene_id": 29,
+    "section": "Industrial Processing",
+    "visual_prompt": "Air knives (thin slits blowing high-velocity air) blow over the slices on the belt to remove surface moisture. Mist flies off. 8K, invisible air distortion.",
+    "audio_prompt": "Loud, high-pitched rushing air sound.",
+    "voice_over_cue": "High-velocity air knives blast the surface of the chips, removing moisture to prevent dangerous reactions in the hot oil."
+  },
+  {
+    "scene_id": 30,
+    "section": "Industrial Processing",
+    "visual_prompt": "The conveyor feeds the slices into the mouth of a massive industrial continuous fryer. Heat waves distort the air. 8K, shimmering heat.",
+    "audio_prompt": "Deep, resonating roar of industrial gas burners.",
+    "voice_over_cue": "The conveyor delivers the prepared slices to the continuous fryer, a massive thermal engine designed for constant throughput."
+  },
+  {
+    "scene_id": 31,
+    "section": "Industrial Processing",
+    "visual_prompt": "Close-up: Slices hitting the hot oil. Violent bubbling and sizzling. 8K, dynamic physics, golden bubbles.",
+    "audio_prompt": "Intense sizzling, crackling of moisture evaporating instantly.",
+    "voice_over_cue": "Upon contact with the thermal fluid, the water inside the cells vaporizes instantly, creating the crisp structure we crave."
+  },
+  {
+    "scene_id": 32,
+    "section": "Industrial Processing",
+    "visual_prompt": "Submerged paddles push the chips forward through the oil river. The oil is dark gold and clear. 8K, flowing liquid motion.",
+    "audio_prompt": "Bubbling oil sounds, rhythmic mechanical churning.",
+    "voice_over_cue": "Submerged paddles guide the chips through the river of oil, ensuring they travel at the exact speed required for cooking."
+  },
+  {
+    "scene_id": 33,
+    "section": "Industrial Processing",
+    "visual_prompt": "A digital temperature gauge on the fryer reads '175°C'. Red digits glowing. Cut to gas flame adjusting automatically. 8K, technical detail.",
+    "audio_prompt": "Electronic beep, whoosh of gas valve opening.",
+    "voice_over_cue": "Precise thermal sensors constantly communicate with the heating elements, maintaining the oil temperature within a single degree."
+  },
+  {
+    "scene_id": 34,
+    "section": "Industrial Processing",
+    "visual_prompt": "Mid-point in fryer: The chips are turning from pale yellow to golden crisp. They float to the surface. 8K, color transformation.",
+    "audio_prompt": "Softer sizzling sound as moisture content drops.",
+    "voice_over_cue": "As moisture leaves the slice, the chip becomes buoyant, floating to the surface as it transitions to a perfect golden hue."
+  },
+  {
+    "scene_id": 35,
+    "section": "Industrial Processing",
+    "visual_prompt": "The end of the fryer. A metal mesh belt lifts the fried chips out of the oil. Oil curtains drip down. 8K, glistening oil, steam rising.",
+    "audio_prompt": "Oil dripping, belt motor drone.",
+    "voice_over_cue": "Emerging from the fryer, the chips are fully cooked, but they carry excess oil that must be removed immediately."
+  },
+  {
+    "scene_id": 36,
+    "section": "De-oiling Process",
+    "visual_prompt": "The chips drop into a large stainless steel centrifuge drum. The drum begins to spin. 8K, metallic reflection.",
+    "audio_prompt": "Clatter of chips falling on metal, motor spin-up whine.",
+    "voice_over_cue": "The batch is transferred to a high-speed centrifuge, where centrifugal force will finish what the fryer began."
+  },
+  {
+    "scene_id": 37,
+    "section": "De-oiling Process",
+    "visual_prompt": "Interior view of the centrifuge spinning rapidly. Oil droplets are flung outward against the walls. 8K, motion blur, dizzying speed.",
+    "audio_prompt": "High-pitched turbine-like spin sound.",
+    "voice_over_cue": "Spinning at high velocity, the machine extracts excess lipids, reducing fat content without compromising the delicate crunch."
+  },
+  {
+    "scene_id": 38,
+    "section": "De-oiling Process",
+    "visual_prompt": "The centrifuge stops and tilts. Dry, crisp chips tumble out onto a cooling conveyor. 8K, dry texture, cascading chips.",
+    "audio_prompt": "Motor wind-down, dry rattling of chips tumbling.",
+    "voice_over_cue": "The de-oiled chips tumble out, lighter and crisper, ready to be cooled down to room temperature to set their structure."
+  },
+  {
+    "scene_id": 39,
+    "section": "Flavoring & Seasoning",
+    "visual_prompt": "The chips enter a large rotating seasoning drum. It looks like a cement mixer but stainless steel. 8K, rotation, industrial scale.",
+    "audio_prompt": "Rhythmic tumbling sound, metallic resonance.",
+    "voice_over_cue": "Entering the flavoring drums, the chips are tumbled gently, creating a continuous curtain of product for seasoning application."
+  },
+  {
+    "scene_id": 40,
+    "section": "Flavoring & Seasoning",
+    "visual_prompt": "Inside the drum: A nozzle sprays a fine mist of seasoning powder. The powder catches the light. 8K, particle effects, magical lighting.",
+    "audio_prompt": "Hiss of powder spray, soft tumbling noise.",
+    "voice_over_cue": "Electrostatic nozzles disperse the seasoning blend into a fine mist, ensuring every crevice of the chip receives flavor."
+  },
+  {
+    "scene_id": 41,
+    "section": "Flavoring & Seasoning",
+    "visual_prompt": "Close-up macro of a chip surface. Salt and spice particles attach perfectly to the texture. 8K, extreme detail, food porn style.",
+    "audio_prompt": "Crackle of seasoning hitting the crisp surface.",
+    "voice_over_cue": "The tumbling action guarantees total coverage, bonding the spice blend to the chip surface for a consistent taste experience."
+  },
+  {
+    "scene_id": 42,
+    "section": "Quality Control",
+    "visual_prompt": "The seasoned chips spread out on a vibratory conveyor belt to separate them. They dance on the metal. 8K, rapid vibration motion.",
+    "audio_prompt": "Fast buzzing vibration sound, rattling chips.",
+    "voice_over_cue": "Vibratory feeders spread the product into a single layer, presenting the chips to the most advanced inspector on the line."
+  },
+  {
+    "scene_id": 43,
+    "section": "Quality Control",
+    "visual_prompt": "An optical sorting machine with camera lenses looking down. A laser scans across the belt. 8K, high-tech, red laser light.",
+    "audio_prompt": "Digital scanning warble, light hum of electronics.",
+    "voice_over_cue": "Optical sorters analyze the color and shape of every single chip passing by, processing millions of pixels per second."
+  },
+  {
+    "scene_id": 44,
+    "section": "Quality Control",
+    "visual_prompt": "Slow motion: A burnt chip is detected. A focused jet of air blasts it out of the stream into a reject bin. 8K, precise physics.",
+    "audio_prompt": "Sharp 'pfft' air blast sound.",
+    "voice_over_cue": "When a defect is spotted, a precise jet of compressed air removes the offending chip instantly without disturbing the others."
+  },
+  {
+    "scene_id": 45,
+    "section": "Quality Control",
+    "visual_prompt": "The chips pass through a metal detector loop. A green light signals 'all clear'. 8K, clean industrial design.",
+    "audio_prompt": "Steady electronic hum, soft chime.",
+    "voice_over_cue": "Metal detectors provide the final safeguard, scanning the flow to ensure absolute purity before the product is packaged."
+  },
+  {
+    "scene_id": 46,
+    "section": "Packaging",
+    "visual_prompt": "The chips travel up a bucket elevator, vertical movement, carrying them to the weighing platform. 8K, verticality, mechanical rhythm.",
+    "audio_prompt": "Rhythmic clanking of plastic buckets on a chain drive.",
+    "voice_over_cue": "Bucket elevators lift the finished product to the weighing deck, the highest point in the packaging facility."
+  },
+  {
+    "scene_id": 47,
+    "section": "Packaging",
+    "visual_prompt": "Multi-head weigher: 14 small metal hoppers opening and closing rapidly, calculating the perfect weight. 8K, frantic mechanical intelligence.",
+    "audio_prompt": "Rapid-fire clicking and clattering of metal gates.",
+    "voice_over_cue": "Computerized multi-head weighers calculate the optimal combination of buckets to hit the target weight with zero error."
+  },
+  {
+    "scene_id": 48,
+    "section": "Packaging",
+    "visual_prompt": "Under the weigher, a roll of foil packaging film is pulled down and formed into a tube. 8K, smooth plastic motion.",
+    "audio_prompt": "Plastic film unrolling, friction sounds.",
+    "voice_over_cue": "Below, a continuous roll of foil is formed into a tube, ready to receive the falling charge of golden chips."
+  },
+  {
+    "scene_id": 49,
+    "section": "Packaging",
+    "visual_prompt": "Chips fall into the tube. A nozzle injects nitrogen gas (invisible but shown as slight haze/distortion). 8K, interior tube view.",
+    "audio_prompt": "Whoosh of falling chips, hiss of gas injection.",
+    "voice_over_cue": "Before sealing, a blast of nitrogen displaces the oxygen, creating a protective atmosphere that preserves freshness for months."
+  },
+  {
+    "scene_id": 50,
+    "section": "Packaging",
+    "visual_prompt": "Heated sealing jaws clamp down on the foil, melting it shut and cutting the bag loose. 8K, heat distortion, mechanical clamp.",
+    "audio_prompt": "Mechanical 'thunk-hiss' of the heat sealer.",
+    "voice_over_cue": "Heated jaws clamp down with immense pressure, sealing the package and cutting it free in one synchronized motion."
+  },
+  {
+    "scene_id": 51,
+    "section": "Packaging",
+    "visual_prompt": "The finished bag drops onto a check-weigher belt. It moves fast. A screen shows '150g OK'. 8K, speed, digital readout.",
+    "audio_prompt": "Thud of bag landing, belt whir.",
+    "voice_over_cue": "A final check-weigher verifies the mass of every bag, rejecting any unit that deviates even slightly from the standard."
+  },
+  {
+    "scene_id": 52,
+    "section": "Packaging",
+    "visual_prompt": "Robotic arm with suction cups grabs the bag and places it into a cardboard box. 8K, pneumatic suction, robotic jerky movement.",
+    "audio_prompt": "Suction cup 'thwomp', robotic arm whine.",
+    "voice_over_cue": "Pick-and-place robots organize the bags into cartons, executing repetitive movements with tireless speed and accuracy."
+  },
+  {
+    "scene_id": 53,
+    "section": "Packaging",
+    "visual_prompt": "The cardboard box is taped shut automatically by a taping machine. 8K, fast tape application.",
+    "audio_prompt": "Zip sound of tape being applied and cut.",
+    "voice_over_cue": "Automatic tapers seal the cartons, transforming loose bags into stackable units ready for the logistics chain."
+  },
+  {
+    "scene_id": 54,
+    "section": "Distribution",
+    "visual_prompt": "A large robotic palletizer arm stacks the boxes onto a wooden pallet. Geometric precision. 8K, heavy robotics.",
+    "audio_prompt": "Heavy industrial servo sounds, thud of boxes.",
+    "voice_over_cue": "Robotic palletizers stack the finished boxes with mathematical precision, interlocking them to ensure stability during transit."
+  },
+  {
+    "scene_id": 55,
+    "section": "Distribution",
+    "visual_prompt": "A stretch-wrap machine spins around the pallet, wrapping it in clear plastic film. 8K, spinning motion.",
+    "audio_prompt": "Whir of the wrapping machine, stretching plastic sound.",
+    "voice_over_cue": "The pallet is secured with stretch film, locking the cargo together into a single, immobile unit for safe shipping."
+  },
+  {
+    "scene_id": 56,
+    "section": "Distribution",
+    "visual_prompt": "An autonomous forklift (AGV) slides under the pallet and lifts it without a driver. 8K, futuristic warehouse.",
+    "audio_prompt": "Electric motor hum, warning beeps.",
+    "voice_over_cue": "Autonomous guided vehicles silently transport the heavy pallets to the loading dock, navigating the warehouse without human aid."
+  },
+  {
+    "scene_id": 57,
+    "section": "Distribution",
+    "visual_prompt": "The AGV places the pallet into the back of a shipping container. Dust motes dance in the light. 8K, depth, loading dock.",
+    "audio_prompt": "Echoing thud of pallet on container floor.",
+    "voice_over_cue": "The pallets are loaded into containers, marking the end of the manufacturing process and the start of global distribution."
+  },
+  {
+    "scene_id": 58,
+    "section": "Micro-Process Detail: Conveyor Speed",
+    "visual_prompt": "Close-up low angle of the conveyor belt rollers spinning rapidly underneath the belt. 8K, mechanical detail, motion blur.",
+    "audio_prompt": "High speed rattling of bearings and rollers.",
+    "voice_over_cue": "Throughout the facility, miles of conveyor belts maintain a precise tempo, synchronizing unrelated machines into one organism."
+  },
+  {
+    "scene_id": 59,
+    "section": "Micro-Process Detail: Sensor Array",
+    "visual_prompt": "Macro shot of a laser sensor lens reflecting the passing product. 8K, glass and light reflection.",
+    "audio_prompt": "Subtle digital data stream sound.",
+    "voice_over_cue": "Thousands of sensors act as the facility's nervous system, constantly feeding data back to the central control unit."
+  },
+  {
+    "scene_id": 60,
+    "section": "Micro-Process Detail: Oil Filtration",
+    "visual_prompt": "Side view of the oil filtration pumps. Dark oil entering, clear oil exiting through filters. 8K, fluid dynamics, pumping.",
+    "audio_prompt": "Rhythmic pumping sound, liquid flowing in pipes.",
+    "voice_over_cue": "Behind the scenes, filtration systems continuously scrub the cooking oil, removing particulates to maintain a pure taste."
+  },
+  {
+    "scene_id": 61,
+    "section": "Micro-Process Detail: Steam Recovery",
+    "visual_prompt": "External shot of steam pipes and valves venting controlled bursts of steam. 8K, industrial atmosphere, white steam against metal.",
+    "audio_prompt": "Hissing steam valves releasing pressure.",
+    "voice_over_cue": "Energy recovery systems capture excess heat, recycling the thermal energy to power other stages of the production line."
+  },
+  {
+    "scene_id": 62,
+    "section": "Micro-Process Detail: Blade Maintenance",
+    "visual_prompt": "Automated sharpening stone grinding against a slicer blade. Sparks fly. 8K, macro, sparks.",
+    "audio_prompt": "Grinding metal sound, high pitch.",
+    "voice_over_cue": "Self-sharpening mechanisms maintain the slicer blades, ensuring that the millionth cut is just as sharp as the first."
+  },
+  {
+    "scene_id": 63,
+    "section": "Micro-Process Detail: Cleaning Cycle",
+    "visual_prompt": "Clean-in-place (CIP) system active. Spinning spray balls inside a tank blasting foam and water. 8K, interior tank view.",
+    "audio_prompt": "Aggressive spraying, water splashing on metal walls.",
+    "voice_over_cue": "Automated cleaning cycles scour the internal systems, maintaining pharmaceutical-grade hygiene without human entry."
+  },
+  {
+    "scene_id": 64,
+    "section": "Micro-Process Detail: Data Center",
+    "visual_prompt": "Rows of server racks blinking in a dark server room. Cooling fans spinning. 8K, tech aesthetic, blue LEDs.",
+    "audio_prompt": "Drone of server cooling fans, rapid hard drive clicks.",
+    "voice_over_cue": "The entire operation is overseen by a digital brain, optimizing efficiency and predicting maintenance needs before they arise."
+  },
+  {
+    "scene_id": 65,
+    "section": "Micro-Process Detail: Box Folding",
+    "visual_prompt": "A machine grabs a flat cardboard sheet and folds it into a box shape in one second. 8K, fast origami-like motion.",
+    "audio_prompt": "Cardboard folding 'thwap', suction release.",
+    "voice_over_cue": "Carton erectors transform flat sheets into rigid boxes in milliseconds, feeding the insatiable appetite of the packing line."
+  },
+  {
+    "scene_id": 66,
+    "section": "Micro-Process Detail: Inkjet Coding",
+    "visual_prompt": "Macro of a nozzle spraying the 'Best Before' date onto a bag. Dots of ink flying. 8K, extreme slow motion.",
+    "audio_prompt": "Fast 'dit-dit-dit-dit' of the inkjet printer.",
+    "voice_over_cue": "High-speed inkjet printers apply tracking codes to every package, creating a digital passport for each bag of chips."
+  },
+  {
+    "scene_id": 67,
+    "section": "Micro-Process Detail: Glue Application",
+    "visual_prompt": "Hot melt glue gun shooting a line of glue onto a box flap. Steaming glue. 8K, macro texture.",
+    "audio_prompt": "Squirt of glue, hiss of hot nozzle.",
+    "voice_over_cue": "Hot melt adhesive is applied with robotic consistency, sealing the transport cartons instantly as they move down the line."
+  },
+  {
+    "scene_id": 68,
+    "section": "Micro-Process Detail: Waste Management",
+    "visual_prompt": "Banana peels moving on a separate waste conveyor into a compactor. 8K, organic waste processing.",
+    "audio_prompt": "Squishing sound of compactor, conveyor hum.",
+    "voice_over_cue": "Organic waste is automatically diverted and compacted, destined to return to the fields as nutrient-rich compost."
+  },
+  {
+    "scene_id": 69,
+    "section": "Micro-Process Detail: Water Recycling",
+    "visual_prompt": "Water treatment tanks with aeration bubbles. Dirty water turning clear. 8K, industrial water treatment.",
+    "audio_prompt": "Bubbling aeration, water flowing over weirs.",
+    "voice_over_cue": "Advanced water treatment facilities recycle the washing fluid, minimizing the environmental footprint of the massive plant."
+  },
+  {
+    "scene_id": 70,
+    "section": "Micro-Process Detail: Laboratory",
+    "visual_prompt": "A robotic arm in a glass lab testing the crunch of a chip. A graph appears on screen. 8K, sterile, scientific.",
+    "audio_prompt": "Crunch sound, electronic beep of data recording.",
+    "voice_over_cue": "Even the texture is quantified, with texture analyzers testing the fracture force to ensure the perfect crunch profile."
+  },
+  {
+    "scene_id": 71,
+    "section": "Conclusion Setup",
+    "visual_prompt": "Wide shot of the entire factory floor buzzing with activity. No humans, just moving machines. 8K, timelapse feel.",
+    "audio_prompt": "Symphony of all machine noises combined into a hum.",
+    "voice_over_cue": "This facility operates as a single, cohesive organism, a testament to the power of modern industrial automation."
+  },
+  {
+    "scene_id": 72,
+    "section": "Conclusion Setup",
+    "visual_prompt": "Close-up of the finished product bag artwork. Light sweeps across the reflective foil. 8K, advertising quality.",
+    "audio_prompt": "Shimmering sound effect, expensive feel.",
+    "voice_over_cue": "The final product is more than just a snack; it is the result of thousands of precisely calibrated mechanical interactions."
+  },
+  {
+    "scene_id": 73,
+    "section": "Conclusion Setup",
+    "visual_prompt": "The back of the delivery truck door rolling down and locking. 8K, heavy metal texture.",
+    "audio_prompt": "Rattling roll-up door, final slam.",
+    "voice_over_cue": "As the doors close, the manufacturing cycle is complete, but the logistical journey to the consumer is just beginning."
+  },
+  {
+    "scene_id": 74,
+    "section": "Conclusion Setup",
+    "visual_prompt": "The truck pulling away from the dock. Heat haze from the exhaust. 8K, exterior day.",
+    "audio_prompt": "Truck engine revving, gears shifting.",
+    "voice_over_cue": "Fleets of transport vehicles disperse the product, carrying the output of this mechanical marvel to every corner of the map."
+  },
+  {
+    "scene_id": 75,
+    "section": "Conclusion",
+    "visual_prompt": "Montage: Quick cuts of the slicer, the fryer, and the bagger working in perfect rhythm. 8K, rhythmic editing.",
+    "audio_prompt": "Rhythmic industrial beat matching the cuts.",
+    "voice_over_cue": "Speed, precision, and consistency—these are the hallmarks of an industry that has mastered the art of food production."
+  },
+  {
+    "scene_id": 76,
+    "section": "Conclusion",
+    "visual_prompt": "Slow motion close-up of a single perfect banana chip spinning in the air against a black background. 8K, dramatic.",
+    "audio_prompt": "Whoosh of air, single crisp crunch sound.",
+    "voice_over_cue": "Every golden slice tells a story of technological achievement, transforming a simple fruit into a globally beloved treat."
+  },
+  {
+    "scene_id": 77,
+    "section": "Conclusion",
+    "visual_prompt": "Silhouette of the factory at sunset. Lights turning on inside. 8K, atmospheric.",
+    "audio_prompt": "Wind blowing, distant factory hum.",
+    "voice_over_cue": "As the sun sets, the machines continue their tireless work, driven by code and current, never pausing for rest or sleep."
+  },
+  {
+    "scene_id": 78,
+    "section": "Conclusion",
+    "visual_prompt": "Abstract shot of conveyor belts intertwining like a highway system. 8K, artistic industrial.",
+    "audio_prompt": "Abstract synthesized drone, futuristic.",
+    "voice_over_cue": "This is the future of nourishment: a seamless integration of agriculture and robotics, operating at a breathtaking scale."
+  },
+  {
+    "scene_id": 79,
+    "section": "Conclusion",
+    "visual_prompt": "Camera pushes in on the logo of a machine. Metallic shine. 8K, brand agnostic but premium look.",
+    "audio_prompt": "Deep bass tone, resonant and final.",
+    "voice_over_cue": "Precision engineering ensures that every crisp bite delivers perfection, completing the cycle from harvest to consumer."
+  },
+  {
+    "scene_id": 80,
+    "section": "Conclusion",
+    "visual_prompt": "Fade to black with a single blinking green LED light in the center. 8K, minimal.",
+    "audio_prompt": "Single digital blip, then total silence.",
+    "voice_over_cue": "From the soil to the shelf, the banana chip stands as a crispy monument to the incredible power of industrial automation."
+  }
+]

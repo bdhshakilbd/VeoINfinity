@@ -1,0 +1,5245 @@
+import 'package:file_picker/file_picker.dart'; // Added
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'dart:async';
+import 'dart:math';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:audioplayers/audioplayers.dart';
+import '../models/story/story_audio_part.dart';
+import '../models/story/alignment_item.dart';
+import '../models/story/story_audio_state.dart';
+import '../models/bulk_task.dart'; // Added
+import '../models/scene_data.dart'; // Added
+import '../services/bulk_task_executor.dart'; // Added
+import '../services/profile_manager_service.dart'; // Added for multi-browser
+import '../services/multi_profile_login_service.dart'; // Added for re-login
+import '../services/story/gemini_tts_service.dart';
+import '../services/story/gemini_alignment_service.dart';
+import '../services/story/story_export_service.dart';
+import '../services/project_service.dart';
+import '../services/browser_video_generator.dart';
+import '../utils/config.dart';
+
+import '../services/mobile/mobile_browser_service.dart'; // Added
+import 'package:open_filex/open_filex.dart'; // For playing videos
+
+
+
+class StoryAudioScreen extends StatefulWidget {
+  final ProjectService projectService;
+  final bool isActivated;
+  final ProfileManagerService? profileManager;
+  final MultiProfileLoginService? loginService;
+  final String email;
+  final String password;
+  final String selectedModel;
+  final String selectedAccountType;
+
+  const StoryAudioScreen({
+    super.key,
+    required this.projectService,
+    required this.isActivated,
+    this.profileManager,
+    this.loginService,
+    this.email = '',
+    this.password = '',
+    this.selectedModel = 'Veo 3.1 - Fast',
+    this.selectedAccountType = 'ai_pro',
+    this.initialTabIndex = 0,
+  });
+
+  final int initialTabIndex;
+
+  @override
+  State<StoryAudioScreen> createState() => _StoryAudioScreenState();
+}
+
+class _StoryAudioScreenState extends State<StoryAudioScreen> {
+  // State
+  StoryAudioState _state = StoryAudioState();
+  
+  // Services
+  final GeminiTtsService _ttsService = GeminiTtsService();
+  final GeminiAlignmentService _alignmentService = GeminiAlignmentService();
+  final StoryExportService _exportService = StoryExportService();
+  ProjectService get _projectService => widget.projectService;
+  late final BulkTaskExecutor _bulkExecutor = BulkTaskExecutor(onTaskStatusChanged: _onReelTaskUpdate);
+  final _audioPlayer = AudioPlayer();
+  
+  // Controllers
+  final _storyScriptController = TextEditingController();
+  final _actionPromptsController = TextEditingController();
+  // Export Settings
+  double _exportTtsVolume = 1.0;
+  double _exportVideoVolume = 0.5;
+  double _exportPlaybackSpeed = 1.0; // Added for final video speed adjustment
+
+  TextEditingController _narratorController = TextEditingController();
+  final _customDelimiterController = TextEditingController(text: '---');
+  final _sentencesPerSegmentController = TextEditingController(text: '1');
+  final _alignmentJsonController = TextEditingController();
+  final _reelTopicController = TextEditingController(); // Reel
+  final TextEditingController _reelCharacterController = TextEditingController();
+  final TextEditingController _apiKeyController = TextEditingController(); // Added persistent controller
+  
+  // Mapping for bulk updates
+  final Map<int, Map<String, dynamic>> _visualIdMap = {};
+  
+  // UI State
+  bool _isGeneratingTts = false;
+  bool _isGeneratingAlignment = false;
+  bool _isExporting = false;
+  String _statusMessage = '';
+  double _progressValue = 0.0;
+  String _selectedAlignmentModel = 'gemini-2.5-flash';
+  String _selectedExportMethod = 'fast';
+  String _reelExportMethod = 'precise'; // For Reel tab exports
+  String _reelExportResolution = 'original'; // Resolution: original, 1080p, 2k, 4k
+  String _reelExportAspectRatio = 'original'; // Aspect: original, 16:9, 9:16, 1:1, 4:5
+  bool _reelForceReEncode = false;
+  int _sentencesPerSegment = 1;
+  String? _customOutputFolder; // Custom output folder selected by user
+  
+  // Audio playback state
+  int? _currentlyPlayingIndex;
+  bool _isPlaying = false;
+  
+  // Volume state
+  double _ttsVolume = 1.0;
+  double _videoVolume = 1.0;
+
+  // Reel State
+  String _reelCharacter = 'Boy';
+  List<Map<String, dynamic>> _reelProjects = [];
+  bool _isGeneratingReel = false;
+  bool _isConnectingBrowsers = false; // Added
+  int _reelCount = 1;
+  final TextEditingController _reelCountController = TextEditingController(text: '1');
+  int _storiesPerHint = 1; // Number of different stories to generate from one hint
+  int _scenesPerStory = 12; // Number of visual scenes/prompts per story (default: 12)
+  String _reelTopicMode = 'single'; // 'single' = one topic + count, 'multi' = one per line
+  Set<int> _selectedReelsForBulkCreate = {}; // Track selected reels for bulk auto-create
+  bool _isBulkAutoCreating = false;
+  int _concurrentReelProcessing = 1; // Process 1 reel at a time (default)
+  Timer? _saveTimer;
+  
+  // Export Progress State
+  bool _isReelExporting = false;
+  double _reelExportProgress = 0.0;
+  String _reelExportStep = '';
+  int _reelExportingIndex = -1;
+
+  void _debouncedSave() {
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(seconds: 2), _saveState);
+  }
+
+  String _reelAccountType = 'ai_pro'; // 'free', 'ai_pro', 'ai_ultra'
+  String _reelVideoModel = 'Veo 3.1 - Fast'; // Flow UI model name
+  bool _globalVoiceCueEnabled = true; // If true, AI generates speech cues for visuals
+  String _voiceCueLanguage = 'English'; // Language for voice cues in visuals
+  
+  // Profile State
+  String _selectedProfile = 'Default';
+  List<String> _profiles = ['Default'];
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureProfilesDir();
+    _loadProfiles();
+    _loadState();
+    _ttsService.loadApiKeys(); // Load API keys for TTS
+    _alignmentService.loadApiKeys(); // Load API keys for Alignment (and Youtube Analysis)
+    
+    // Configure bulk executor with multi-browser support
+    print('[STORY AUDIO] Configuring BulkTaskExecutor...');
+    print('[STORY AUDIO] Profile Manager: ${widget.profileManager != null ? "SET" : "NULL"}');
+    print('[STORY AUDIO] Login Service: ${widget.loginService != null ? "SET" : "NULL"}');
+    print('[STORY AUDIO] Email: ${widget.email.isNotEmpty ? "SET" : "EMPTY"}');
+    
+    // Set initial model from widget param
+    _reelVideoModel = widget.selectedModel;
+    
+    _bulkExecutor.setProfileManager(widget.profileManager);
+    _bulkExecutor.setLoginService(widget.loginService);
+    _bulkExecutor.setCredentials(widget.email, widget.password);
+    _bulkExecutor.setAccountType(widget.selectedAccountType);
+    
+    // Initialize Mobile Service on Android
+    if (Platform.isAndroid) {
+       final mobileService = MobileBrowserService();
+       mobileService.initialize(4);
+       _bulkExecutor.setMobileBrowserService(mobileService);
+    }
+    
+    print('[STORY AUDIO] BulkTaskExecutor configured!');
+    
+    // Reconnect callback for singleton executor (in case screen was recreated)
+    _bulkExecutor.setOnTaskStatusChanged(_onReelTaskUpdate);
+    
+    // Check if there are running tasks and update UI accordingly
+    _reconnectToRunningTasks();
+    
+    _storyScriptController.addListener(() {
+      _state = _state.copyWith(storyScript: _storyScriptController.text);
+      _saveState(); // Save on change
+    });
+    _actionPromptsController.addListener(() {
+      _state = _state.copyWith(actionPrompts: _actionPromptsController.text);
+      _saveState(); // Save on change
+    });
+    _reelTopicController.addListener(() {
+      _state = _state.copyWith(reelTopic: _reelTopicController.text);
+      _saveState(); // Save on change
+    });
+  }
+
+  @override
+  void dispose() {
+    _reelTopicController.dispose();
+    _reelCharacterController.dispose();
+    _apiKeyController.dispose(); // Dispose here
+    _audioPlayer.dispose();
+    // Note: NOT disposing _bulkExecutor so tasks continue in background
+    super.dispose();
+  }
+
+  /// Reconnect to running tasks when screen is recreated
+  void _reconnectToRunningTasks() {
+    final runningTasks = _bulkExecutor.runningTasks;
+    if (runningTasks.isEmpty) return;
+    
+    print('[RECONNECT] Found ${runningTasks.length} running tasks');
+    
+    for (final task in runningTasks) {
+      // Find matching reel project
+      final projectIndex = _reelProjects.indexWhere(
+        (p) => 'reel_task_${p['id']}' == task.id
+      );
+      
+      if (projectIndex >= 0) {
+        final project = _reelProjects[projectIndex];
+        print('[RECONNECT] Reconnected to task: ${task.name} (status: ${task.status})');
+        
+        // Update project status to reflect running task
+        if (task.status == TaskStatus.running) {
+          setState(() {
+            project['status'] = 'video_generating';
+            _state = _state.copyWith(reelProjects: _reelProjects);
+          });
+        }
+      }
+    }
+  }
+
+  Future<Directory> _getEffectiveOutputDir() async {
+    // On Android, always use public external storage
+    if (Platform.isAndroid) {
+      final defaultDir = Directory('/storage/emulated/0/veo3');
+      if (!await defaultDir.exists()) {
+        await defaultDir.create(recursive: true);
+      }
+      return defaultDir;
+    }
+    
+    // For other platforms, check custom folder first
+    if (_customOutputFolder != null) return Directory(_customOutputFolder!);
+    if (widget.projectService.currentProject?.projectPath != null) {
+      final dir = Directory(widget.projectService.currentProject!.projectPath);
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+      return dir;
+    }
+    
+    // Default fallback for non-Android
+    Directory defaultDir;
+    if (Platform.isIOS) {
+      // iOS: Use documents directory
+      final docsDir = await getApplicationDocumentsDirectory();
+      defaultDir = Directory(path.join(docsDir.path, 'veo3_stories'));
+    } else {
+      // Desktop: Use app directory
+      final appDir = File(Platform.resolvedExecutable).parent;
+      defaultDir = Directory(path.join(appDir.path, 'stories_history'));
+    }
+    
+    if (!await defaultDir.exists()) {
+      await defaultDir.create(recursive: true);
+    }
+    return defaultDir;
+  }
+
+  /// Get organized reel paths for a given reel project
+  /// Returns: {baseDir, audiosDir, videoclipsDir, exportDir}
+  Future<Map<String, Directory>> _getReelPaths(Map<String, dynamic> project) async {
+    final outputDir = await _getEffectiveOutputDir();
+    final reelName = (project['name'] as String? ?? 'Untitled_Reel')
+        .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
+        .replaceAll(' ', '_');
+    
+    // Structure: /veo3/reels/{name}/audios, /veo3/reels/{name}/videoclips
+    final baseDir = Directory(path.join(outputDir.path, 'reels', reelName));
+    final audiosDir = Directory(path.join(baseDir.path, 'audios'));
+    final videoclipsDir = Directory(path.join(baseDir.path, 'videoclips'));
+    final exportDir = Directory(path.join(outputDir.path, 'reels_output'));
+    
+    // Create all directories
+    await baseDir.create(recursive: true);
+    await audiosDir.create(recursive: true);
+    await videoclipsDir.create(recursive: true);
+    await exportDir.create(recursive: true);
+    
+    return {
+      'base': baseDir,
+      'audios': audiosDir,
+      'videoclips': videoclipsDir,
+      'export': exportDir,
+    };
+  }
+
+
+  /// Load state from JSON file
+  Future<void> _loadState() async {
+    try {
+      final projectDir = await _getEffectiveOutputDir();
+
+      final stateFile = File(path.join(projectDir.path, 'story_audio_state.json'));
+      if (await stateFile.exists()) {
+        final content = await stateFile.readAsString();
+        final json = jsonDecode(content) as Map<String, dynamic>;
+        
+        if (mounted) {
+           setState(() {
+             _state = StoryAudioState.fromJson(json);
+             _storyScriptController.text = _state.storyScript;
+             _actionPromptsController.text = _state.actionPrompts;
+             _customDelimiterController.text = _state.customDelimiter;
+             if (_state.alignmentJson != null && _state.alignmentJson!.isNotEmpty) {
+               _alignmentJsonController.text = const JsonEncoder.withIndent('  ').convert(_state.alignmentJson);
+             }
+           
+             // Load Reel State
+             _reelTopicController.text = _state.reelTopic;
+             _reelCharacter = _state.reelCharacter; // Ensure this matches dropdown items
+             if (_state.reelProjects != null) {
+                _reelProjects = _state.reelProjects!.map((e) => Map<String, dynamic>.from(e)).toList();
+             }
+           });
+        }
+        
+        print('[STORY AUDIO] State loaded: ${_reelProjects.length} reels found.');
+      }
+    } catch (e) {
+      print('[STORY AUDIO] Error loading state: $e');
+    }
+  }
+
+  /// Save state to JSON file
+  Future<void> _saveState() async {
+    try {
+      final projectDir = await _getEffectiveOutputDir();
+      
+      // Ensure state is updated with latest local variables before saving
+      _state = _state.copyWith(
+         storyScript: _storyScriptController.text,
+         actionPrompts: _actionPromptsController.text,
+         reelTopic: _reelTopicController.text,
+         reelCharacter: _state.reelCharacter, // Use state directly or variable
+         reelProjects: _reelProjects,
+      );
+
+      final stateFile = File(path.join(projectDir.path, 'story_audio_state.json'));
+      await stateFile.writeAsString(jsonEncode(_state.toJson()));
+      print('[STORY AUDIO] Saved state to ${stateFile.path}');
+    } catch (e) {
+      print('[STORY AUDIO] Error saving state: $e');
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save state: $e')));
+    }
+  }
+
+  /// Split story script into parts
+  void _splitStoryScript() {
+    final script = _storyScriptController.text.trim();
+    if (script.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a story script first')),
+      );
+      return;
+    }
+
+    List<String> textParts = [];
+
+    switch (_state.splitMode) {
+      case 'numbered':
+        // Split by numbered lines (1., 2., 3., etc.)
+        final regex = RegExp(r'^\d+\.\s*', multiLine: true);
+        textParts = script.split(regex).where((s) => s.trim().isNotEmpty).toList();
+        break;
+
+      case 'line':
+        // Split by line breaks
+        textParts = script.split('\n').where((s) => s.trim().isNotEmpty).toList();
+        break;
+
+      case 'custom':
+        // Split by custom delimiter
+        final delimiter = _customDelimiterController.text;
+        textParts = script.split(delimiter).where((s) => s.trim().isNotEmpty).toList();
+        break;
+
+      case 'sentences':
+        // Split by sentences - support multiple languages:
+        // . ! ? - English, Spanish, German, etc.
+        // । - Hindi, Bengali, Sanskrit (Devanagari danda)
+        // ۔ - Urdu, Arabic (Arabic full stop)
+        // ؟ - Arabic question mark
+        // ！ - Chinese/Japanese exclamation
+        // ？ - Chinese/Japanese question mark
+        // 。 - Chinese/Japanese period
+        final allSentences = script
+            .split(RegExp(r'[.!?।۔؟！？。]+'))
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
+            .toList();
+        
+        print('[SPLIT] Found ${allSentences.length} sentences, grouping by $_sentencesPerSegment');
+        
+        // Group sentences based on _sentencesPerSegment
+        for (int i = 0; i < allSentences.length; i += _sentencesPerSegment) {
+          final end = (i + _sentencesPerSegment < allSentences.length) 
+              ? i + _sentencesPerSegment 
+              : allSentences.length;
+          final sentencesInGroup = allSentences.sublist(i, end);
+          
+          // Detect the original terminator from the script to use for joining
+          String terminator = '. '; // Default
+          if (script.contains('।')) terminator = '। ';
+          else if (script.contains('۔')) terminator = '۔ ';
+          else if (script.contains('。')) terminator = '。';
+          
+          final group = sentencesInGroup.join(terminator);
+          textParts.add(group);
+          print('[SPLIT] Segment ${textParts.length}: ${sentencesInGroup.length} sentences');
+        }
+        break;
+    }
+
+    if (textParts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No parts found. Check your split mode.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _state = _state.copyWith(
+        parts: textParts.asMap().entries.map((entry) {
+          return StoryAudioPart(
+            index: entry.key + 1,
+            text: entry.value.trim(),
+            voiceModel: _state.globalVoiceModel,
+            voiceStyle: _state.globalVoiceStyle,
+          );
+        }).toList(),
+      );
+    });
+
+    _saveState();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Created ${textParts.length} story parts')),
+    );
+  }
+
+  bool _stopGenerationFlag = false;
+
+  /// Stop current generation
+  void _stopGeneration() {
+    setState(() {
+      _stopGenerationFlag = true;
+    });
+  }
+
+  /// Generate TTS for a specific part index (Internal helper for batching)
+  Future<void> _generatePartInternal(int index, Directory audioDir, {bool forceOverwrite = false}) async {
+    if (_stopGenerationFlag) return;
+
+    final part = _state.parts[index];
+    final audioPath = path.join(audioDir.path, 'story_part_${part.index.toString().padLeft(3, '0')}.wav');
+    
+    // Check if file already exists - skip generation if so (unless forced)
+    if (!forceOverwrite && await File(audioPath).exists()) {
+       final duration = await _ttsService.getDuration(audioPath);
+       if (mounted) {
+         setState(() {
+           _state.parts[index] = part.copyWith(
+             status: 'success',
+             audioPath: audioPath,
+             duration: duration,
+           );
+         });
+       }
+       return;
+    }
+
+    // Update part status to generating
+    if (mounted) {
+       setState(() {
+        _state.parts[index] = part.copyWith(status: 'generating');
+       });
+    }
+    
+    try {
+      if (_stopGenerationFlag) return;
+
+      final success = await _ttsService.generateTts(
+        text: part.text,
+        voiceModel: part.voiceModel,
+        voiceStyle: part.voiceStyle,
+        speechRate: 1.0,
+        outputPath: audioPath,
+      );
+
+      if (_stopGenerationFlag) return;
+
+      if (success) {
+        final duration = await _ttsService.getDuration(audioPath);
+        if (mounted) {
+          setState(() {
+            _state.parts[index] = part.copyWith(
+              status: 'success',
+              audioPath: audioPath,
+              duration: duration,
+            );
+          });
+        }
+      } else {
+         if (mounted) {
+          setState(() {
+            _state.parts[index] = part.copyWith(status: 'error', error: 'TTS generation failed');
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _state.parts[index] = part.copyWith(status: 'error', error: e.toString());
+        });
+      }
+    }
+  }
+
+  /// Generate TTS for all parts causing concurrency
+  Future<void> _generateAllTts() async {
+    print('[StoryAudio] Starting generation...');
+    if (_state.parts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please split the story script first')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isGeneratingTts = true;
+      _stopGenerationFlag = false;
+      _statusMessage = 'Loading API keys...';
+      _progressValue = 0.0;
+    });
+
+    try {
+      // Load API keys
+      print('[StoryAudio] Loading API keys...');
+      await _ttsService.loadApiKeys();
+
+      // Get output directory
+      String? projectDir = _customOutputFolder ?? widget.projectService.currentProject?.projectPath;
+      if (projectDir == null) {
+        throw Exception('No project selected');
+      }
+      
+      final audioDir = Directory(path.join(projectDir, 'story_audio'));
+      await audioDir.create(recursive: true);
+      print('[StoryAudio] Audio dir: ${audioDir.path}');
+
+      // Check for existing files
+      int existingFilesCount = 0;
+      for (var part in _state.parts) {
+         final partPath = path.join(audioDir.path, 'story_part_${part.index.toString().padLeft(3, '0')}.wav');
+         if (await File(partPath).exists()) {
+            existingFilesCount++;
+         }
+      }
+
+      bool forceOverwrite = false;
+      if (existingFilesCount > 0) {
+         if (mounted) {
+            final result = await showDialog<String>(
+               context: context, 
+               barrierDismissible: false,
+               builder: (ctx) => AlertDialog(
+                 title: const Text('Existing Files Found'),
+                 content: Text('$existingFilesCount audio files already exist.\n\nOverwrite all or generate only missing parts?'),
+                 actions: [
+                   TextButton(onPressed: () => Navigator.pop(ctx, 'cancel'), child: const Text('Cancel')),
+                   TextButton(onPressed: () => Navigator.pop(ctx, 'missing'), child: const Text('Generate Missing')),
+                   ElevatedButton(
+                     style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                              foregroundColor: Colors.white,
+                                              
+                                            ),
+                     onPressed: () => Navigator.pop(ctx, 'overwrite'), 
+                     child: const Text('Overwrite All')
+                   ),
+                 ],
+               ),
+            );
+            
+            if (result == 'cancel' || result == null) {
+               setState(() => _isGeneratingTts = false);
+               return;
+            }
+            if (result == 'overwrite') {
+               forceOverwrite = true;
+            }
+         }
+      }
+
+      // Concurrent Generation Logic (Sliding Window)
+      int total = _state.parts.length;
+      int completed = 0;
+      int concurrentLimit = 10;
+      final activeFutures = <Future<void>>{};
+      int nextIndex = 0;
+
+      print('[StoryAudio] Starting loop. Total: $total');
+
+      while ((nextIndex < total || activeFutures.isNotEmpty)) {
+        if (_stopGenerationFlag) {
+           print('[StoryAudio] Stopped by user');
+           setState(() => _statusMessage = 'Generation Stopped by User');
+           break;
+        }
+
+        // Fill pool
+        while (activeFutures.length < concurrentLimit && nextIndex < total) {
+           if (_stopGenerationFlag) break;
+           
+           final index = nextIndex;
+           nextIndex++;
+           
+           // Use Completer to ensure stable reference in Set
+           final completer = Completer<void>();
+           
+           // Start task
+           _generatePartInternal(index, audioDir, forceOverwrite: forceOverwrite).then((_) {
+              completed++;
+              if (mounted) {
+                 setState(() {
+                   _progressValue = completed / total;
+                 });
+              }
+           }).catchError((e) {
+              print('[StoryAudio] Task $index failed: $e');
+           }).whenComplete(() {
+              activeFutures.remove(completer.future);
+              completer.complete();
+              
+              if (mounted && !_stopGenerationFlag) {
+                 setState(() {
+                   _statusMessage = 'Active: ${activeFutures.length} | Completed: $completed/$total';
+                 });
+              }
+           });
+           
+           activeFutures.add(completer.future);
+        }
+
+        if (activeFutures.isEmpty) break;
+
+        // Wait for at least one future to complete
+        await Future.any(activeFutures);
+      }
+      
+      setState(() {
+        _statusMessage = _stopGenerationFlag ? 'Stopped.' : 'TTS generation complete!';
+      });
+      
+      if (!_stopGenerationFlag) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('TTS generation complete!')),
+        );
+      }
+    } catch (e) {
+      print('[StoryAudio] Error: $e');
+      setState(() {
+        _statusMessage = 'Error: $e';
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      print('[StoryAudio] Finished. Resetting flag.');
+      setState(() {
+        _isGeneratingTts = false;
+      });
+    }
+  }
+
+  /// Generate TTS for single part
+  Future<void> _generateSingleTts(int index) async {
+    if (index < 0 || index >= _state.parts.length) return;
+
+    final part = _state.parts[index];
+
+    try {
+      await _ttsService.loadApiKeys();
+
+      // Get output directory - use custom folder if selected, otherwise use project
+      String? projectDir = _customOutputFolder ?? widget.projectService.currentProject?.projectPath;
+      
+      if (projectDir == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select an output folder first')),
+        );
+        return;
+      }
+      
+      final audioDir = Directory(path.join(projectDir, 'story_audio'));
+      await audioDir.create(recursive: true);
+
+      _state.parts[index] = part.copyWith(status: 'generating');
+      setState(() {});
+
+      final audioPath = path.join(audioDir.path, 'story_part_${part.index.toString().padLeft(3, '0')}.wav');
+      
+      final success = await _ttsService.generateTts(
+        text: part.text,
+        voiceModel: part.voiceModel,
+        voiceStyle: part.voiceStyle,
+        speechRate: 1.0,
+        outputPath: audioPath,
+      );
+
+      if (success) {
+        final duration = await _ttsService.getDuration(audioPath);
+        
+        _state.parts[index] = part.copyWith(
+          status: 'success',
+          audioPath: audioPath,
+          duration: duration,
+        );
+      } else {
+        _state.parts[index] = part.copyWith(
+          status: 'error',
+          error: 'TTS generation failed',
+        );
+      }
+
+      setState(() {});
+      await _saveState();
+    } catch (e) {
+      _state.parts[index] = part.copyWith(
+        status: 'error',
+        error: e.toString(),
+      );
+      setState(() {});
+    }
+  }
+
+  void _saveAlignmentJson() {
+    try {
+      final jsonContent = _alignmentJsonController.text;
+      if (jsonContent.isEmpty) return;
+      
+      final jsonList = jsonDecode(jsonContent) as List;
+      final items = jsonList.map((e) => AlignmentItem.fromJson(e)).toList();
+      
+      setState(() {
+        _state = _state.copyWith(alignmentJson: items);
+      });
+      _saveState();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Alignment JSON updated manually')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid JSON format: $e')),
+      );
+    }
+  }
+
+  void _copyAlignmentJson() {
+     if (_alignmentJsonController.text.isNotEmpty) {
+       Clipboard.setData(ClipboardData(text: _alignmentJsonController.text));
+       ScaffoldMessenger.of(context).showSnackBar(
+         const SnackBar(content: Text('Copied to clipboard')),
+       );
+     }
+  }
+
+  /// Generate alignment JSON
+  Future<void> _generateAlignment() async {
+    if (_state.parts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please create story parts first')),
+      );
+      return;
+    }
+
+    final prompts = _actionPromptsController.text.trim();
+    if (prompts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter action prompts first')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isGeneratingAlignment = true;
+      _statusMessage = 'Generating alignment...';
+    });
+
+    try {
+      await _alignmentService.loadApiKeys();
+
+      // Parse prompts (one per line)
+      final videoPrompts = prompts.split('\n').where((s) => s.trim().isNotEmpty).toList();
+
+      final alignment = await _alignmentService.generateAlignment(
+        storyParts: _state.parts,
+        videoPrompts: videoPrompts,
+        model: _selectedAlignmentModel,
+      );
+
+      setState(() {
+        _state = _state.copyWith(alignmentJson: alignment);
+        _alignmentJsonController.text = const JsonEncoder.withIndent('  ').convert(alignment);
+        _statusMessage = 'Alignment generated successfully!';
+      });
+
+      await _saveState();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Generated ${alignment.length} alignment items')),
+      );
+    } catch (e) {
+      setState(() {
+        _statusMessage = 'Error: $e';
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() {
+        _isGeneratingAlignment = false;
+      });
+    }
+  }
+
+  /// Load action prompts from file
+  Future<void> _loadActionPrompts() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['txt', 'json'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
+        final content = await file.readAsString();
+
+        // Try to parse as JSON first
+        try {
+          final json = jsonDecode(content) as List;
+          final prompts = json.map((item) => item['prompt'] as String? ?? item.toString()).join('\n');
+          _actionPromptsController.text = prompts;
+        } catch (_) {
+          // If not JSON, use as plain text
+          _actionPromptsController.text = content;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Action prompts loaded')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading prompts: $e')),
+      );
+    }
+  }
+
+  /// Load videos
+  Future<void> _loadVideos() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['mp4', 'avi', 'mkv', 'mov', 'webm'],
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final videoPaths = result.files
+            .where((f) => f.path != null)
+            .map((f) => f.path!)
+            .toList();
+
+        setState(() {
+          _state = _state.copyWith(videosPaths: videoPaths);
+        });
+
+        await _saveState();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Loaded ${videoPaths.length} videos')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading videos: $e')),
+      );
+    }
+  }
+
+  /// Export video
+  Future<void> _exportVideo() async {
+    if (_state.alignmentJson == null || _state.alignmentJson!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please generate alignment JSON first')),
+      );
+      return;
+    }
+
+    if (_state.videosPaths == null || _state.videosPaths!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please load videos first')),
+      );
+      return;
+    }
+
+    // Ask for output path
+    final outputPath = await FilePicker.platform.saveFile(
+      dialogTitle: 'Save Video As',
+      fileName: 'story_video.mp4',
+      type: FileType.custom,
+      allowedExtensions: ['mp4'],
+    );
+
+    if (outputPath == null) return;
+
+    setState(() {
+      _isExporting = true;
+      _statusMessage = 'Exporting video...';
+      _progressValue = 0.0;
+    });
+
+    try {
+      if (_selectedExportMethod == 'fast') {
+        await _exportService.exportVideoFast(
+          alignment: _state.alignmentJson!,
+          parts: _state.parts,
+          videoPaths: _state.videosPaths!,
+          outputPath: outputPath,
+          onProgress: (current, total, message) {
+            setState(() {
+              _progressValue = current / total;
+              _statusMessage = message;
+            });
+          },
+          ttsVolume: _ttsVolume,
+          videoVolume: _videoVolume,
+        );
+      } else {
+        await _exportService.exportVideoPrecise(
+          alignment: _state.alignmentJson!,
+          parts: _state.parts,
+          videoPaths: _state.videosPaths!,
+          outputPath: outputPath,
+          onProgress: (current, total, message) {
+            setState(() {
+              _progressValue = current / total;
+              _statusMessage = message;
+            });
+          },
+          ttsVolume: _ttsVolume,
+          videoVolume: _videoVolume,
+        );
+      }
+
+      setState(() {
+        _statusMessage = 'Export complete!';
+      });
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('✅ Success'),
+            content: Text('Video exported successfully!\n\nOutput: ${path.basename(outputPath)}'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Process.run('explorer', ['/select,', outputPath]);
+                },
+                child: const Text('Open Folder'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _statusMessage = 'Error: $e';
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() {
+        _isExporting = false;
+      });
+    }
+  }
+
+  /// Apply global settings to all parts
+  void _applyGlobalSettings() {
+    if (_state.parts.isEmpty) return;
+
+    setState(() {
+      _state = _state.copyWith(
+        parts: _state.parts.map((part) {
+          return part.copyWith(
+            voiceModel: _state.globalVoiceModel,
+            voiceStyle: _state.globalVoiceStyle,
+          );
+        }).toList(),
+      );
+    });
+
+    _saveState();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Applied global settings to all parts')),
+    );
+  }
+
+  /// Play audio for a specific part
+  Future<void> _playAudio(int index) async {
+    if (index < 0 || index >= _state.parts.length) return;
+    
+    final part = _state.parts[index];
+    if (part.audioPath == null || !await File(part.audioPath!).exists()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Audio file not found. Please generate audio first.')),
+      );
+      return;
+    }
+
+    try {
+      // If already playing this part, stop it
+      if (_currentlyPlayingIndex == index && _isPlaying) {
+        await _stopAudio();
+        return;
+      }
+
+      // Stop any currently playing audio
+      if (_isPlaying) {
+        await _stopAudio();
+      }
+
+      // Play the audio
+      await _audioPlayer.play(DeviceFileSource(part.audioPath!));
+      
+      setState(() {
+        _currentlyPlayingIndex = index;
+        _isPlaying = true;
+      });
+
+      // Listen for completion
+      _audioPlayer.onPlayerComplete.listen((_) {
+        if (mounted) {
+          setState(() {
+            _currentlyPlayingIndex = null;
+            _isPlaying = false;
+          });
+        }
+      });
+
+      print('[AUDIO] Playing: ${path.basename(part.audioPath!)}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error playing audio: $e')),
+      );
+      setState(() {
+        _currentlyPlayingIndex = null;
+        _isPlaying = false;
+      });
+    }
+  }
+
+  /// Stop audio playback
+  Future<void> _stopAudio() async {
+    try {
+      await _audioPlayer.stop();
+      setState(() {
+        _currentlyPlayingIndex = null;
+        _isPlaying = false;
+      });
+    } catch (e) {
+      print('[AUDIO] Error stopping: $e');
+    }
+  }
+
+  Future<File> _getApiKeyFile() async {
+    if (Platform.isAndroid) {
+       // User requested explicit path
+       final dir = Directory('/storage/emulated/0/veo3');
+       if (!await dir.exists()) {
+         await dir.create(recursive: true);
+       }
+       return File(path.join(dir.path, 'gemini_api_keys.txt'));
+    } 
+    if (Platform.isIOS) {
+       final dir = await getApplicationDocumentsDirectory();
+       return File(path.join(dir.path, 'gemini_api_keys.txt'));
+    }
+    final exePath = Platform.resolvedExecutable;
+    return File(path.join(File(exePath).parent.path, 'gemini_api_keys.txt'));
+  }
+
+  /// Load API keys from file
+  Future<String> _loadApiKeys() async {
+    try {
+      final file = await _getApiKeyFile();
+      if (await file.exists()) {
+        return await file.readAsString();
+      }
+      return '';
+    } catch (e) {
+      print('[API KEYS] Error loading: $e');
+      return '';
+    }
+  }
+
+  /// Save API keys to file
+  Future<void> _saveApiKeys(String keys) async {
+    try {
+      final file = await _getApiKeyFile();
+      
+      // Ensure directory exists (mostly for desktop/custom paths)
+      if (!await file.parent.exists()) {
+         await file.parent.create(recursive: true);
+      }
+      
+      await file.writeAsString(keys);
+      
+      // Reload services (they will need to know the new path too - we'll fix them next)
+      try {
+        await _ttsService.loadApiKeys();
+        await _alignmentService.loadApiKeys();
+      } catch (_) {
+         // Ignore reload errors here if services aren't updated yet
+      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('API keys saved to ${file.path}')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving API keys: $e')),
+      );
+    }
+  }
+
+  /// Show API keys management dialog
+  Future<void> _showApiKeysDialog() async {
+    // Load existing keys
+    final existingKeys = await _loadApiKeys();
+    _apiKeyController.text = existingKeys;
+
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.key, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Gemini API Keys'),
+          ],
+        ),
+        content: SizedBox(
+          width: 600,
+          height: 400,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Enter your Gemini API keys (one per line):',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  '💡 Tip: Multiple keys enable automatic rotation for better rate limiting',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: TextField(
+                  controller: _apiKeyController, // Use persistent controller
+                  maxLines: null,
+                  expands: true,
+                  decoration: const InputDecoration(
+                    hintText: 'AIzaSyAbc123...\nAIzaSyDef456...\nAIzaSyGhi789...',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(12),
+                  ),
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: Colors.grey.shade600),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Keys are saved to: gemini_api_keys.txt in app directory',
+                      style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              final keys = _apiKeyController.text.trim(); // Use persistent controller
+              if (keys.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter at least one API key')),
+                );
+                return;
+              }
+              
+              // Count keys
+              final keyCount = keys.split('\n').where((k) => k.trim().isNotEmpty).length;
+              
+              await _saveApiKeys(keys);
+              
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            icon: const Icon(Icons.save),
+            label: const Text('Save Keys'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Row(
+          children: [
+            Icon(Icons.audiotrack, size: 24),
+            SizedBox(width: 8),
+            Text('Story Audio'),
+          ],
+        ),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'API Settings',
+            onPressed: _showApiKeysDialog,
+          ),
+        ],
+      ),
+      body: DefaultTabController(
+        length: 2,
+        initialIndex: widget.initialTabIndex.clamp(0, 1),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              child: const TabBar(
+                tabs: [
+                  Tab(text: 'Story Audio'),
+                  Tab(text: 'Reel Special'),
+                ],
+                labelColor: Colors.blue,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.blue,
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                   _buildStoryAudioContent(),
+                   _buildReelTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoryAudioContent() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+        final padding = isMobile ? 4.0 : 8.0;
+        
+        if (isMobile) {
+          // Mobile: Single column layout
+          return Padding(
+            padding: EdgeInsets.all(padding),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildOutputFolderSection(),
+                  const SizedBox(height: 8),
+                  _buildStoryScriptSection(),
+                  const SizedBox(height: 8),
+                  _buildActionPromptsSection(),
+                  const SizedBox(height: 8),
+                  _buildGlobalSettingsSection(),
+                  const SizedBox(height: 8),
+                  _buildAlignmentSection(),
+                  const SizedBox(height: 8),
+                  _buildVideoSection(),
+                  const SizedBox(height: 8),
+                  _buildStoryPartsSection(),
+                  const SizedBox(height: 8),
+                  _buildExportSection(),
+                  if (_statusMessage.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    _buildStatusSection(),
+                  ],
+                ],
+              ),
+            ),
+          );
+        } else {
+          // Desktop: Two column layout
+          return Padding(
+            padding: EdgeInsets.all(padding),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left Column - Input & Settings
+                Expanded(
+                  flex: 1,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildOutputFolderSection(),
+                        const SizedBox(height: 8),
+                        _buildStoryScriptSection(),
+                        const SizedBox(height: 8),
+                        _buildActionPromptsSection(),
+                        const SizedBox(height: 8),
+                        _buildGlobalSettingsSection(),
+                        const SizedBox(height: 8),
+                        _buildAlignmentSection(),
+                        const SizedBox(height: 8),
+                        _buildVideoSection(),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Right Column - Story Parts & Export
+                Expanded(
+                  flex: 1,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildStoryPartsSection(),
+                        const SizedBox(height: 8),
+                        _buildExportSection(),
+                        if (_statusMessage.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          _buildStatusSection(),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  // --- Reel Special Tab ---
+
+  // --- Profile Methods ---
+  Future<void> _ensureProfilesDir() async {
+    await Directory(AppConfig.profilesDir).create(recursive: true);
+    final defaultProfile = Directory(path.join(AppConfig.profilesDir, 'Default'));
+    if (!await defaultProfile.exists()) {
+      await defaultProfile.create(recursive: true);
+    }
+  }
+
+  Future<void> _loadProfiles() async {
+    final profilesDir = Directory(AppConfig.profilesDir);
+    if (await profilesDir.exists()) {
+      final dirs = await profilesDir.list().where((entity) => entity is Directory).toList();
+      setState(() {
+        _profiles = dirs.map((d) => path.basename(d.path)).toList()..sort();
+        if (_profiles.isEmpty) {
+          _profiles = ['Default'];
+        }
+      });
+    }
+  }
+
+  Future<void> _connectBrowsers() async {
+    if (widget.profileManager == null) return;
+    
+    setState(() => _isConnectingBrowsers = true);
+    
+    try {
+      // Try to connect to up to 10 browsers (standard max)
+      final count = await widget.profileManager!.connectToOpenProfiles(10);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Connected to $count browsers'),
+            backgroundColor: count > 0 ? Colors.green : Colors.orange,
+          ),
+        );
+        setState(() {}); // Trigger rebuild to update count display
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error connecting: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isConnectingBrowsers = false);
+    }
+  }
+
+  Future<void> _launchChrome() async {
+     final profilePath = path.join(AppConfig.profilesDir, 'Default'); // Default profile since selector removed
+    
+    await Process.start(
+      AppConfig.chromePath,
+      [
+        '--remote-debugging-port=${AppConfig.debugPort}',
+        '--remote-allow-origins=*',
+        '--user-data-dir=$profilePath',
+        '--profile-directory=Default',
+        'https://labs.google/fx/tools/flow',
+      ],
+      mode: ProcessStartMode.detached,
+    );
+     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Launched Chrome with Default profile')));
+  }
+
+  Widget _buildReelTab() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+        final isTablet = constraints.maxWidth >= 600 && constraints.maxWidth < 900;
+        final padding = isMobile ? 8.0 : (isTablet ? 12.0 : 16.0);
+        
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Input Section
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(padding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    _buildOutputFolderSection(), // Reusing existing widget
+                    const SizedBox(height: 16),
+                    Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                          const Text('Topic', style: TextStyle(fontWeight: FontWeight.bold)),
+                          IconButton(
+                             icon: const Icon(Icons.folder_open),
+                             tooltip: 'Open Output Folder',
+                             onPressed: () {
+                                final path = _customOutputFolder ?? widget.projectService.currentProject?.projectPath;
+                                if (path != null) {
+                                   Process.run('explorer', [path]);
+                                } else {
+                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No output folder selected')));
+                                }
+                             },
+                          ),
+                       ],
+                    ),
+                    const SizedBox(height: 8),
+                    // Template Selector - Responsive
+                    isMobile
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            DropdownButtonFormField<String>(
+                              value: _state.selectedReelTemplateId,
+                              decoration: const InputDecoration(
+                                labelText: 'Story Template',
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                isDense: true,
+                              ),
+                              items: [
+                                const DropdownMenuItem(value: null, child: Text("Default (Boy Saves Animals)", style: TextStyle(fontSize: 12))),
+                                ..._state.reelTemplates.map((t) => DropdownMenuItem(value: t.id, child: Text(t.name, style: const TextStyle(fontSize: 12)))),
+                              ],
+                              onChanged: (val) {
+                                setState(() {
+                                  _state = _state.copyWith(selectedReelTemplateId: val);
+                                });
+                                _saveState();
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: _showTemplateCreatorDialog,
+                                    icon: const Icon(Icons.add_circle_outline, size: 16),
+                                    label: const Text("New", style: TextStyle(fontSize: 12)),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                PopupMenuButton<String>(
+                                  icon: const Icon(Icons.more_vert),
+                                  onSelected: (val) {
+                                    if (val == 'import') _importTemplate();
+                                    if (val == 'export') _exportTemplate();
+                                  },
+                                  itemBuilder: (context) => [
+                                    const PopupMenuItem(value: 'import', child: Text('Import Template (JSON)')),
+                                    const PopupMenuItem(value: 'export', child: Text('Export Selected Template')),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                value: _state.selectedReelTemplateId,
+                                decoration: const InputDecoration(
+                                  labelText: 'Story Template',
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                ),
+                                items: [
+                                  const DropdownMenuItem(value: null, child: Text("Default (Boy Saves Animals)")),
+                                  ..._state.reelTemplates.map((t) => DropdownMenuItem(value: t.id, child: Text(t.name))),
+                                ],
+                                onChanged: (val) {
+                                  setState(() {
+                                    _state = _state.copyWith(selectedReelTemplateId: val);
+                                  });
+                                  _saveState();
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            PopupMenuButton<String>(
+                              icon: const Icon(Icons.more_vert),
+                              onSelected: (val) {
+                                if (val == 'import') _importTemplate();
+                                if (val == 'export') _exportTemplate();
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(value: 'import', child: Text('Import Template (JSON)')),
+                                const PopupMenuItem(value: 'export', child: Text('Export Selected Template')),
+                              ],
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton.icon(
+                              onPressed: _showTemplateCreatorDialog,
+                              icon: const Icon(Icons.add_circle_outline),
+                              label: const Text("New Template"),
+                            ),
+                          ],
+                        ),
+                    const SizedBox(height: 8),
+                    const SizedBox(height: 8),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _reelTopicController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter topic (e.g., A boy saves a dolphin...)',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+                    // Connected Browsers Info & Connect Button
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                            ? Colors.green.shade50
+                            : Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                              ? Colors.green.shade200
+                              : Colors.orange.shade200,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                                ? Icons.check_circle
+                                : Icons.warning,
+                            color: widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                                ? Colors.green
+                                : Colors.orange,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                                  ? '${widget.profileManager!.countConnectedProfiles()} browser(s) connected'
+                                  : 'No browsers connected.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: widget.profileManager != null && widget.profileManager!.countConnectedProfiles() > 0
+                                    ? Colors.green.shade800
+                                    : Colors.orange.shade800,
+                              ),
+                            ),
+                          ),
+                          if (widget.profileManager != null) ...[
+                            const SizedBox(width: 8),
+                            _isConnectingBrowsers
+                              ? const SizedBox(
+                                  width: 24, 
+                                  height: 24, 
+                                  child: CircularProgressIndicator(strokeWidth: 2)
+                                )
+                              : ElevatedButton.icon(
+                                  onPressed: _connectBrowsers,
+                                  icon: const Icon(Icons.link, size: 16),
+                                  label: const Text('Connect All'),
+                                  style: ElevatedButton.styleFrom(
+                                    visualDensity: VisualDensity.compact,
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.blue.shade700,
+                                  ),
+                                ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Text('Character:', style: TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: _state.reelCharacter,
+                                decoration: const InputDecoration(
+                                  hintText: 'e.g. Boy, Hulk, Ironman',
+                                  border: OutlineInputBorder(),
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                ),
+                                onChanged: (value) {
+                                  _state = _state.copyWith(reelCharacter: value);
+                                  _saveState();
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                           children: [
+                             const Text('Language:', style: TextStyle(fontWeight: FontWeight.bold)),
+                             const SizedBox(width: 8),
+                             DropdownButton<String>(
+                               value: _state.reelLanguage ?? 'English',
+                               items: const [
+                                 DropdownMenuItem(value: 'English', child: Text('English')),
+                                 DropdownMenuItem(value: 'Bengali', child: Text('Bengali')),
+                                 DropdownMenuItem(value: 'Hindi', child: Text('Hindi')),
+                               ], 
+                               onChanged: (v) {
+                                  setState(() {
+                                     _state = _state.copyWith(reelLanguage: v);
+                                  });
+                                  _saveState();
+                               }
+                             ),
+                           ],
+                        ),
+                        // Topic Mode Toggle - Responsive
+                        isMobile
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Text('Topic Mode:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                const SizedBox(height: 4),
+                                SegmentedButton<String>(
+                                  segments: const [
+                                    ButtonSegment(value: 'single', label: Text('Single', style: TextStyle(fontSize: 11))),
+                                    ButtonSegment(value: 'multi', label: Text('Per Line', style: TextStyle(fontSize: 11))),
+                                  ],
+                                  selected: {_reelTopicMode},
+                                  onSelectionChanged: (v) => setState(() => _reelTopicMode = v.first),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                const Text('Topic Mode:', style: TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 8),
+                                SegmentedButton<String>(
+                                  segments: const [
+                                    ButtonSegment(value: 'single', label: Text('Single Topic')),
+                                    ButtonSegment(value: 'multi', label: Text('One per Line')),
+                                  ],
+                                  selected: {_reelTopicMode},
+                                  onSelectionChanged: (v) => setState(() => _reelTopicMode = v.first),
+                                ),
+                              ],
+                            ),
+                        const SizedBox(height: 8),
+                        // Reels count and story variations - Responsive
+                        if (_reelTopicMode == 'single')
+                        isMobile
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Expanded(child: Text('Reels:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                                    SizedBox(
+                                      width: 80,
+                                      child: TextField(
+                                        controller: _reelCountController,
+                                        keyboardType: TextInputType.number,
+                                        style: const TextStyle(fontSize: 12),
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                                          isDense: true,
+                                        ),
+                                        onChanged: (v) {
+                                          final count = int.tryParse(v) ?? 1;
+                                          setState(() => _reelCount = count.clamp(1, 1000));
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    const Expanded(child: Text('Stories/Hint:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                                    SizedBox(
+                                      width: 60,
+                                      child: DropdownButton<int>(
+                                        value: _storiesPerHint,
+                                        isDense: true,
+                                        isExpanded: true,
+                                        items: [1, 2, 3, 4, 5].map((n) => DropdownMenuItem(
+                                          value: n,
+                                          child: Text('$n', style: const TextStyle(fontSize: 12)),
+                                        )).toList(),
+                                        onChanged: (v) => setState(() => _storiesPerHint = v ?? 1),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                // Scenes per Story (Video Prompts)
+                                Row(
+                                  children: [
+                                    const Expanded(child: Text('Scenes/Story:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                                    SizedBox(
+                                      width: 60,
+                                      child: DropdownButton<int>(
+                                        value: _scenesPerStory,
+                                        isDense: true,
+                                        isExpanded: true,
+                                        items: [8, 10, 12, 15, 18, 20].map((n) => DropdownMenuItem(
+                                          value: n,
+                                          child: Text('$n', style: const TextStyle(fontSize: 12)),
+                                        )).toList(),
+                                        onChanged: (v) => setState(() => _scenesPerStory = v ?? 12),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                const Text('Reels:', style: TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 8),
+                                SizedBox(
+                                  width: 80,
+                                  child: TextField(
+                                    controller: _reelCountController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      isDense: true,
+                                    ),
+                                    onChanged: (v) {
+                                      final count = int.tryParse(v) ?? 1;
+                                      setState(() => _reelCount = count.clamp(1, 1000));
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                const Text('Stories/Hint:', style: TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 8),
+                                SizedBox(
+                                  width: 60,
+                                  child: DropdownButton<int>(
+                                    value: _storiesPerHint,
+                                    isDense: true,
+                                    items: [1, 2, 3, 4, 5].map((n) => DropdownMenuItem(
+                                      value: n,
+                                      child: Text('$n'),
+                                    )).toList(),
+                                    onChanged: (v) => setState(() => _storiesPerHint = v ?? 1),
+                                  ),
+                                ),
+                               const SizedBox(width: 12),
+                               const Text('Scenes/Story:', style: TextStyle(fontWeight: FontWeight.bold)),
+                               const SizedBox(width: 8),
+                               SizedBox(
+                                 width: 60,
+                                 child: DropdownButton<int>(
+                                   value: _scenesPerStory,
+                                   isDense: true,
+                                   items: [8, 10, 12, 15, 18, 20].map((n) => DropdownMenuItem(
+                                     value: n,
+                                     child: Text('$n'),
+                                   )).toList(),
+                                   onChanged: (v) => setState(() => _scenesPerStory = v ?? 12),
+                                 ),
+                               ),
+                              const SizedBox(width: 12),
+                             // Current Model Info (Read-only)
+                             Container(
+                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                               decoration: BoxDecoration(
+                                 color: Colors.purple.shade50,
+                                 borderRadius: BorderRadius.circular(4),
+                                 border: Border.all(color: Colors.purple.shade200),
+                               ),
+                               child: Row(
+                                 mainAxisSize: MainAxisSize.min,
+                                 children: [
+                                   const Icon(Icons.star, size: 14, color: Colors.purple),
+                                   const SizedBox(width: 4),
+                                   Text(
+                                     'Using: $_reelVideoModel', 
+                                     style: TextStyle(
+                                       fontSize: 12, 
+                                       color: Colors.purple.shade900,
+                                       fontWeight: FontWeight.w500,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                             const SizedBox(width: 12),
+                             const Text('Voice Cue:', style: TextStyle(fontWeight: FontWeight.bold)),
+                             Switch(
+                                value: _globalVoiceCueEnabled,
+                                onChanged: (v) => setState(() => _globalVoiceCueEnabled = v),
+                             ),
+                          ],
+                        ),
+                        // Voice Cue Language Picker (only show when voice cue is enabled)
+                        if (_globalVoiceCueEnabled)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                             children: [
+                                const Text('Voice Cue Language:', style: TextStyle(fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                   child: Autocomplete<String>(
+                                      initialValue: TextEditingValue(text: _voiceCueLanguage),
+                                      optionsBuilder: (textEditingValue) {
+                                         final options = ['English', 'Bengali', 'Hindi', 'Spanish', 'French', 'Arabic', 'Japanese', 'Korean', 'Portuguese', 'German'];
+                                         if (textEditingValue.text.isEmpty) return options;
+                                         return options.where((o) => o.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+                                      },
+                                      onSelected: (value) => setState(() => _voiceCueLanguage = value),
+                                      fieldViewBuilder: (context, controller, focusNode, onSubmitted) {
+                                         return TextFormField(
+                                            controller: controller,
+                                            focusNode: focusNode,
+                                            decoration: const InputDecoration(
+                                               isDense: true,
+                                               border: OutlineInputBorder(),
+                                               hintText: 'Select or type language',
+                                               contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                            ),
+                                            onChanged: (v) => _voiceCueLanguage = v,
+                                            onFieldSubmitted: (v) {
+                                               setState(() => _voiceCueLanguage = v);
+                                               onSubmitted();
+                                            },
+                                         );
+                                      },
+                                   ),
+                                ),
+                             ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _isGeneratingReel ? null : _generateReel,
+                                icon: _isGeneratingReel 
+                                   ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) 
+                                   : const Icon(Icons.movie_creation),
+                                label: Text(_isGeneratingReel ? 'Generating $_reelCount Reels...' : 'Generate Content'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.deepPurple,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                ),
+                              ),
+                            ),
+                            if (_isGeneratingReel) ...[
+                               const SizedBox(width: 16),
+                               ElevatedButton.icon(
+                                  onPressed: () {
+                                     setState(() { 
+                                        _shouldStopReelGeneration = true; 
+                                        _isGeneratingReel = false;
+                                     });
+                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Stopping...')));
+                                  },
+                                  icon: const Icon(Icons.stop),
+                                  label: const Text('Stop'),
+                                  style: ElevatedButton.styleFrom(
+                                     backgroundColor: Colors.red,
+                                     foregroundColor: Colors.white,
+                                     padding: const EdgeInsets.symmetric(vertical: 16),
+                                  ),
+                               ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Bulk Auto-Create Controls - Responsive
+            if (_reelProjects.isNotEmpty)
+              Card(
+                color: Colors.blue.shade50,
+                child: Padding(
+                  padding: EdgeInsets.all(padding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.auto_awesome_mosaic, color: Colors.blue, size: isMobile ? 20 : 24),
+                          const SizedBox(width: 8),
+                          Text('Bulk Auto-Create', style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: isMobile ? 14 : 16
+                          )),
+                          const Spacer(),
+                          Text('${_selectedReelsForBulkCreate.length} selected', 
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: isMobile ? 11 : 13,
+                            )
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      isMobile
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: _selectedReelsForBulkCreate.isEmpty || _isBulkAutoCreating
+                                    ? null
+                                    : () => _startBulkAutoCreate(),
+                                icon: _isBulkAutoCreating 
+                                    ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
+                                    : const Icon(Icons.play_arrow, size: 18),
+                                label: Text(_isBulkAutoCreating ? 'Processing...' : 'Start Selected',
+                                  style: const TextStyle(fontSize: 12)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                              if (_isBulkAutoCreating) ...[
+                                const SizedBox(height: 8),
+                                ElevatedButton.icon(
+                                  onPressed: () => setState(() => _isBulkAutoCreating = false),
+                                  icon: const Icon(Icons.stop, size: 18),
+                                  label: const Text('Stop', style: TextStyle(fontSize: 12)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (_selectedReelsForBulkCreate.length == _reelProjects.length) {
+                                            _selectedReelsForBulkCreate.clear();
+                                          } else {
+                                            _selectedReelsForBulkCreate = Set.from(
+                                              List.generate(_reelProjects.length, (i) => i)
+                                            );
+                                          }
+                                        });
+                                      },
+                                      icon: Icon(_selectedReelsForBulkCreate.length == _reelProjects.length 
+                                          ? Icons.check_box 
+                                          : Icons.check_box_outline_blank, size: 18),
+                                      label: Text(
+                                        _selectedReelsForBulkCreate.length == _reelProjects.length 
+                                            ? 'Deselect All' 
+                                            : 'Select All',
+                                        style: const TextStyle(fontSize: 11),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text('Concurrent:', style: TextStyle(fontSize: 11)),
+                                  const SizedBox(width: 4),
+                                  DropdownButton<int>(
+                                    value: _concurrentReelProcessing,
+                                    isDense: true,
+                                    items: [1, 2, 3, 4].map((n) => DropdownMenuItem(
+                                      value: n,
+                                      child: Text('$n', style: const TextStyle(fontSize: 11)),
+                                    )).toList(),
+                                    onChanged: (v) => setState(() => _concurrentReelProcessing = v ?? 2),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: _selectedReelsForBulkCreate.isEmpty || _isBulkAutoCreating
+                                    ? null
+                                    : () => _startBulkAutoCreate(),
+                                icon: _isBulkAutoCreating 
+                                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                                    : const Icon(Icons.play_arrow),
+                                label: Text(_isBulkAutoCreating ? 'Processing...' : 'Start Selected'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              if (_isBulkAutoCreating)
+                                ElevatedButton.icon(
+                                  onPressed: () => setState(() => _isBulkAutoCreating = false),
+                                  icon: const Icon(Icons.stop),
+                                  label: const Text('Stop'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                ),
+                              const SizedBox(width: 16),
+                              TextButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    if (_selectedReelsForBulkCreate.length == _reelProjects.length) {
+                                      _selectedReelsForBulkCreate.clear();
+                                    } else {
+                                      _selectedReelsForBulkCreate = Set.from(
+                                        List.generate(_reelProjects.length, (i) => i)
+                                      );
+                                    }
+                                  });
+                                },
+                                icon: Icon(_selectedReelsForBulkCreate.length == _reelProjects.length 
+                                    ? Icons.check_box 
+                                    : Icons.check_box_outline_blank),
+                                label: Text(_selectedReelsForBulkCreate.length == _reelProjects.length 
+                                    ? 'Deselect All' 
+                                    : 'Select All'),
+                              ),
+                              const Spacer(),
+                              const Text('Concurrent: ', style: TextStyle(fontSize: 12)),
+                              DropdownButton<int>(
+                                value: _concurrentReelProcessing,
+                                isDense: true,
+                                items: [1, 2, 3, 4].map((n) => DropdownMenuItem(
+                                  value: n,
+                                  child: Text('$n'),
+                                )).toList(),
+                                onChanged: (v) => setState(() => _concurrentReelProcessing = v ?? 2),
+                              ),
+                            ],
+                          ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 16),
+            
+            // Projects List
+            if (_reelProjects.isNotEmpty)
+               Column(
+                  children: _reelProjects.asMap().entries.map((entry) {
+                     final index = entry.key;
+                     final project = entry.value;
+                     final projectId = project['id'];
+                     
+                     return Card(
+                       margin: const EdgeInsets.only(bottom: 16),
+                       child: ExpansionTile(
+                         initiallyExpanded: index == _reelProjects.length - 1, // Expand newest
+                          title: Row(
+                            children: [
+                              Checkbox(
+                                 value: _selectedReelsForBulkCreate.contains(index),
+                                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                 visualDensity: VisualDensity.compact,
+                                onChanged: (checked) {
+                                  setState(() {
+                                    if (checked == true) {
+                                      _selectedReelsForBulkCreate.add(index);
+                                    } else {
+                                      _selectedReelsForBulkCreate.remove(index);
+                                    }
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: Text(
+                                  project['name'] ?? 'Untitled Reel',
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ),
+                              // Video count indicator (right side, bold and big)
+                              Builder(
+                                builder: (context) {
+                                  final content = project['content'] as List?;
+                                  if (content == null) return const SizedBox.shrink();
+                                  
+                                  int totalVideos = 0;
+                                  int completedVideos = 0;
+                                  
+                                  for (var part in content) {
+                                    final visuals = part['visuals'] as List?;
+                                    if (visuals != null) {
+                                      for (var visual in visuals) {
+                                        if (visual['active'] != false) {
+                                          totalVideos++;
+                                          if (visual['video_path'] != null) {
+                                            completedVideos++;
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                  
+                                  final color = completedVideos == totalVideos 
+                                      ? Colors.green 
+                                      : completedVideos == 0 
+                                          ? Colors.red 
+                                          : Colors.orange;
+                                  
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: color.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(color: color, width: 1.5),
+                                    ),
+                                    child: Text(
+                                      '$completedVideos/$totalVideos',
+                                      style: TextStyle(
+                                        fontSize: 12, 
+                                        color: color, 
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 4),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                                onPressed: () => _deleteReel(index),
+                                tooltip: 'Delete Reel',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                          ),
+                         subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                               Row(
+                                 children: [
+                                   Expanded(
+                                     child: Text('Status: ${project['status']}', style: TextStyle(fontSize: isMobile ? 11 : 13)),
+                                   ),
+                                   ElevatedButton.icon(
+                                     onPressed: () => _regenerateFailedVideos(index),
+                                     icon: Icon(Icons.refresh, size: isMobile ? 14 : 16),
+                                     label: Text('Regen Missing', style: TextStyle(fontSize: isMobile ? 10 : 11)),
+                                     style: ElevatedButton.styleFrom(
+                                       backgroundColor: Colors.orange.shade100,
+                                       foregroundColor: Colors.orange.shade900,
+                                       padding: EdgeInsets.symmetric(horizontal: isMobile ? 6 : 8, vertical: isMobile ? 4 : 6),
+                                       minimumSize: const Size(0, 28),
+                                       visualDensity: VisualDensity.compact,
+                                     ),
+                                   ),
+                                 ],
+                               ),
+                               // Export Progress Bar (when exporting)
+                               if (_isReelExporting && _reelExportingIndex == index) ...[
+                                  const SizedBox(height: 8),
+                                  Container(
+                                     padding: const EdgeInsets.all(8),
+                                     decoration: BoxDecoration(
+                                        color: Colors.green.shade50,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(color: Colors.green.shade200),
+                                     ),
+                                     child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                           Row(
+                                              children: [
+                                                 const SizedBox(
+                                                    width: 16, height: 16,
+                                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                                 ),
+                                                 const SizedBox(width: 8),
+                                                 const Text('Exporting...', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                                 const Spacer(),
+                                                 Text('${(_reelExportProgress * 100).toInt()}%', 
+                                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                              ],
+                                           ),
+                                           const SizedBox(height: 6),
+                                           ClipRRect(
+                                              borderRadius: BorderRadius.circular(4),
+                                              child: LinearProgressIndicator(
+                                                 value: _reelExportProgress,
+                                                 backgroundColor: Colors.grey.shade200,
+                                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade600),
+                                                 minHeight: 8,
+                                              ),
+                                           ),
+                                           const SizedBox(height: 4),
+                                           Text(
+                                              _reelExportStep,
+                                              style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                           ),
+                                        ],
+                                     ),
+                                  ),
+                               ],
+                               const SizedBox(height: 8),
+                               // Live Progress Indicator (when generating)
+                               if (project['status'] == 'video_generating') Builder(
+                                 builder: (context) {
+                                   final content = project['content'] as List?;
+                                   if (content == null) return const SizedBox.shrink();
+                                   
+                                   int queued = 0, generating = 0, polling = 0, completed = 0, failed = 0;
+                                   for (var part in content) {
+                                     final visuals = part['visuals'] as List?;
+                                     if (visuals != null) {
+                                       for (var v in visuals) {
+                                         if (v['active'] != false) {
+                                           final status = v['gen_status'] ?? (v['video_path'] != null ? 'completed' : 'queued');
+                                           if (status == 'completed' || v['video_path'] != null) completed++;
+                                           else if (status == 'generating') generating++;
+                                           else if (status == 'polling') polling++;
+                                           else if (status == 'failed') failed++;
+                                           else queued++;
+                                         }
+                                       }
+                                     }
+                                   }
+                                   final total = queued + generating + polling + completed + failed;
+                                   final progress = total > 0 ? completed / total : 0.0;
+                                   
+                                   return Column(
+                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                     children: [
+                                       Row(
+                                         children: [
+                                           Expanded(
+                                             child: ClipRRect(
+                                               borderRadius: BorderRadius.circular(4),
+                                               child: LinearProgressIndicator(
+                                                 value: progress,
+                                                 backgroundColor: Colors.grey.shade200,
+                                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                                                 minHeight: 8,
+                                               ),
+                                             ),
+                                           ),
+                                           const SizedBox(width: 8),
+                                           Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                         ],
+                                       ),
+                                       const SizedBox(height: 4),
+                                       Wrap(
+                                         spacing: 8,
+                                         children: [
+                                           if (generating > 0) _buildStatusChip('Gen: $generating', Colors.blue),
+                                           if (polling > 0) _buildStatusChip('Poll: $polling', Colors.cyan),
+                                           if (completed > 0) _buildStatusChip('Done: $completed', Colors.green),
+                                           if (failed > 0) _buildStatusChip('Fail: $failed', Colors.red),
+                                           if (queued > 0) _buildStatusChip('Queue: $queued', Colors.grey),
+                                         ],
+                                       ),
+                                       const SizedBox(height: 8),
+                                     ],
+                                   );
+                                 },
+                               ),
+                               Container(
+                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                 decoration: BoxDecoration(
+                                   color: _reelAccountType == 'ai_ultra' 
+                                       ? Colors.purple.shade50 
+                                       : _reelAccountType == 'ai_pro'
+                                           ? Colors.blue.shade50
+                                           : Colors.green.shade50,
+                                   borderRadius: BorderRadius.circular(4),
+                                   border: Border.all(color: Colors.grey.shade300),
+                                 ),
+                                 child: Row(
+                                   children: [
+                                     Icon(
+                                       _reelAccountType == 'ai_ultra'
+                                           ? Icons.star
+                                           : _reelAccountType == 'ai_pro'
+                                               ? Icons.workspace_premium
+                                               : Icons.auto_awesome,
+                                       size: 14,
+                                       color: _reelAccountType == 'ai_ultra'
+                                           ? Colors.purple
+                                           : _reelAccountType == 'ai_pro'
+                                               ? Colors.blue
+                                               : Colors.green,
+                                     ),
+                                     const SizedBox(width: 6),
+                                     Expanded(
+                                       child: Text(
+                                         'Using: $_reelVideoModel',
+                                         style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                                         overflow: TextOverflow.ellipsis,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                               ),
+                               const SizedBox(height: 8),
+                               // Aspect Ratio Selector only
+                               DropdownButtonFormField<String>(
+                                  value: project['aspect_ratio'] ?? 'VIDEO_ASPECT_RATIO_PORTRAIT',
+                                  decoration: const InputDecoration(
+                                     labelText: 'Aspect Ratio',
+                                     isDense: true,
+                                     border: OutlineInputBorder(),
+                                     contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                  ),
+                                  items: [
+                                      DropdownMenuItem(value: 'VIDEO_ASPECT_RATIO_PORTRAIT', child: Text('9:16 (Reel)', style: TextStyle(fontSize: isMobile ? 11 : 12))),
+                                     DropdownMenuItem(value: 'VIDEO_ASPECT_RATIO_LANDSCAPE', child: Text('16:9 (Wide)', style: TextStyle(fontSize: isMobile ? 11 : 12))),
+                                  ],
+                                  onChanged: (val) {
+                                     if (val != null) {
+                                        setState(() {
+                                           project['aspect_ratio'] = val;
+                                           _state = _state.copyWith(reelProjects: _reelProjects);
+                                        });
+                                        _saveState();
+                                     }
+                                  },
+                               ),
+                               const SizedBox(height: 8),
+                               // Voice Controls
+                               Row(
+                                  children: [
+                                     // Voice Model
+                                     Expanded(
+                                        child: DropdownButtonFormField<String>(
+                                           value: project['voice_model'] ?? 'Zephyr',
+                                           decoration: const InputDecoration(
+                                              labelText: 'Voice',
+                                              isDense: true,
+                                              border: OutlineInputBorder(),
+                                              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                           ),
+                                           items: ['Zephyr', 'Puck', 'Kore', 'Fenrir', 'Lambo', 'Aoede', 'Charon', 'Maia', 'Orpheus', 'Leda']
+                                              .map((v) => DropdownMenuItem(value: v, child: Text(v, style: const TextStyle(fontSize: 12))))
+                                              .toList(),
+                                           onChanged: (val) {
+                                              if (val != null) {
+                                                 setState(() {
+                                                    project['voice_model'] = val;
+                                                    _state = _state.copyWith(reelProjects: _reelProjects);
+                                                 });
+                                                 _debouncedSave();
+                                              }
+                                           },
+                                        ),
+                                     ),
+                                     const SizedBox(width: 8),
+                                     // Voice Style
+                                     Expanded(
+                                        flex: 2,
+                                        child: TextFormField(
+                                           initialValue: project['voice_style'] ?? 'friendly and engaging',
+                                           decoration: InputDecoration(
+                                              labelText: project['voice_style_auto'] == true ? 'Voice Style (AI Generated)' : 'Voice Style',
+                                              isDense: true,
+                                              border: const OutlineInputBorder(),
+                                              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                              suffixIcon: Row(
+                                                 mainAxisSize: MainAxisSize.min,
+                                                 children: [
+                                                    // Regenerate with AI
+                                                    IconButton(
+                                                       icon: const Icon(Icons.auto_awesome, size: 18),
+                                                       tooltip: 'Regenerate with AI',
+                                                       onPressed: () async {
+                                                          final content = project['content'] as List;
+                                                          final storyTexts = content.map((c) => c['text']?.toString() ?? '').toList();
+                                                          final newStyle = await _alignmentService.generateVoiceStyle(
+                                                             storyTitle: project['name'] ?? 'Story',
+                                                             storyTexts: storyTexts,
+                                                             language: _state.reelLanguage ?? 'English',
+                                                          );
+                                                          setState(() {
+                                                             project['voice_style'] = newStyle;
+                                                             project['voice_style_auto'] = true;
+                                                          });
+                                                          _saveState();
+                                                       },
+                                                    ),
+                                                    // Preset dropdown
+                                                    PopupMenuButton<String>(
+                                                       icon: const Icon(Icons.list, size: 18),
+                                                       tooltip: 'Use Preset',
+                                                       itemBuilder: (ctx) => [
+                                                          const PopupMenuItem(value: 'Friendly and engaging storytelling', child: Text('Friendly')),
+                                                          const PopupMenuItem(value: 'Dramatic, movie-trailer style with powerful pauses', child: Text('Dramatic')),
+                                                          const PopupMenuItem(value: 'Warm, gentle narration like a bedtime story', child: Text('Bedtime')),
+                                                          const PopupMenuItem(value: 'Excited, fast-paced with childlike enthusiasm', child: Text('Excited')),
+                                                          const PopupMenuItem(value: 'Calm and soothing with clear articulation', child: Text('Calm')),
+                                                       ],
+                                                       onSelected: (val) {
+                                                          setState(() {
+                                                             project['voice_style'] = val;
+                                                             project['voice_style_auto'] = false;
+                                                          });
+                                                          _saveState();
+                                                       },
+                                                    ),
+                                                 ],
+                                              ),
+                                           ),
+                                           style: const TextStyle(fontSize: 12),
+                                           onChanged: (val) {
+                                              project['voice_style'] = val;
+                                              project['voice_style_auto'] = false;
+                                              _debouncedSave();
+                                           },
+                                        ),
+                                     ),
+                                  ],
+                               ),
+                               const SizedBox(height: 8),
+                               // Controls
+                               Wrap(
+                                 spacing: 8,
+                                 children: [
+                                     if (project['status'] != 'video_generating')
+                                        ElevatedButton.icon(
+                                           icon: Icon(Icons.play_arrow, size: isMobile ? 14 : 16),
+                                            label: Text('Resume / Start', style: TextStyle(fontSize: isMobile ? 10 : 12)),
+                                           onPressed: () => _generateReelVideo(index), 
+                                           style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.green.shade100,
+                                              foregroundColor: Colors.green.shade900,
+                                              
+                                            ),
+                                        ),
+                                     
+                                     if (project['status'] == 'video_generating')
+                                        ElevatedButton.icon(
+                                           icon: Icon(Icons.pause, size: isMobile ? 14 : 16),
+                                            label: Text('Pause', style: TextStyle(fontSize: isMobile ? 10 : 12)),
+                                           onPressed: () => _cancelReelTask(index), 
+                                           style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.orange.shade100,
+                                              foregroundColor: Colors.orange.shade900,
+                                              
+                                            ),
+                                        ),
+                                        
+                                     ElevatedButton.icon(
+                                           icon: Icon(Icons.refresh, size: isMobile ? 14 : 16),
+                                            label: Text('Restart', style: TextStyle(fontSize: isMobile ? 10 : 12)),
+                                           onPressed: () {
+                                              // Confirm restart
+                                              showDialog(context: context, builder: (c) => AlertDialog(
+                                                 title: const Text('Restart Video Generation?'),
+                                                 content: const Text('This will clear all existing videos for this reel and start over. Are you sure?'),
+                                                 actions: [
+                                                    TextButton(onPressed: () => Navigator.pop(c), child: const Text('Cancel')),
+                                                    TextButton(onPressed: () {
+                                                       Navigator.pop(c);
+                                                       _restartReelVideo(index);
+                                                    }, child: const Text('Restart', style: TextStyle(color: Colors.red))),
+                                                 ],
+                                              ));
+                                           }, 
+                                           style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red.shade100,
+                                              foregroundColor: Colors.red.shade900,
+                                              
+                                            ),
+                                     ),
+                                     
+                                     // Auto Create (Magic) Button
+                                     if (_autoProcessMap[projectId] != true)
+                                         ElevatedButton.icon(
+                                           icon: Icon(Icons.auto_awesome, size: isMobile ? 14 : 16),
+                                            label: Text('Auto Create', style: TextStyle(fontSize: isMobile ? 10 : 12)),
+                                           onPressed: () => _processReelFull(index),
+                                           style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.purple.shade100,
+                                              foregroundColor: Colors.purple.shade900,
+                                              
+                                            ),
+                                         )
+                                     else
+                                         ElevatedButton.icon(
+                                           icon: Icon(Icons.stop_circle, size: isMobile ? 14 : 16),
+                                            label: Text('Stop Auto', style: TextStyle(fontSize: isMobile ? 10 : 12)),
+                                           onPressed: () => _stopReelProcess(index),
+                                           style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.red,
+                                              foregroundColor: Colors.white,
+                                              
+                                            ),
+                                         ),
+                                 ],
+                               )
+                            ],
+                         ),
+                         children: [
+                            Padding( // Content
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        children: [
+                                          // Action Buttons
+                                          Wrap(
+                                            spacing: 8,
+                                            runSpacing: 8,
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              ElevatedButton.icon(
+                                                onPressed: () => _generateReelAudio(index),
+                                                icon: const Icon(Icons.record_voice_over, size: 16),
+                                                label: const Text('Gen Audio', style: TextStyle(fontSize: 10)),
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: () => _generateReelVideo(index), 
+                                                icon: const Icon(Icons.video_library, size: 16),
+                                                label: const Text('Gen Video', style: TextStyle(fontSize: 10)),
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: () => _showExportDialog(index),
+                                                icon: const Icon(Icons.download, size: 16),
+                                                label: const Text('Export', style: TextStyle(fontSize: 10)),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.green,
+                                                  foregroundColor: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          
+                                          Container(
+                                            height: 400, // Fixed height for scrollable content
+                                            decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
+                                            child: Column( // Column to hold Mute All / List
+                                              children: [
+                                                // Batch Controls
+                                                Container(
+                                                   color: Colors.grey.shade100,
+                                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                   child: Row(
+                                                      children: [
+                                                         const Text('Batch actions:', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                                         const SizedBox(width: 8),
+                                                         TextButton.icon(
+                                                            onPressed: () => _toggleMuteAll(index, true),
+                                                            icon: const Icon(Icons.volume_off, size: 14),
+                                                            label: const Text('Mute All', style: TextStyle(fontSize: 10)),
+                                                            style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(60, 30)),
+                                                         ),
+                                                         TextButton.icon(
+                                                            onPressed: () => _toggleMuteAll(index, false),
+                                                            icon: const Icon(Icons.volume_up, size: 14),
+                                                            label: const Text('Unmute All', style: TextStyle(fontSize: 10)),
+                                                            style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(60, 30)),
+                                                         ),
+                                                      ],
+                                                   ),
+                                                ),
+                                                const Divider(height: 1),
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                    physics: const ClampingScrollPhysics(),
+                                                    itemCount: (project['content'] as List).length,
+                                                    itemBuilder: (ctx, partIdx) {
+                                                       final part = (project['content'] as List)[partIdx];
+                                                       final hasAudio = part['audio_path'] != null;
+                                                       final visuals = part['visuals'] as List?;
+                                                       
+                                                       return Column(
+                                                          children: [
+                                                             // Audio Part Header
+                                                             Container(
+                                                                color: Colors.grey.shade200,
+                                                                padding: const EdgeInsets.all(8),
+                                                                child: Column(
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                     Row(children: [
+                                                                        Text('Audio Part ${partIdx + 1}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                                                        const Spacer(),
+                                                                        // TTS Mute Toggle
+                                                                        IconButton(
+                                                                           icon: Icon(
+                                                                              (part['tts_muted'] == true) ? Icons.mic_off : Icons.mic,
+                                                                              color: (part['tts_muted'] == true) ? Colors.red : Colors.green,
+                                                                              size: 18,
+                                                                           ),
+                                                                           tooltip: (part['tts_muted'] == true) ? 'Unmute TTS' : 'Mute TTS',
+                                                                           onPressed: () {
+                                                                              setState(() {
+                                                                                 part['tts_muted'] = !(part['tts_muted'] == true);
+                                                                                 _state = _state.copyWith(reelProjects: _reelProjects);
+                                                                              });
+                                                                              _saveState();
+                                                                           },
+                                                                           constraints: const BoxConstraints(),
+                                                                           padding: const EdgeInsets.only(right: 8),
+                                                                        ),
+                                                                        if (hasAudio) IconButton(
+                                                                           icon: const Icon(Icons.play_circle, color: Colors.blue),
+                                                                           onPressed: () => _playReelAudio(part['audio_path']),
+                                                                           constraints: const BoxConstraints(),
+                                                                           padding: EdgeInsets.zero,
+                                                                        ),
+                                                                     ]),
+                                                                     TextFormField(
+                                                                        initialValue: part['text'] ?? '',
+                                                                        maxLines: null,
+                                                                        style: const TextStyle(fontSize: 13),
+                                                                        decoration: const InputDecoration(
+                                                                           isDense: true,
+                                                                           border: InputBorder.none,
+                                                                           contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                                                           hintText: 'Enter script...',
+                                                                        ),
+                                                                        onChanged: (val) {
+                                                                           part['text'] = val;
+                                                                           _debouncedSave();
+                                                                        },
+                                                                     ),
+                                                                  ],
+                                                                ),
+                                                             ),
+                                                             // Visuals List
+                                                             if (visuals != null)
+                                                                ...visuals.asMap().entries.map((entry) {
+                                                                   final vIdx = entry.key;
+                                                                   final visual = entry.value;
+                                                                   final hasVideo = visual['video_path'] != null;
+                                                                   final isMuted = visual['is_muted'] ?? false;
+                                                                   
+                                                                   return Container(
+                                                                      padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4, right: 8),
+                                                                      decoration: BoxDecoration(
+                                                                          border: Border(bottom: BorderSide(color: Colors.grey.shade100))
+                                                                      ),
+                                                                      child: Row(
+                                                                         crossAxisAlignment: CrossAxisAlignment.start,
+                                                                         children: [
+                                                                           Checkbox(
+                                                                             value: visual['active'] ?? true, 
+                                                                             onChanged: (val) {
+                                                                                setState(() {
+                                                                                   visual['active'] = val;
+                                                                                });
+                                                                                _saveState();
+                                                                             },
+                                                                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                                           ),
+                                                                           Expanded(
+                                                                             child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                   Row(children: [
+                                                                                      Text('Visual ${partIdx + 1}.${vIdx + 1}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                                                                                      if (hasVideo) ...[
+                                                                                         const SizedBox(width: 4),
+                                                                                         const Icon(Icons.videocam, size: 12, color: Colors.green),
+                                                                                      ],
+                                                                                       // Live generation status badge
+                                                                                       if (visual['gen_status'] != null && visual['gen_status'] != 'completed' && !hasVideo) ...[
+                                                                                          const SizedBox(width: 4),
+                                                                                          Container(
+                                                                                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: visual['gen_status'] == 'generating' 
+                                                                                                ? Colors.blue.shade100 
+                                                                                                : visual['gen_status'] == 'polling' 
+                                                                                                  ? Colors.cyan.shade100 
+                                                                                                  : visual['gen_status'] == 'failed'
+                                                                                                    ? Colors.red.shade100
+                                                                                                    : Colors.grey.shade100,
+                                                                                              borderRadius: BorderRadius.circular(3),
+                                                                                            ),
+                                                                                            child: Row(
+                                                                                              mainAxisSize: MainAxisSize.min,
+                                                                                              children: [
+                                                                                                if (visual['gen_status'] == 'generating' || visual['gen_status'] == 'polling')
+                                                                                                  const SizedBox(
+                                                                                                    width: 8, height: 8,
+                                                                                                    child: CircularProgressIndicator(strokeWidth: 1.5),
+                                                                                                  ),
+                                                                                                if (visual['gen_status'] == 'generating' || visual['gen_status'] == 'polling')
+                                                                                                  const SizedBox(width: 3),
+                                                                                                Text(
+                                                                                                  visual['gen_status'] == 'generating' ? 'Gen...' 
+                                                                                                    : visual['gen_status'] == 'polling' ? 'Poll...'
+                                                                                                    : visual['gen_status'] == 'failed' ? 'Failed'
+                                                                                                    : visual['gen_status'].toString().substring(0, min(5, visual['gen_status'].toString().length)),
+                                                                                                  style: TextStyle(
+                                                                                                    fontSize: 9, 
+                                                                                                    color: visual['gen_status'] == 'failed' ? Colors.red : Colors.black54,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                       ],
+                                                                                       const Spacer(),
+                                                                                      // Mute Toggle
+                                                                                      IconButton(
+                                                                                         icon: Icon(isMuted ? Icons.volume_off : Icons.volume_up, size: 16, color: isMuted ? Colors.red : Colors.grey),
+                                                                                         tooltip: isMuted ? 'Unmute' : 'Mute',
+                                                                                         constraints: const BoxConstraints(),
+                                                                                         padding: const EdgeInsets.symmetric(horizontal: 4),
+                                                                                         onPressed: () {
+                                                                                            setState(() {
+                                                                                               visual['is_muted'] = !isMuted;
+                                                                                            });
+                                                                                            _saveState();
+                                                                                         },
+                                                                                      ),
+                                                                                       if (hasVideo) Tooltip(
+                                                                                          message: 'Open Video',
+                                                                                          child: InkWell(
+                                                                                             onTap: () {
+                                                                                                if (visual['video_path'] != null) {
+                                                                                                   Process.run('explorer', ['/select,', visual['video_path']]);
+                                                                                                }
+                                                                                             }, 
+                                                                                             child: const Icon(Icons.folder_open, size: 16, color: Colors.blue),
+                                                                                          ),
+                                                                                       ),
+                                                                                       const SizedBox(width: 8),
+                                                                                       // Play Video (External)
+                                                                                       if (hasVideo) Tooltip(
+                                                                                          message: 'Play Video',
+                                                                                          child: InkWell(
+                                                                                             onTap: () async {
+                                                                                                final videoPath = visual['video_path'];
+                                                                                                if (videoPath != null) {
+                                                                                                   try {
+                                                                                                      await OpenFilex.open(videoPath);
+                                                                                                   } catch (e) {
+                                                                                                      print('[PLAY] Error opening video: $e');
+                                                                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                                                                        SnackBar(content: Text('Cannot play: $videoPath'))
+                                                                                                      );
+                                                                                                   }
+                                                                                                }
+                                                                                             }, 
+                                                                                             child: const Icon(Icons.play_circle_filled, size: 16, color: Colors.green),
+                                                                                          ),
+                                                                                       ),
+                                                                                       const SizedBox(width: 8),
+                                                                                       // Regenerate Video Button
+                                                                                       Tooltip(
+                                                                                          message: 'Regenerate Video',
+                                                                                          child: InkWell(
+                                                                                             onTap: () {
+                                                                                                // Regenerate this specific visual
+                                                                                                _regenerateSingleVisual(index, partIdx, vIdx);
+                                                                                             }, 
+                                                                                             child: Icon(
+                                                                                                Icons.refresh, 
+                                                                                                size: 16, 
+                                                                                                color: hasVideo ? Colors.orange : Colors.red,
+                                                                                             ),
+                                                                                          ),
+                                                                                       ),
+                                                                                    ]),
+                                                                                   TextFormField(
+                                                                                      initialValue: visual['prompt'] ?? '',
+                                                                                      maxLines: null,
+                                                                                      style: const TextStyle(fontSize: 12),
+                                                                                      decoration: const InputDecoration(
+                                                                                         isDense: true,
+                                                                                         border: InputBorder.none,
+                                                                                         contentPadding: EdgeInsets.zero,
+                                                                                         hintText: 'Enter visual prompt...',
+                                                                                      ),
+                                                                                      onChanged: (val) {
+                                                                                         visual['prompt'] = val;
+                                                                                         _debouncedSave();
+                                                                                      },
+                                                                                   ),
+                                                                                   // Voice Cue field (for video speech)
+                                                                                   if (visual['voice_cue'] != null) ...[
+                                                                                      const SizedBox(height: 4),
+                                                                                      Container(
+                                                                                         padding: const EdgeInsets.all(4),
+                                                                                         decoration: BoxDecoration(
+                                                                                            color: Colors.blue.shade50,
+                                                                                            borderRadius: BorderRadius.circular(4),
+                                                                                         ),
+                                                                                         child: Row(
+                                                                                            children: [
+                                                                                               const Icon(Icons.record_voice_over, size: 14, color: Colors.blue),
+                                                                                               const SizedBox(width: 4),
+                                                                                               Expanded(
+                                                                                                  child: TextFormField(
+                                                                                                     initialValue: visual['voice_cue'] ?? '',
+                                                                                                     maxLines: null,
+                                                                                                     style: const TextStyle(fontSize: 11, color: Colors.blue),
+                                                                                                     decoration: const InputDecoration(
+                                                                                                        isDense: true,
+                                                                                                        border: InputBorder.none,
+                                                                                                        contentPadding: EdgeInsets.zero,
+                                                                                                        hintText: 'Voice cue (speech in video)...',
+                                                                                                     ),
+                                                                                                     onChanged: (val) {
+                                                                                                        visual['voice_cue'] = val;
+                                                                                                        _debouncedSave();
+                                                                                                     },
+                                                                                                  ),
+                                                                                               ),
+                                                                                            ],
+                                                                                         ),
+                                                                                      ),
+                                                                                   ],
+                                                                                ],
+                                                                             ),
+                                                                           ),
+                                                                         ],
+                                                                      ),
+                                                                   );
+                                                                }).toList(),
+                                                          ],
+                                                       );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                             );
+                          }).toList(),
+                        ),
+          ],
+        ),
+      ),
+    );
+      },
+    );
+  }
+  
+  // --- Generators ---
+  
+
+  bool _shouldStopReelGeneration = false;
+  final Map<int, bool> _autoProcessMap = {};
+
+  Future<void> _processReelFull(int index) async {
+     final project = _reelProjects[index];
+     final projectId = project['id'];
+     
+     setState(() {
+        _autoProcessMap[projectId] = true;
+     });
+     
+     // 1. Audio
+     if (project['status'] != 'audio_done') {
+         await _generateReelAudio(index);
+         
+         // Check if stopped or failed
+         if (_autoProcessMap[projectId] != true) return;
+         if (project['status'] != 'audio_done') {
+             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Auto Process: Audio generation incomplete.')));
+             setState(() { _autoProcessMap[projectId] = false; });
+             return;
+         }
+     }
+     
+     // 2. Video
+     if (project['status'] != 'video_done') {
+         // Start generation
+         await _generateReelVideo(index);
+         
+         // Poll for completion
+         while (project['status'] == 'video_generating' || project['status'] == 'queued') {
+            if (_autoProcessMap[projectId] != true) {
+                // Stopped by user
+                _cancelReelTask(index);
+                return;
+            }
+            await Future.delayed(const Duration(seconds: 2));
+            // UI updates happen via _onReelTaskUpdate which calls setState
+         }
+         
+         if (project['status'] != 'video_done') {
+             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Auto Process: Video generation incomplete.')));
+             setState(() { _autoProcessMap[projectId] = false; });
+             return;
+         }
+     }
+     
+     // 3. Export
+     if (_autoProcessMap[projectId] == true) {
+        await _exportReel(index);
+     }
+     
+     if (mounted) {
+        setState(() {
+           _autoProcessMap[projectId] = false;
+        });
+     }
+  }
+
+  void _stopReelProcess(int index) {
+      final projectId = _reelProjects[index]['id'];
+      setState(() {
+         _autoProcessMap[projectId] = false;
+      });
+      // Cancelling video task if running
+      if (_reelProjects[index]['status'] == 'video_generating') {
+          _cancelReelTask(index);
+      }
+  }
+
+  /// Bulk auto-create: Process multiple selected reels concurrently
+  Future<void> _startBulkAutoCreate() async {
+    if (_selectedReelsForBulkCreate.isEmpty) return;
+    
+    setState(() => _isBulkAutoCreating = true);
+    
+    try {
+      final selectedIndices = _selectedReelsForBulkCreate.toList()..sort();
+      int completed = 0;
+      int failed = 0;
+      
+      // Process in batches based on concurrent setting
+      for (int i = 0; i < selectedIndices.length; i += _concurrentReelProcessing) {
+        if (!_isBulkAutoCreating) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Bulk auto-create stopped. Completed: $completed, Failed: $failed'))
+          );
+          break;
+        }
+        
+        // Get batch of indices
+        final batchEnd = (i + _concurrentReelProcessing).clamp(0, selectedIndices.length);
+        final batch = selectedIndices.sublist(i, batchEnd);
+        
+        // Process batch concurrently
+        final results = await Future.wait(
+          batch.map((index) async {
+            try {
+              await _processReelFull(index);
+              return true;
+            } catch (e) {
+              print('Error processing reel $index: $e');
+              return false;
+            }
+          }),
+        );
+        
+        // Count results
+        completed += results.where((r) => r).length;
+        failed += results.where((r) => !r).length;
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Progress: $completed completed, $failed failed (${selectedIndices.length - completed - failed} remaining)'),
+              duration: const Duration(seconds: 2),
+            )
+          );
+        }
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Bulk auto-create finished! Completed: $completed, Failed: $failed'),
+            backgroundColor: failed > 0 ? Colors.orange : Colors.green,
+            duration: const Duration(seconds: 5),
+          )
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isBulkAutoCreating = false;
+          _selectedReelsForBulkCreate.clear();
+        });
+      }
+    }
+  }
+
+  Future<void> _generateReel() async {
+    final topic = _reelTopicController.text.trim();
+    if (topic.isEmpty) {
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a topic')));
+       return;
+    }
+
+     setState(() { 
+        _isGeneratingReel = true; 
+        _shouldStopReelGeneration = false;
+     });
+     
+      try {
+           await _alignmentService.loadApiKeys();
+
+           final isRandomChar = _reelCharacter == 'Random';
+           final baseCharacter = isRandomChar ? 'Boy or Girl' : _reelCharacter;
+           int successCount = 0;
+           
+           // Determine topics to process based on mode
+           List<String> topicsToProcess;
+           if (_reelTopicMode == 'multi') {
+              // Multi-line: each line is a separate topic (process one by one)
+              topicsToProcess = topic.split('\n').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+           } else {
+              // Single mode: Generate multiple stories from one hint
+              if (_storiesPerHint > 1) {
+                 // Generate N different stories from the same hint
+                 topicsToProcess = List.generate(_reelCount, (i) {
+                    final storyVariation = (i % _storiesPerHint) + 1;
+                    if (storyVariation == 1) {
+                       return topic;
+                    } else {
+                       // Request completely different story variations
+                       return """Generate story variation #$storyVariation based on this theme: $topic
+                       
+Requirements:
+- Create a COMPLETELY DIFFERENT story with unique characters, setting, and plot
+- Use different animals/creatures if applicable
+- Change the environment/location
+- Alter the conflict/challenge
+- Make it feel like a fresh, original story while keeping the core theme""";
+                    }
+                 });
+              } else {
+                 // Original behavior: variations of the same story
+                 topicsToProcess = List.generate(_reelCount, (i) {
+                    if (i == 0) return topic;
+                    return "Create a unique variation of this story: $topic. Use completely different animals/settings/characters.";
+                 });
+              }
+           }
+           
+           for (int i = 0; i < topicsToProcess.length; i++) {
+              if (_shouldStopReelGeneration) {
+                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Generation Stopped by User')));
+                 break;
+              }
+              
+              String currentTopic = topicsToProcess[i];
+              String characterType = baseCharacter;
+              
+              // In multi-line mode, detect character from the topic line
+              if (_reelTopicMode == 'multi') {
+                 final lowerTopic = currentTopic.toLowerCase();
+                 if (lowerTopic.contains('girl') || lowerTopic.contains('she ') || lowerTopic.contains('her ')) {
+                    characterType = 'Girl';
+                 } else if (lowerTopic.contains('boy') || lowerTopic.contains('he ') || lowerTopic.contains('his ')) {
+                    characterType = 'Boy';
+                 } else {
+                    // Let AI decide based on the topic
+                    characterType = 'Character from the topic (Boy or Girl based on context)';
+                 }
+              } else if (isRandomChar && i > 0) {
+                 characterType = 'Random Character (Not the same as before if possible)';
+              }
+
+              List<Map<String, dynamic>> batchResults = [];
+              int retries = 0;
+              bool stepSuccess = false;
+
+              while (!stepSuccess && retries < 3) {
+                 if (_shouldStopReelGeneration) break;
+                 try {
+                    ReelTemplate? templateToUse;
+                    if (_state.selectedReelTemplateId != null) {
+                       try {
+                         templateToUse = _state.reelTemplates.firstWhere((t) => t.id == _state.selectedReelTemplateId);
+                       } catch (_) {}
+                    }
+
+                    // Generate 1 at a time
+                    batchResults = await _alignmentService.generateBatchReelContent(
+                       topic: currentTopic,
+                       characterType: characterType,
+                       model: 'gemini-2.5-flash',
+                       language: _state.reelLanguage ?? 'English',
+                       count: 1,
+                       scenesPerStory: _scenesPerStory, // User-selected number of scenes
+                       template: templateToUse,
+                       voiceCueEnabled: _globalVoiceCueEnabled,
+                       voiceCueLanguage: _voiceCueLanguage,
+                    );
+                    stepSuccess = true;
+                 } catch (e) {
+                    retries++;
+                    print('Gen Reel ${i+1} failed (Attempt $retries): $e');
+                    await Future.delayed(const Duration(seconds: 2));
+                 }
+              }
+              
+              if (stepSuccess && batchResults.isNotEmpty) {
+                   final reelData = batchResults.first;
+                   final title = reelData['title'] ?? '$topic (Var ${i + 1})';
+                   final content = reelData['content'] as List;
+
+                   // Force defaults
+                   for (var item in content) {
+                     if (item is Map) {
+                         item['active'] = true;
+                         if (item['visuals'] != null && item['visuals'] is List) {
+                            for (var v in (item['visuals'] as List)) {
+                               if (v is Map) v['active'] = true;
+                            }
+                         }
+                     }
+                   }
+
+                   // Generate AI voice style based on story content
+                   String generatedVoiceStyle = _state.globalVoiceStyle;
+                   try {
+                      final storyTexts = content.map((c) => c['text']?.toString() ?? '').toList();
+                      generatedVoiceStyle = await _alignmentService.generateVoiceStyle(
+                         storyTitle: title,
+                         storyTexts: storyTexts,
+                         language: _state.reelLanguage ?? 'English',
+                      );
+                   } catch (e) {
+                      print('[REEL] Voice style generation failed: $e');
+                   }
+
+                   final newProject = {
+                      'id': DateTime.now().millisecondsSinceEpoch + i,
+                      'name': title,
+                      'status': 'draft',
+                      'content': content,
+                      'voice_model': _state.globalVoiceModel,
+                      'voice_style': generatedVoiceStyle, // AI-generated style
+                      'voice_style_auto': true, // Flag to indicate AI-generated
+                      // Ensure we set the per-project default correctly
+                      'video_model': _reelVideoModel, // Flow UI model name
+                      'aspect_ratio': 'VIDEO_ASPECT_RATIO_PORTRAIT',
+                      'created_at': DateTime.now().toIso8601String(),
+                   };
+                   
+                   setState(() {
+                     _reelProjects.add(newProject);
+                     _state = _state.copyWith(reelProjects: _reelProjects);
+                   });
+                   _saveState();
+                   successCount++;
+              }
+           }
+        
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Generated $successCount / $_reelCount reels.')));
+      } catch (e) {
+         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      } finally {
+         if (mounted) setState(() { _isGeneratingReel = false; });
+      }
+  }
+
+  void _deleteReel(int index) {
+      setState(() {
+         _reelProjects.removeAt(index);
+         _state = _state.copyWith(reelProjects: _reelProjects);
+      });
+      _saveState();
+  }
+  
+  String _getReelVoiceScript(Map<String, dynamic> project) {
+    final content = project['content'] as List?;
+    if (content == null) return '';
+    return content
+        .where((s) => (s['active'] ?? true) && s['text'] != null && s['text'].toString().isNotEmpty)
+        .map((s) => s['text'].toString().trim())
+        .join('\n\n');
+  }
+
+  void _toggleMuteAll(int projectIndex, bool mute) {
+      final project = _reelProjects[projectIndex];
+      final content = project['content'] as List;
+      
+      for(var part in content) {
+          if (part['visuals'] != null) {
+              for(var v in part['visuals']) {
+                  v['is_muted'] = mute;
+              }
+          }
+      }
+      
+      setState(() {
+          _state = _state.copyWith(reelProjects: _reelProjects);
+      });
+      _saveState();
+  }
+
+  // --- Reel Pipeline Methods ---
+  
+  Future<void> _generateReelAudio(int projectIndex) async {
+    final project = _reelProjects[projectIndex];
+    final content = project['content'] as List;
+    final projectId = project['id'];
+
+     
+     setState(() {
+        project['status'] = 'audio_generating';
+        _state = _state.copyWith(reelProjects: _reelProjects);
+     });
+     
+     int successCount = 0;
+     
+     // Get organized reel paths - audios will go to reels/{name}/audios/
+     final reelPaths = await _getReelPaths(project);
+     final audioDir = reelPaths['audios']!;
+     
+     // Load keys before loop
+     await _ttsService.loadApiKeys();
+
+     // Process in batches of 5
+     const int batchSize = 5;
+     for (int i = 0; i < content.length; i += batchSize) {
+       final end = (i + batchSize < content.length) ? i + batchSize : content.length;
+       final batch = content.sublist(i, end);
+       final futures = <Future<void>>[];
+
+       for (int j = 0; j < batch.length; j++) {
+         final partIdx = i + j;
+         final part = batch[j];
+         
+         if (part['text'] == null) continue;
+         
+         // Skip if already generated
+         // Note: We check this inside the future to keep the loop synchronous structure clean, 
+         // but strictly speaking checking existence is fast.
+         
+         futures.add(() async {
+            if (part['audio_path'] != null && await File(part['audio_path']).exists()) {
+               successCount++;
+               return; 
+            }
+            
+            try {
+               final outputAudioPath = path.join(audioDir.path, 'reel_part_${partIdx}.wav');
+               final success = await _ttsService.generateTts(
+                  text: part['text'],
+                  voiceModel: project['voice_model'] ?? _state.globalVoiceModel ?? 'Zephyr',
+                  voiceStyle: project['voice_style'] ?? _state.globalVoiceStyle ?? 'friendly and engaging',
+                  outputPath: outputAudioPath,
+                  speechRate: 1.0, 
+               );
+               
+               if (success) {
+                   if (mounted) {
+                     setState(() {
+                       part['audio_path'] = outputAudioPath;
+                       // We don't trigger full state copy here heavily to avoid lagging UI in loop
+                     });
+                   }
+                   successCount++;
+               }
+            } catch (e) {
+               print('Error generating audio for part $partIdx: $e');
+            }
+         }());
+       }
+
+       await Future.wait(futures);
+       
+       // Update global state and save after each batch
+       if (mounted) {
+          setState(() {
+              _state = _state.copyWith(reelProjects: _reelProjects);
+          });
+       }
+       _saveState();
+     }
+     
+     setState(() {
+        project['status'] = 'audio_done';
+        _state = _state.copyWith(reelProjects: _reelProjects);
+     });
+     _saveState();
+  }
+
+  Future<void> _generateReelVideo(int projectIndex) async {
+     final project = _reelProjects[projectIndex];
+     final content = project['content'] as List;
+     final projectId = project['id'];
+     
+     setState(() {
+        project['status'] = 'video_generating';
+        _state = _state.copyWith(reelProjects: _reelProjects);
+     });
+
+     // Get organized reel paths - videos will go to reels/{name}/videoclips/
+     final reelPaths = await _getReelPaths(project);
+     final videoDir = reelPaths['videoclips']!;
+     print('[REEL] Videos will be saved to: ${videoDir.path}');
+
+     // Flatten visual list and create SceneData
+     List<SceneData> scenesToGen = [];
+     int tempIdCounter = DateTime.now().millisecondsSinceEpoch; // Base ID
+     
+     for(var part in content) {
+        if(part['visuals'] != null) {
+           for(var v in part['visuals']) {
+              if (v['active'] != false && (v['video_path'] == null || !File(v['video_path']).existsSync())) {
+                  final prompt = v['prompt'];
+                  if (prompt != null) {
+                     // Assign unique ID if not present (although we use map now)
+                     int vId = tempIdCounter++;
+                     _visualIdMap[vId] = v; // Map ID to visual object reference
+                     
+                     scenesToGen.add(SceneData(
+                        sceneId: vId,
+                        prompt: prompt,
+                        status: 'queued',
+                     ));
+                  }
+              }
+           }
+        }
+     }
+     
+     if (scenesToGen.isEmpty) {
+        setState(() {
+           project['status'] = 'video_done'; // Nothing to do
+           _state = _state.copyWith(reelProjects: _reelProjects);
+        });
+        _saveState();
+        return;
+     }
+
+     // Create Bulk Task (using global Flow UI model)
+     final task = BulkTask(
+        id: 'reel_task_$projectId',
+        name: project['name'] ?? 'Reel Task',
+        scenes: scenesToGen,
+        profile: 'Default', // Default profile
+        outputFolder: videoDir.path,
+        model: _reelVideoModel, // Use global reel model
+        aspectRatio: project['aspect_ratio'] ?? 'VIDEO_ASPECT_RATIO_PORTRAIT',
+     );
+     
+     // Start
+     try {
+       await _bulkExecutor.startTask(task);
+     } catch (e) {
+       print('Bulk Task Start Error: $e');
+        setState(() {
+           project['status'] = 'video_error';
+           _state = _state.copyWith(reelProjects: _reelProjects);
+        });
+     }
+  }
+
+  void _onReelTaskUpdate(BulkTask task) {
+     // Trigger UI update - sync scene statuses to visual objects
+     bool anyChanged = false;
+     
+     for(var scene in task.scenes) {
+        if (_visualIdMap.containsKey(scene.sceneId)) {
+           final visual = _visualIdMap[scene.sceneId]!;
+           
+           // Update status for live display
+           final oldStatus = visual['gen_status'];
+           if (oldStatus != scene.status) {
+              visual['gen_status'] = scene.status;
+              visual['gen_error'] = scene.error;
+              anyChanged = true;
+           }
+           
+           // Update video path when completed
+           if (scene.status == 'completed' && scene.videoPath != null) {
+              if (visual['video_path'] != scene.videoPath) {
+                 visual['video_path'] = scene.videoPath;
+                 anyChanged = true;
+              }
+           }
+        }
+     }
+     
+     // Update project status and UI
+     if (mounted) {
+        setState(() {
+           if (anyChanged) {
+              _state = _state.copyWith(reelProjects: _reelProjects);
+           }
+           
+           // Update project status if task done
+           if (task.status == TaskStatus.completed) {
+              final proj = _reelProjects.firstWhere((p) => 'reel_task_${p['id']}' == task.id, orElse: ()=> {});
+              if (proj.isNotEmpty) {
+                proj['status'] = 'video_done';
+                _saveState();
+              }
+           } else if (task.status == TaskStatus.running) {
+              final proj = _reelProjects.firstWhere((p) => 'reel_task_${p['id']}' == task.id, orElse: ()=> {});
+              if (proj.isNotEmpty && proj['status'] != 'video_generating') {
+                proj['status'] = 'video_generating';
+              }
+           }
+        });
+        
+        // Save completed videos periodically
+        if (anyChanged && task.completedScenes > 0) {
+           _saveState();
+        }
+     }
+  }
+    
+
+  void _showExportDialog(int index) {
+     showDialog(
+        context: context,
+        builder: (ctx) => LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+            final fontSize = isMobile ? 12.0 : 14.0;
+            final titleFontSize = isMobile ? 14.0 : 16.0;
+            
+            return StatefulBuilder(
+              builder: (context, setDialogState) {
+                return AlertDialog(
+                  title: Text('Export Reel Settings', style: TextStyle(fontSize: titleFontSize)),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(children: [
+                          Expanded(child: Text('Voice Script Volume:', style: TextStyle(fontSize: fontSize))),
+                          Text(_exportTtsVolume.toStringAsFixed(1), style: TextStyle(fontSize: fontSize)),
+                        ]),
+                        Slider(
+                          value: _exportTtsVolume,
+                          min: 0.0, max: 2.0,
+                          divisions: 20,
+                          onChanged: (v) => setDialogState(() => _exportTtsVolume = v),
+                        ),
+                        Row(children: [
+                          Expanded(child: Text('Video Sound Volume:', style: TextStyle(fontSize: fontSize))),
+                          Text(_exportVideoVolume.toStringAsFixed(1), style: TextStyle(fontSize: fontSize)),
+                        ]),
+                        Slider(
+                          value: _exportVideoVolume,
+                          min: 0.0, max: 2.0,
+                          divisions: 20,
+                          onChanged: (v) => setDialogState(() => _exportVideoVolume = v),
+                        ),
+                        Row(children: [
+                          Expanded(child: Text('Video Speed (Final):', style: TextStyle(fontSize: fontSize))),
+                          Text('${_exportPlaybackSpeed.toStringAsFixed(1)}x', style: TextStyle(fontSize: fontSize)),
+                        ]),
+                        Slider(
+                          value: _exportPlaybackSpeed,
+                          min: 0.5, max: 2.0,
+                          divisions: 15,
+                          onChanged: (v) => setDialogState(() => _exportPlaybackSpeed = v),
+                        ),
+                        const Divider(),
+                        Text('Export Method:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+                        const SizedBox(height: 8),
+                        SegmentedButton<String>(
+                          segments: [
+                            ButtonSegment(
+                              value: 'fast',
+                              label: Text('Fast', style: TextStyle(fontSize: fontSize)),
+                              icon: Icon(Icons.speed, size: isMobile ? 14 : 16),
+                            ),
+                            ButtonSegment(
+                              value: 'precise',
+                              label: Text('Precise', style: TextStyle(fontSize: fontSize)),
+                              icon: Icon(Icons.precision_manufacturing, size: isMobile ? 14 : 16),
+                            ),
+                          ],
+                          selected: {_reelExportMethod},
+                          onSelectionChanged: (v) => setDialogState(() => _reelExportMethod = v.first),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _reelExportMethod == 'fast' 
+                            ? 'Adjusts audio speed to match video' 
+                            : 'Adjusts video speed to match audio',
+                          style: TextStyle(fontSize: isMobile ? 10 : 11, color: Colors.grey.shade600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                     TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                     ElevatedButton(
+                        onPressed: () {
+                           Navigator.pop(ctx);
+                           _exportReel(index);
+                        },
+                        child: const Text('Export'),
+                     )
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      );
+  }
+
+  Future<void> _exportReel(int projectIndex) async {
+    final project = _reelProjects[projectIndex];
+    final content = project['content'] as List;
+    final projectId = project['id'];
+    
+    // Get organized reel paths - export goes to reels_output/
+    final reelPaths = await _getReelPaths(project);
+    final exportDir = reelPaths['export']!;
+    
+    // Sanitize filename: remove special chars AND non-ASCII chars for FFmpeg compatibility
+    final rawName = (project['name'] ?? 'reel_$projectId').toString();
+    // Replace non-ASCII chars with underscore, then remove invalid filename chars
+    final safeName = rawName
+        .replaceAll(RegExp(r'[^\x00-\x7F]'), '_')  // Replace non-ASCII with underscore
+        .replaceAll(RegExp(r'[<>:"/\\|?*\s]'), '_')  // Replace invalid chars and spaces
+        .replaceAll(RegExp(r'_+'), '_')  // Collapse multiple underscores
+        .replaceAll(RegExp(r'^_|_$'), ''); // Remove leading/trailing underscores
+    final finalName = safeName.isEmpty ? 'reel_$projectId' : safeName;
+    final outputFile = path.join(exportDir.path, '$finalName.mp4');
+    
+    // Start export progress tracking
+    setState(() {
+      project['status'] = 'exporting';
+      _isReelExporting = true;
+      _reelExportingIndex = projectIndex;
+      _reelExportProgress = 0.0;
+      _reelExportStep = 'Preparing...';
+      _state = _state.copyWith(reelProjects: _reelProjects);
+    });
+    
+    try {
+       // 1. Auto-create Alignment JSON
+       setState(() => _reelExportStep = 'Creating alignment...');
+       
+       final alignmentItems = <AlignmentItem>[];
+       for(int i=0; i<content.length; i++) {
+          final part = content[i];
+          final visuals = part['visuals'] as List?;
+          
+          List<VideoReference> vRefs = [];
+          if (visuals != null) {
+             for (int j=0; j<visuals.length; j++) {
+                if (visuals[j]['active'] != false) {
+                   // ID is implied by order or path? Use unique string
+                   vRefs.add(VideoReference(id: 'part_${i}_visual_${j}'));
+                }
+             }
+          }
+          
+          alignmentItems.add(AlignmentItem(
+             audioPartIndex: i,
+             text: part['text'] ?? '',
+             matchingVideos: vRefs,
+          ));
+       }
+       // Save to reel folder or output folder? User said "how it create on story default tab". 
+       // Main tab saves to project root usually. I'll save alongside the video for convenience.
+       final alignmentJsonPath = path.join(exportDir.path, '${finalName}_alignment.json');
+       await File(alignmentJsonPath).writeAsString(jsonEncode(alignmentItems.map((e) => e.toJson()).toList()));
+       print('Saved alignment JSON to $alignmentJsonPath');
+
+       // 2. Export with live progress updates
+       await _exportService.exportReel(
+          scenes: content,
+          outputPath: outputFile,
+          onProgress: (current, total, msg) {
+             if (mounted) {
+                setState(() {
+                   _reelExportProgress = total > 0 ? current / total : 0.0;
+                   _reelExportStep = msg;
+                });
+             }
+             print('[EXPORT] $msg ($current/$total)');
+          },
+          ttsVolume: _exportTtsVolume,
+          videoVolume: _exportVideoVolume,
+          method: _reelExportMethod,
+          playbackSpeed: _exportPlaybackSpeed,
+       );
+       
+       setState(() {
+        project['status'] = 'complete';
+        _state = _state.copyWith(reelProjects: _reelProjects);
+      });
+      _saveState();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('✓ Reel Exported: $finalName.mp4'),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(label: 'Open', onPressed: () async {
+             await OpenFilex.open(outputFile);
+          }),
+        ));
+      }
+    } catch (e) {
+       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Export Error: $e')));
+       setState(() {
+        project['status'] = 'export_failed';
+       });
+    } finally {
+       // Reset export progress state
+       setState(() {
+          _isReelExporting = false;
+          _reelExportingIndex = -1;
+          _reelExportProgress = 0.0;
+          _reelExportStep = '';
+       });
+    }
+  }
+  
+  Future<void> _playReelAudio(String? path) async {
+     if (path == null) return;
+     if (await File(path).exists()) {
+        await _audioPlayer.play(DeviceFileSource(path));
+     }
+  }
+
+
+  
+  String _getReelPrompts(Map<String, dynamic> project) {
+    final content = project['content'] as List?;
+    if (content == null) return '';
+    StringBuffer sb = StringBuffer();
+    for (var part in content) {
+       final visuals = part['visuals'] as List?;
+       if (visuals != null) {
+          for (var v in visuals) {
+             sb.writeln('- ${v['prompt']}');
+          }
+       }
+    }
+    return sb.toString();
+  }
+  
+  void _copyToClipboard(String text) {
+     Clipboard.setData(ClipboardData(text: text));
+     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied!')));
+  }
+
+  Widget _buildOutputFolderSection() {
+    final currentFolder = _customOutputFolder ?? 
+        widget.projectService.currentProject?.projectPath ?? 
+        'No folder selected';
+    
+    return Card(
+      color: Colors.blue.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.folder, size: 20, color: Colors.blue),
+                const SizedBox(width: 6),
+                const Text(
+                  'Output Folder',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _selectOutputFolder,
+                  icon: const Icon(Icons.folder_open, size: 16),
+                  label: const Text('Select', style: TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      currentFolder,
+                      style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Select output folder
+  Future<void> _selectOutputFolder() async {
+    try {
+      final result = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select Output Folder for Story Audio',
+      );
+
+      if (result != null) {
+        setState(() {
+          _customOutputFolder = result;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Output folder: ${path.basename(result)}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error selecting folder: $e')),
+      );
+    }
+  }
+
+  Widget _buildStoryScriptSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Story Script',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: _storyScriptController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'Enter your story script here...',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.all(8),
+                isDense: true,
+              ),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w300, fontFamily: 'Roboto'),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    value: _state.splitMode,
+                    decoration: const InputDecoration(
+                      labelText: 'Split Mode',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      isDense: true,
+                    ),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black87, fontFamily: 'Roboto'),
+                    items: const [
+                      DropdownMenuItem(value: 'numbered', child: Text('Numbered (1., 2., 3.)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black87, fontFamily: 'Roboto'))),
+                      DropdownMenuItem(value: 'line', child: Text('Line Breaks', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black87, fontFamily: 'Roboto'))),
+                      DropdownMenuItem(value: 'custom', child: Text('Custom Delimiter', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black87, fontFamily: 'Roboto'))),
+                      DropdownMenuItem(value: 'sentences', child: Text('Sentences', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300, color: Colors.black87, fontFamily: 'Roboto'))),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _state = _state.copyWith(splitMode: value);
+                        });
+                        _saveState();
+                      }
+                    },
+                  ),
+                ),
+                if (_state.splitMode == 'custom') ...[
+                  const SizedBox(width: 6),
+                  Expanded(
+                    flex: 1,
+                    child: TextField(
+                      controller: _customDelimiterController,
+                      decoration: const InputDecoration(
+                        labelText: 'Delimiter',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        isDense: true,
+                      ),
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w300, fontFamily: 'Roboto'),
+                      onChanged: (value) {
+                        _state = _state.copyWith(customDelimiter: value);
+                        _saveState();
+                      },
+                    ),
+                  ),
+                ],
+                if (_state.splitMode == 'sentences') ...[
+                  const SizedBox(width: 6),
+                  SizedBox(
+                    width: 100,
+                    child: TextField(
+                      controller: _sentencesPerSegmentController,
+                      decoration: const InputDecoration(
+                        labelText: 'Per Segment',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        isDense: true,
+                      ),
+                      style: const TextStyle(fontSize: 13),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final num = int.tryParse(value);
+                        if (num != null && num > 0) {
+                          setState(() {
+                            _sentencesPerSegment = num;
+                          });
+                          print('[SPLIT] Sentences per segment set to: $num');
+                        }
+                      },
+                    ),
+                  ),
+                ],
+                const SizedBox(width: 6),
+                ElevatedButton.icon(
+                  onPressed: _splitStoryScript,
+                  icon: const Icon(Icons.splitscreen, size: 16),
+                  label: const Text('Split', style: TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionPromptsSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Action Prompts',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadActionPrompts,
+                  icon: const Icon(Icons.file_open, size: 16),
+                  label: const Text('Load', style: TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: _actionPromptsController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'Enter video action prompts (one per line)...',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.all(8),
+                isDense: true,
+              ),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStoryPartsSection() {
+    if (_state.parts.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Story Parts (${_state.parts.length})',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _isGeneratingTts ? _stopGeneration : _generateAllTts,
+                  icon: _isGeneratingTts
+                      ? const Icon(Icons.stop, size: 16)
+                      : const Icon(Icons.play_arrow, size: 16),
+                  label: Text(_isGeneratingTts ? 'Stop' : 'Generate All', style: const TextStyle(fontSize: 12)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isGeneratingTts ? Colors.red : Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            if (_isGeneratingTts) LinearProgressIndicator(value: _progressValue),
+            const SizedBox(height: 6),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _state.parts.length,
+              itemBuilder: (context, index) => _buildPartCard(_state.parts[index], index),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Show dialog to edit part text
+  Future<void> _showEditPartDialog(int index) async {
+    final part = _state.parts[index];
+    final controller = TextEditingController(text: part.text);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Part ${part.index}'),
+        content: SizedBox(
+          width: 500,
+          child: TextField(
+            controller: controller,
+            maxLines: 10,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter text...',
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _state.parts[index] = part.copyWith(
+                  text: controller.text,
+                  status: 'idle', // Reset status
+                );
+              });
+              _saveState();
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPartCard(StoryAudioPart part, int index) {
+    IconData statusIcon;
+    Color statusColor;
+
+    switch (part.status) {
+      case 'success':
+        statusIcon = Icons.check_circle;
+        statusColor = Colors.green;
+        break;
+      case 'generating':
+        statusIcon = Icons.sync;
+        statusColor = Colors.blue;
+        break;
+      case 'error':
+        statusIcon = Icons.error;
+        statusColor = Colors.red;
+        break;
+      default:
+        statusIcon = Icons.pending;
+        statusColor = Colors.grey;
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(statusIcon, color: statusColor, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Part ${part.index}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 16, color: Colors.blue),
+                  onPressed: () => _showEditPartDialog(index),
+                  tooltip: 'Edit Text',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const Spacer(),
+                if (part.duration != null)
+                  Text(
+                    '${part.duration!.toStringAsFixed(1)}s',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Text(
+                part.text,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    value: part.voiceModel,
+                    decoration: const InputDecoration(
+                      labelText: 'Voice',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    ),
+                    items: VoiceModels.all.map((voice) {
+                      return DropdownMenuItem(value: voice, child: Text(voice));
+                    }).toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _state.parts[index] = part.copyWith(voiceModel: value);
+                        });
+                        _saveState();
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Style',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    ),
+                    controller: TextEditingController(text: part.voiceStyle),
+                    onChanged: (value) {
+                      _state.parts[index] = part.copyWith(voiceStyle: value);
+                      _saveState();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () => _generateSingleTts(index),
+                  icon: const Icon(Icons.refresh),
+                  tooltip: 'Regenerate',
+                ),
+                if (part.audioPath != null && File(part.audioPath!).existsSync())
+                  IconButton(
+                    onPressed: () => _playAudio(index),
+                    icon: Icon(
+                      (_currentlyPlayingIndex == index && _isPlaying)
+                          ? Icons.stop_circle
+                          : Icons.play_circle,
+                      color: (_currentlyPlayingIndex == index && _isPlaying)
+                          ? Colors.red
+                          : Colors.green,
+                    ),
+                    tooltip: (_currentlyPlayingIndex == index && _isPlaying)
+                        ? 'Stop'
+                        : 'Play',
+                  ),
+              ],
+            ),
+            if (part.error != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                'Error: ${part.error}',
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGlobalSettingsSection() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+        final labelFontSize = isMobile ? 11.0 : 14.0;
+        final titleFontSize = isMobile ? 13.0 : 16.0;
+        
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.all(isMobile ? 6 : 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Global Voice Settings',
+                  style: TextStyle(fontSize: titleFontSize, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: isMobile ? 4 : 6),
+                isMobile
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          value: _state.globalVoiceModel,
+                          decoration: InputDecoration(
+                            labelText: 'Voice',
+                            labelStyle: TextStyle(fontSize: labelFontSize),
+                            border: const OutlineInputBorder(),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            isDense: true,
+                          ),
+                          style: TextStyle(fontSize: labelFontSize, color: Colors.black),
+                          items: VoiceModels.all.map((voice) {
+                            return DropdownMenuItem(
+                              value: voice,
+                              child: Text(voice, style: TextStyle(fontSize: labelFontSize)),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _state = _state.copyWith(globalVoiceModel: value);
+                              });
+                              _saveState();
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Style',
+                            labelStyle: TextStyle(fontSize: labelFontSize),
+                            border: const OutlineInputBorder(),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            isDense: true,
+                          ),
+                          style: TextStyle(fontSize: labelFontSize),
+                          controller: TextEditingController(text: _state.globalVoiceStyle),
+                          onChanged: (value) {
+                            _state = _state.copyWith(globalVoiceStyle: value);
+                            _saveState();
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton.icon(
+                          onPressed: _applyGlobalSettings,
+                          icon: const Icon(Icons.done_all, size: 16),
+                          label: Text('Apply to All', style: TextStyle(fontSize: labelFontSize)),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: _state.globalVoiceModel,
+                            decoration: const InputDecoration(
+                              labelText: 'Voice',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: VoiceModels.all.map((voice) {
+                              return DropdownMenuItem(value: voice, child: Text(voice));
+                            }).toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _state = _state.copyWith(globalVoiceModel: value);
+                                });
+                                _saveState();
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              labelText: 'Style',
+                              border: OutlineInputBorder(),
+                            ),
+                            controller: TextEditingController(text: _state.globalVoiceStyle),
+                            onChanged: (value) {
+                              _state = _state.copyWith(globalVoiceStyle: value);
+                              _saveState();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton.icon(
+                          onPressed: _applyGlobalSettings,
+                          icon: const Icon(Icons.done_all),
+                          label: const Text('Apply to All'),
+                        ),
+                      ],
+                    ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAlignmentSection() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+        final labelFontSize = isMobile ? 11.0 : 14.0;
+        final titleFontSize = isMobile ? 13.0 : 16.0;
+        
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.all(isMobile ? 6 : 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Alignment',
+                  style: TextStyle(fontSize: titleFontSize, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: isMobile ? 4 : 6),
+                isMobile
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          value: _selectedAlignmentModel,
+                          decoration: InputDecoration(
+                            labelText: 'Model',
+                            labelStyle: TextStyle(fontSize: labelFontSize),
+                            border: const OutlineInputBorder(),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            isDense: true,
+                          ),
+                          style: TextStyle(fontSize: labelFontSize, color: Colors.black),
+                          items: [
+                            DropdownMenuItem(
+                              value: 'gemini-2.5-flash',
+                              child: Text('Gemini 2.5 Flash', style: TextStyle(fontSize: labelFontSize)),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _selectedAlignmentModel = value;
+                              });
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton.icon(
+                          onPressed: _isGeneratingAlignment ? null : _generateAlignment,
+                          icon: _isGeneratingAlignment
+                              ? const SizedBox(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Icon(Icons.auto_awesome, size: 16),
+                          label: Text(
+                            _isGeneratingAlignment ? 'Generating...' : 'Generate Alignment',
+                            style: TextStyle(fontSize: labelFontSize),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedAlignmentModel,
+                            decoration: const InputDecoration(
+                              labelText: 'Model',
+                              border: OutlineInputBorder(),
+                            ),
+                            items: const [
+                              DropdownMenuItem(value: 'gemini-2.5-flash', child: Text('Gemini 2.5 Flash')),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _selectedAlignmentModel = value;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        ElevatedButton.icon(
+                          onPressed: _isGeneratingAlignment ? null : _generateAlignment,
+                          icon: _isGeneratingAlignment
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Icon(Icons.auto_awesome),
+                          label: Text(_isGeneratingAlignment ? 'Generating...' : 'Generate Alignment'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+            if (_state.alignmentJson != null) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Text('Alignment JSON & Manual Edit:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.copy, size: 20),
+                    tooltip: 'Copy JSON',
+                    onPressed: _copyAlignmentJson,
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: _saveAlignmentJson,
+                    icon: const Icon(Icons.save, size: 16),
+                    label: const Text('Save Edits'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Container(
+                height: 300,
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: TextField(
+                  controller: _alignmentJsonController,
+                  maxLines: null,
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  decoration: const InputDecoration.collapsed(border: InputBorder.none, hintText: 'JSON...'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+      },
+    );
+  }
+
+  Widget _buildVideoSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Videos',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadVideos,
+                  icon: const Icon(Icons.video_library),
+                  label: const Text('Load Videos'),
+                ),
+              ],
+            ),
+            if (_state.videosPaths != null && _state.videosPaths!.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                '✓ ${_state.videosPaths!.length} videos loaded',
+                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExportSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Export',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(
+                  value: 'fast',
+                  label: Text('Fast'),
+                  icon: Icon(Icons.speed, size: 16),
+                ),
+                ButtonSegment(
+                  value: 'precise',
+                  label: Text('Precise'),
+                  icon: Icon(Icons.precision_manufacturing, size: 16),
+                ),
+              ],
+              selected: {_selectedExportMethod},
+              onSelectionChanged: (value) {
+                setState(() {
+                  _selectedExportMethod = value.first;
+                });
+              },
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _selectedExportMethod == 'fast'
+                ? 'Adjusts audio speed to match video'
+                : 'Adjusts video speed to match audio',
+              style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 12),
+            // Volume Controls
+            const Text('Audio Mixing', style: TextStyle(fontWeight: FontWeight.bold)),
+            Row(
+              children: [
+                const SizedBox(width: 8),
+                const SizedBox(width: 40, child: Text('TTS:', style: TextStyle(fontSize: 12))),
+                Expanded(
+                  child: Slider(
+                    value: _ttsVolume,
+                    min: 0.0,
+                    max: 5.0,
+                    divisions: 50,
+                    label: '${(_ttsVolume * 100).round()}%',
+                    onChanged: (v) => setState(() => _ttsVolume = v),
+                  ),
+                ),
+                Text('${(_ttsVolume * 100).round()}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              ],
+            ),
+             Row(
+              children: [
+                const SizedBox(width: 8),
+                const SizedBox(width: 40, child: Text('Video:', style: TextStyle(fontSize: 12))),
+                Expanded(
+                  child: Slider(
+                    value: _videoVolume,
+                    min: 0.0,
+                    max: 5.0,
+                    divisions: 50,
+                    label: '${(_videoVolume * 100).round()}%',
+                    onChanged: (v) => setState(() => _videoVolume = v),
+                  ),
+                ),
+                Text('${(_videoVolume * 100).round()}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (_isExporting) LinearProgressIndicator(value: _progressValue),
+            const SizedBox(height: 12),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: _isExporting ? null : _exportVideo,
+                icon: _isExporting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.video_file),
+                label: Text(_isExporting ? 'Exporting...' : 'Export Video'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusSection() {
+    return Card(
+      color: Colors.blue.shade50,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            const Icon(Icons.info, color: Colors.blue),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                _statusMessage,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Future<void> _cancelReelTask(int projectIndex) async {
+     final project = _reelProjects[projectIndex];
+     
+     // Update status to likely stop binding
+     setState(() {
+        project['status'] = 'paused';
+        _state = _state.copyWith(reelProjects: _reelProjects);
+     });
+     _saveState();
+  }
+
+  Future<void> _restartReelVideo(int projectIndex) async {
+     final project = _reelProjects[projectIndex];
+     final content = project['content'] as List;
+     
+     // Clear existing videos
+     for (var part in content) {
+        if (part['visuals'] != null) {
+           for (var v in part['visuals']) {
+              v['video_path'] = null;
+              v['download_url'] = null;
+              v['file_size'] = null;
+           }
+        }
+     }
+     
+     setState(() {
+         _state = _state.copyWith(reelProjects: _reelProjects);
+     });
+     _saveState();
+     await _generateReelVideo(projectIndex);
+  }
+  // --- Template Creator ---
+  
+  void _showTemplateCreatorDialog() {
+     final nameCtrl = TextEditingController();
+     final storyCtrl = TextEditingController();
+     final instructionCtrl = TextEditingController();
+     final youtubeUrlCtrl = TextEditingController(); // New
+     final systemPromptCtrl = TextEditingController(); // Filled by analysis
+     
+     bool isAnalyzing = false;
+     
+     showDialog(
+        context: context,
+        builder: (context) {
+           return StatefulBuilder(
+              builder: (ctx, setDialogState) {
+                 return AlertDialog(
+                    title: const Text("Create New Reel Template"),
+                    content: SizedBox(
+                       width: 700,
+                       height: 650,
+                       child: Column(
+                          children: [
+                             TextField(
+                                controller: nameCtrl,
+                                decoration: const InputDecoration(labelText: "Template Name", border: OutlineInputBorder()),
+                             ),
+                             const SizedBox(height: 16),
+                             Expanded(
+                                child: DefaultTabController(
+                                   length: 3, 
+                                   child: Builder(
+                                      builder: (tabCtx) {
+                                         return Column(
+                                            children: [
+                                               const TabBar(
+                                                  labelColor: Colors.blue,
+                                                  unselectedLabelColor: Colors.grey,
+                                                  tabs: [
+                                                     Tab(text: "Auto-Analyze Style"), 
+                                                     Tab(text: "YouTube Analyze"),
+                                                     Tab(text: "Manual Prompt")
+                                                  ],
+                                               ),
+                                               Expanded(
+                                                  child: TabBarView(
+                                                     children: [
+                                                        // Tab 1: Auto Analyze (Text)
+                                                        Padding(
+                                                           padding: const EdgeInsets.all(8.0),
+                                                           child: Column(
+                                                              children: [
+                                                                 const Text("Paste an example story/script and specific constraints. Gemini will generate the System Prompt for you.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                                                 const SizedBox(height: 8),
+                                                                 Expanded(
+                                                                    child: TextField(
+                                                                       controller: storyCtrl,
+                                                                       decoration: const InputDecoration(labelText: "Example Story / Script", border: OutlineInputBorder(), alignLabelWithHint: true),
+                                                                       maxLines: 8,
+                                                                    ),
+                                                                 ),
+                                                                 const SizedBox(height: 8),
+                                                                 TextField(
+                                                                    controller: instructionCtrl,
+                                                                    decoration: const InputDecoration(labelText: "Visual/Duration Instructions", border: OutlineInputBorder()),
+                                                                 ),
+                                                                 const SizedBox(height: 16),
+                                                                 ElevatedButton.icon(
+                                                                    onPressed: isAnalyzing ? null : () async {
+                                                                       if (storyCtrl.text.isEmpty && instructionCtrl.text.isEmpty) return;
+                                                                       
+                                                                       setDialogState(() => isAnalyzing = true);
+                                                                       try {
+                                                                          final result = await _alignmentService.generateTemplateFromExample(
+                                                                             model: 'gemini-2.5-flash',
+                                                                             exampleStory: storyCtrl.text,
+                                                                             additionalInstructions: instructionCtrl.text,
+                                                                          );
+                                                                          setDialogState(() {
+                                                                             systemPromptCtrl.text = result;
+                                                                             isAnalyzing = false;
+                                                                          });
+                                                                          // Use tabCtx to find DefaultTabController
+                                                                          DefaultTabController.of(tabCtx).animateTo(2); 
+                                                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Template Analyzed!")));
+                                                                       } catch (e) {
+                                                                          setDialogState(() => isAnalyzing = false);
+                                                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                                                                       }
+                                                                    },
+                                                                    icon: isAnalyzing ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.auto_fix_high),
+                                                                    label: const Text("Analyze & Generate Prompt"),
+                                                                 ),
+                                                              ],
+                                                           ),
+                                                        ),
+                                                        
+                                                        // Tab 2: YouTube Analyze
+                                                        Padding(
+                                                           padding: const EdgeInsets.all(8.0),
+                                                           child: Column(
+                                                              children: [
+                                                                 const Text("Paste a YouTube link. We'll extract the title, description, and transcript (if available) to analyze the style.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                                                 const SizedBox(height: 16),
+                                                                 TextField(
+                                                                    controller: youtubeUrlCtrl,
+                                                                    decoration: const InputDecoration(labelText: "YouTube Video URL", border: OutlineInputBorder(), prefixIcon: Icon(Icons.link)),
+                                                                 ),
+                                                                 const SizedBox(height: 8),
+                                                                 TextField(
+                                                                    controller: instructionCtrl,
+                                                                    decoration: const InputDecoration(labelText: "Additional Instructions (optional)", border: OutlineInputBorder()),
+                                                                 ),
+                                                                 const SizedBox(height: 16),
+                                                                 ElevatedButton.icon(
+                                                                    onPressed: isAnalyzing ? null : () async {
+                                                                       if (youtubeUrlCtrl.text.isEmpty) return;
+                                                                       
+                                                                       setDialogState(() => isAnalyzing = true);
+                                                                       try {
+                                                                          final result = await _alignmentService.generateTemplateFromYoutube(
+                                                                             model: 'gemini-2.5-flash',
+                                                                             youtubeUrl: youtubeUrlCtrl.text,
+                                                                             additionalInstructions: instructionCtrl.text,
+                                                                          );
+                                                                          setDialogState(() {
+                                                                             systemPromptCtrl.text = result;
+                                                                             isAnalyzing = false;
+                                                                          });
+                                                                          // Use tabCtx to find DefaultTabController
+                                                                          DefaultTabController.of(tabCtx).animateTo(2); 
+                                                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("YouTube Video Analyzed!")));
+                                                                       } catch (e) {
+                                                                          setDialogState(() => isAnalyzing = false);
+                                                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                                                                       }
+                                                                    },
+                                                                    icon: isAnalyzing ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.video_library),
+                                                                    label: const Text("Analyze YouTube Video"),
+                                                                 ),
+                                                              ],
+                                                           ),
+                                                        ),
+                                                        
+                                                        // Tab 3: Manual / Result
+                                                        Padding(
+                                                           padding: const EdgeInsets.all(8.0),
+                                                           child: Column(
+                                                              children: [
+                                                                 const Text("This is the actual System Prompt. Edit carefully.", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                                                                 const SizedBox(height: 8),
+                                                                 Expanded(
+                                                                    child: TextField(
+                                                                       controller: systemPromptCtrl,
+                                                                       decoration: const InputDecoration(border: OutlineInputBorder(), hintText: "System Prompt..."),
+                                                                       maxLines: null,
+                                                                       expands: true,
+                                                                       style: const TextStyle(fontFamily: 'Courier', fontSize: 12),
+                                                                    ),
+                                                                 ),
+                                                              ],
+                                                           ),
+                                                        ),
+                                                     ],
+                                                  ),
+                                               ),
+                                            ],
+                                         );
+                                      }
+                                   ),
+                                ),
+                             ),
+                          ],
+                       ),
+                    ),
+                    actions: [
+                       TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                       ElevatedButton(
+                          onPressed: () {
+                             if (nameCtrl.text.isEmpty || systemPromptCtrl.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Name and Prompt are required")));
+                                return;
+                             }
+                             
+                             final newTemplate = ReelTemplate(
+                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                name: nameCtrl.text,
+                                systemPrompt: systemPromptCtrl.text,
+                             );
+                             
+                             setState(() {
+                                final updatedTemplates = List<ReelTemplate>.from(_state.reelTemplates)..add(newTemplate);
+                                _state = _state.copyWith(
+                                    reelTemplates: updatedTemplates,
+                                    selectedReelTemplateId: newTemplate.id
+                                );
+                             });
+                             _saveState();
+                             Navigator.pop(context);
+                          },
+                          child: const Text("Save Template"),
+                       ),
+                    ],
+                 );
+              },
+           );
+        },
+     );
+  }
+
+  Future<void> _exportTemplate() async {
+     final templateId = _state.selectedReelTemplateId;
+     if (templateId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No custom template selected")));
+        return;
+     }
+
+     final template = _state.reelTemplates.firstWhere((t) => t.id == templateId, orElse: () => ReelTemplate(id: '', name: '', systemPrompt: ''));
+     if (template.id.isEmpty) return;
+
+     try {
+       // Just save to Downloads or App Dir for simplicity if file_picker too complex for now,
+       // but file_picker is better. I'll assume I can't easily add it via multi_replace if imports missing.
+       // ACTUALLY, I can't guarantee `file_picker` import is present at top.
+       // I'll use `_projectService` path or `_customOutputFolder` if available, else standard Location.
+       
+       final dir = _customOutputFolder ?? widget.projectService.currentProject?.projectPath ?? Directory.current.path;
+       final path = '$dir/${template.name.replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')}_template.json';
+       final file = File(path);
+       await file.writeAsString(jsonEncode(template.toJson()));
+       
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Exported to: $path")));
+       // Open folder
+       Process.run('explorer', ['/select,', path]); // Windows specific selection
+       
+     } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Export failed: $e")));
+     }
+  }
+
+  Future<void> _importTemplate() async {
+     try {
+        final result = await FilePicker.platform.pickFiles(
+           type: FileType.custom,
+           allowedExtensions: ['json'],
+        );
+        
+        if (result != null && result.files.single.path != null) {
+           final file = File(result.files.single.path!);
+           final jsonStr = await file.readAsString();
+           final json = jsonDecode(jsonStr);
+           
+           final newTemplate = ReelTemplate.fromJson(json);
+           // Generate new ID to avoid conflict? Or keep?
+           // Better generate new ID to be safe
+           final importedTemplate = ReelTemplate(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              name: '${newTemplate.name} (Imported)',
+              systemPrompt: newTemplate.systemPrompt
+           );
+           
+           setState(() {
+              final updatedTemplates = List<ReelTemplate>.from(_state.reelTemplates)..add(importedTemplate);
+              _state = _state.copyWith(
+                 reelTemplates: updatedTemplates,
+                 selectedReelTemplateId: importedTemplate.id
+              );
+           });
+           _saveState();
+           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Template Imported!")));
+        }
+     } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Import failed: $e")));
+     }
+  }
+
+  void _deleteAllData() {
+    _showDeleteConfirmationDialog();
+  }
+
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete All Data'),
+          content: const Text(
+            'Are you sure you want to delete all generated data and reset the project? This action cannot be undone.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Add your delete logic here
+                setState(() {
+                   // _state.reelProjects.clear();
+                   // _state.reelTemplates.clear();
+                   // _saveState();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Regenerate a single visual scene within a reel
+  Future<void> _regenerateSingleVisual(int reelIndex, int partIndex, int visualIndex) async {
+    if (reelIndex >= _reelProjects.length) return;
+    
+    final project = _reelProjects[reelIndex];
+    final content = project['content'] as List?;
+    if (content == null || partIndex >= content.length) return;
+    
+    final part = content[partIndex];
+    final visuals = part['visuals'] as List?;
+    if (visuals == null || visualIndex >= visuals.length) return;
+    
+    final visual = visuals[visualIndex];
+    final prompt = visual['prompt'] as String?;
+    if (prompt == null || prompt.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No prompt found for this visual'))
+      );
+      return;
+    }
+    
+    // Clear the video for this visual and set generating status
+    setState(() {
+      visual['video_path'] = null;
+      visual['gen_status'] = 'generating';
+      _state = _state.copyWith(reelProjects: _reelProjects);
+    });
+    _saveState();
+    
+    // Create scene ID and register in visualIdMap for live updates
+    final sceneId = DateTime.now().millisecondsSinceEpoch;
+    _visualIdMap[sceneId] = visual;
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Regenerating Visual ${partIndex + 1}.${visualIndex + 1}...'))
+    );
+    
+    // Get the same output folder as main generation: reels/reelName/videoclips/
+    final reelPaths = await _getReelPaths(project);
+    final videoDir = reelPaths['videoclips']!.path;
+    
+    // Create a single-scene task for just this visual
+    final scene = SceneData(
+      sceneId: sceneId,
+      prompt: prompt,
+      status: 'queued',
+    );
+    
+    // Use same task ID format as main generation so callback can find it
+    final taskId = 'reel_task_${project['id']}';
+    
+    final task = BulkTask(
+      id: 'regen_${sceneId}', // Unique ID for this regen
+      name: (project['name'] as String? ?? 'Untitled_Reel'), // Use reel name
+      scenes: [scene],
+      profile: 'Default',
+      model: _reelVideoModel,
+      aspectRatio: project['aspect_ratio'] ?? 'VIDEO_ASPECT_RATIO_PORTRAIT',
+      outputFolder: videoDir, // Use videoclips folder
+      scheduleType: TaskScheduleType.immediate,
+    );
+    
+    print('[REGENERATE] Video will be saved to: $videoDir');
+    
+    // Execute the task - the _onReelTaskUpdate callback will handle updates
+    try {
+      await _bulkExecutor.startTask(task);
+      
+      // The callback should have updated visual['video_path'] already
+      // But let's verify and update UI
+      if (scene.videoPath != null && await File(scene.videoPath!).exists()) {
+        setState(() {
+          visual['video_path'] = scene.videoPath;
+          visual['gen_status'] = 'completed';
+          _state = _state.copyWith(reelProjects: _reelProjects);
+        });
+        _saveState();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('✓ Visual ${partIndex + 1}.${visualIndex + 1} regenerated!'))
+        );
+      } else if (visual['video_path'] != null) {
+        // Callback already set the path
+        setState(() {
+          visual['gen_status'] = 'completed';
+          _state = _state.copyWith(reelProjects: _reelProjects);
+        });
+        _saveState();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('✓ Visual ${partIndex + 1}.${visualIndex + 1} regenerated!'))
+        );
+      } else {
+        print('[REGENERATE] Video not found. Scene videoPath: ${scene.videoPath}');
+        
+        setState(() {
+          visual['gen_status'] = 'failed';
+          visual['gen_error'] = scene.error ?? 'Video file not found after generation';
+          _state = _state.copyWith(reelProjects: _reelProjects);
+        });
+        _saveState();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('✗ Visual ${partIndex + 1}.${visualIndex + 1} - Video not found'))
+        );
+      }
+    } catch (e) {
+      print('[REGENERATE] Error: $e');
+      setState(() {
+        visual['gen_status'] = 'failed';
+        visual['gen_error'] = e.toString();
+        _state = _state.copyWith(reelProjects: _reelProjects);
+      });
+      _saveState();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'))
+      );
+    }
+  }
+
+  /// Regenerate all failed or missing videos in a reel
+  Future<void> _regenerateFailedVideos(int reelIndex) async {
+    if (reelIndex >= _reelProjects.length) return;
+    
+    final project = _reelProjects[reelIndex];
+    final content = project['content'] as List?;
+    if (content == null) return;
+    
+    // Find all visuals that need regeneration
+    final toRegenerate = <Map<String, int>>[];
+    
+    for (int partIdx = 0; partIdx < content.length; partIdx++) {
+      final part = content[partIdx];
+      final visuals = part['visuals'] as List?;
+      if (visuals == null) continue;
+      
+      for (int visualIdx = 0; visualIdx < visuals.length; visualIdx++) {
+        final visual = visuals[visualIdx];
+        if (visual['active'] != false && visual['video_path'] == null) {
+          toRegenerate.add({'part': partIdx, 'visual': visualIdx});
+        }
+      }
+    }
+    
+    if (toRegenerate.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No failed or missing videos to regenerate'))
+      );
+      return;
+    }
+    
+    // Confirm with user
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Regenerate Failed Videos'),
+        content: Text('Regenerate ${toRegenerate.length} failed/missing videos?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Regenerate'),
+          ),
+        ],
+      ),
+    );
+    
+    if (confirm != true) return;
+    
+    // Regenerate each one
+    for (int i = 0; i < toRegenerate.length; i++) {
+      final item = toRegenerate[i];
+      final partIdx = item['part']!;
+      final visualIdx = item['visual']!;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Regenerating ${i + 1}/${toRegenerate.length}...'), duration: const Duration(seconds: 1))
+      );
+      
+      await _regenerateSingleVisual(reelIndex, partIdx, visualIdx);
+      
+      // Small delay between regenerations
+      if (i < toRegenerate.length - 1) {
+        await Future.delayed(const Duration(seconds: 2));
+      }
+    }
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('✓ Completed regenerating ${toRegenerate.length} videos'))
+    );
+  }
+
+  /// Helper to build compact status chips for progress display
+  Widget _buildStatusChip(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withOpacity(0.5), width: 1),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+} // End Block
+
+

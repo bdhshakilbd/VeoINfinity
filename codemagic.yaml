@@ -1,0 +1,155 @@
+workflows:
+  # iOS Build Workflow
+  ios-workflow:
+    name: iOS Build
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.yourcompany.veo3another" # Change this!
+        APP_NAME: "Veo3 Another"
+    
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      
+      - name: Install CocoaPods dependencies
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      
+      - name: Build iOS (unsigned for testing)
+        script: |
+          flutter build ios --release --no-codesign
+      
+      # Uncomment for signed build (requires certificates in Codemagic UI)
+      # - name: Build signed iOS IPA
+      #   script: |
+      #     flutter build ipa --release
+    
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - build/ios/ipa/*.ipa
+    
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com # Change this!
+        notify:
+          success: true
+          failure: true
+
+  # macOS Build Workflow
+  macos-workflow:
+    name: macOS Build
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      vars:
+        APP_NAME: "Veo3 Another"
+    
+    scripts:
+      - name: Enable macOS desktop support
+        script: |
+          flutter config --enable-macos-desktop
+      
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      
+      - name: Build macOS app
+        script: |
+          flutter build macos --release
+      
+      - name: Create DMG installer (optional)
+        script: |
+          # Install create-dmg tool
+          brew install create-dmg
+          
+          # Create DMG
+          cd build/macos/Build/Products/Release
+          create-dmg \
+            --volname "$APP_NAME Installer" \
+            --window-pos 200 120 \
+            --window-size 800 400 \
+            --icon-size 100 \
+            --app-drop-link 600 185 \
+            "$APP_NAME.dmg" \
+            "$APP_NAME.app" || true
+      
+      - name: Create ZIP archive
+        script: |
+          cd build/macos/Build/Products/Release
+          zip -r "$APP_NAME.zip" "$APP_NAME.app"
+    
+    artifacts:
+      - build/macos/Build/Products/Release/*.app
+      - build/macos/Build/Products/Release/*.dmg
+      - build/macos/Build/Products/Release/*.zip
+    
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com # Change this!
+        notify:
+          success: true
+          failure: true
+
+  # Combined iOS + macOS Build (runs both)
+  all-platforms:
+    name: Build iOS + macOS
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.yourcompany.veo3another"
+        APP_NAME: "Veo3 Another"
+    
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      
+      # iOS Build
+      - name: Install iOS CocoaPods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      
+      - name: Build iOS
+        script: |
+          flutter build ios --release --no-codesign
+      
+      # macOS Build
+      - name: Enable macOS support
+        script: |
+          flutter config --enable-macos-desktop
+      
+      - name: Build macOS
+        script: |
+          flutter build macos --release
+      
+      - name: Package macOS
+        script: |
+          cd build/macos/Build/Products/Release
+          zip -r "$APP_NAME-macOS.zip" "$APP_NAME.app"
+    
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - build/macos/Build/Products/Release/*.app
+      - build/macos/Build/Products/Release/*.zip
+    
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com # Change this!
+        notify:
+          success: true
+          failure: true
