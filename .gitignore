@@ -1,0 +1,48 @@
+# Flutter/Dart build outputs
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Build artifacts (except the final installer)
+*.dll
+*.exe
+!installer_output/*.exe
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+
+# FFmpeg (large binaries - download separately)
+ffmpeg.exe
+ffprobe.exe
+
+# WebView2 installer (download separately)
+MicrosoftEdgeWebview2Setup.exe
+
+# User data
+profiles/
+v_output/
+story_frames/
+
+# Inno Setup temp files
+installer_output/*.tmp
+installer_output/*.bak
+# Exclude all EXE files 
+*.exe 
+Output/*.exe 
