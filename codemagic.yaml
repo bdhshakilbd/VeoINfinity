@@ -74,6 +74,10 @@ workflows:
           
           # Create DMG
           cd build/macos/Build/Products/Release
+          
+          # Rename output app to match desired name
+          mv veo3_another.app "$APP_NAME.app" || true
+          
           create-dmg \
             --volname "$APP_NAME Installer" \
             --window-pos 200 120 \
@@ -86,6 +90,10 @@ workflows:
       - name: Create ZIP archive
         script: |
           cd build/macos/Build/Products/Release
+          # Rename if not already renamed (in case create-dmg step failed/skipped)
+          if [ -d "veo3_another.app" ]; then
+            mv veo3_another.app "$APP_NAME.app"
+          fi
           zip -r "$APP_NAME.zip" "$APP_NAME.app"
     
     artifacts:
@@ -140,6 +148,7 @@ workflows:
       - name: Package macOS
         script: |
           cd build/macos/Build/Products/Release
+          mv veo3_another.app "$APP_NAME.app" || true
           zip -r "$APP_NAME-macOS.zip" "$APP_NAME.app"
     
     artifacts:
