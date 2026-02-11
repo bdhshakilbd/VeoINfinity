@@ -1,0 +1,894 @@
+[
+  {
+    "id": "001",
+    "visual_prompt": "A classic 2D cartoon shot where [CHAR_SPIKE] stands by [OBJ_GRILL] in [LOC_BACKYARD], vigorously grinding [OBJ_PEPPER] onto [OBJ_STEAK].",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A black, round charcoal barbecue grill on legs.",
+      "A tall, red wooden pepper grinder.",
+      "A large, thick cut of red raw meat with a T-bone.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "002",
+    "visual_prompt": "A cel-animated close-up of [CHAR_SPIKE] hugging [CHAR_TYKE] affectionately in [LOC_BACKYARD], while holding [OBJ_PEPPER].",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A small, cute grey puppy, son of Spike, usually wearing a red collar.",
+      "A tall, red wooden pepper grinder.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "003",
+    "visual_prompt": "A vibrant cartoon scene in [LOC_BACKYARD] where [CHAR_TOM] is perched high on a tree branch, holding a [OBJ_ROPE] to swing down.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A thick brown rope used for climbing or swinging.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "004",
+    "visual_prompt": "A wide shot in [LOC_BACKYARD] showing [CHAR_TOM] swinging on [OBJ_ROPE] towards [OBJ_TABLE], attempting to snatch food.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A thick brown rope used for climbing or swinging.",
+      "A dining table covered with a checkered or white tablecloth.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "005",
+    "visual_prompt": "A classic animation frame in [LOC_BACKYARD] where [CHAR_SPIKE] notices [OBJ_STEAK] is missing from [OBJ_GRILL] and looks confused.",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A large, thick cut of red raw meat with a T-bone.",
+      "A black, round charcoal barbecue grill on legs.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "006",
+    "visual_prompt": "A dynamic cartoon shot of [CHAR_TOM] swinging back up with [OBJ_STEAK] in his mouth, high above [LOC_BACKYARD].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A large, thick cut of red raw meat with a T-bone.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "007",
+    "visual_prompt": "A scene in [LOC_BACKYARD] where [CHAR_TOM] runs across a wall holding a baguette, balancing like a tightrope walker.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "008",
+    "visual_prompt": "A humorous cartoon moment in [LOC_POOL] where [CHAR_TOM] dives from a board but crashes onto the pavement because there is no water.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A blue swimming pool with a diving board in a backyard setting."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "009",
+    "visual_prompt": "A shot in [LOC_POOL] showing [CHAR_TOM] flat on the surface of the water, dazed after a belly flop.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A blue swimming pool with a diving board in a backyard setting."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "010",
+    "visual_prompt": "A cheerful scene in [LOC_BACKYARD] where [CHAR_SPIKE] is sitting at [OBJ_TABLE] preparing to eat [OBJ_STEAK] with a knife and fork.",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A dining table covered with a checkered or white tablecloth.",
+      "A large, thick cut of red raw meat with a T-bone.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "011",
+    "visual_prompt": "A classic gag shot in [LOC_BACKYARD] showing a line of ants marching away with the entire [OBJ_TABLE] setup, including food.",
+    "entities_in_this_scene": [
+      "A dining table covered with a checkered or white tablecloth.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "012",
+    "visual_prompt": "A close-up in [LOC_BACKYARD] of a single ant carrying a massive piece of food, displaying exaggerated strength.",
+    "entities_in_this_scene": [
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "013",
+    "visual_prompt": "A scene in [LOC_BACKYARD] where [CHAR_SPIKE] looks down at the empty spot where [OBJ_TABLE] was, looking baffled.",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "014",
+    "visual_prompt": "A technicolor shot in [LOC_CASTLE] showing [CHAR_JERRY] wearing a musketeer tabard, standing next to a large wedge of [OBJ_CHEESE].",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A yellow wedge of Swiss cheese with holes.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "015",
+    "visual_prompt": "A dynamic action frame in [LOC_CASTLE] where [CHAR_TOM] thrusts his [OBJ_SWORD] towards [CHAR_JERRY].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A thin, steel fencing rapier with a hand guard.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "016",
+    "visual_prompt": "A funny cartoon moment in [LOC_CASTLE] showing [CHAR_TOM] flattened on the floor after tripping, his [OBJ_SWORD] bent.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A thin, steel fencing rapier with a hand guard.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "017",
+    "visual_prompt": "A scene in [LOC_CASTLE] where [CHAR_NIBBLES] and [CHAR_JERRY] are carrying a stack of [OBJ_DISHES] away.",
+    "entities_in_this_scene": [
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "018",
+    "visual_prompt": "A shot in [LOC_CASTLE] where [CHAR_TOM] catches a stack of falling [OBJ_DISHES] on his foot and head.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "019",
+    "visual_prompt": "A classic cartoon pose in [LOC_CASTLE] with [CHAR_TOM] balancing [OBJ_DISHES] on all limbs while holding [OBJ_SWORD].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A thin, steel fencing rapier with a hand guard.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "020",
+    "visual_prompt": "A scene outside [LOC_CASTLE] showing [CHAR_TOM] running across a drawbridge while still balancing [OBJ_DISHES].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "021",
+    "visual_prompt": "A humorous frame in [LOC_CASTLE] where [CHAR_JERRY] drops tacks on the floor behind a curtain.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "022",
+    "visual_prompt": "A painful gag scene in [LOC_CASTLE] where [CHAR_TOM] steps on tacks and screams in silence, hopping on one foot.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "023",
+    "visual_prompt": "A close-up in [LOC_CASTLE] of [CHAR_TOM] clutching his foot, face red with pain.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "024",
+    "visual_prompt": "A shot in [LOC_CASTLE] showing [CHAR_TOM] trying to walk silently with bandaged feet past a sleeping guard.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "025",
+    "visual_prompt": "A scene in [LOC_CASTLE] where [CHAR_JERRY] is hiding inside a wedge of [OBJ_CHEESE] on a table.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A yellow wedge of Swiss cheese with holes.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "026",
+    "visual_prompt": "A frame in [LOC_CASTLE] where [CHAR_TOM] looks angrily at the [OBJ_CHEESE], suspecting [CHAR_JERRY] is inside.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A yellow wedge of Swiss cheese with holes.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "027",
+    "visual_prompt": "A shot in [LOC_BEDROOM] showing [CHAR_KING] sleeping in a large bed while [CHAR_TOM] tries to catch [CHAR_JERRY] on the pillow.",
+    "entities_in_this_scene": [
+      "A large human king with red hair and a crown, sleeping in a bed.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "028",
+    "visual_prompt": "A suspenseful moment in [LOC_BEDROOM] where [CHAR_TOM] hangs from the ceiling above [CHAR_KING].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A large human king with red hair and a crown, sleeping in a bed."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "029",
+    "visual_prompt": "A scene in [LOC_CASTLE] where [CHAR_TOM] fights an empty suit of armor that [CHAR_JERRY] is controlling.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "030",
+    "visual_prompt": "A funny frame in [LOC_CASTLE] where [CHAR_TOM] slices the armor in half with his [OBJ_SWORD], revealing [CHAR_JERRY].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A thin, steel fencing rapier with a hand guard.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "031",
+    "visual_prompt": "A close-up in [LOC_BEDROOM] of [CHAR_JERRY] using clothespins on [CHAR_KING]'s nose to stop his snoring.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A large human king with red hair and a crown, sleeping in a bed."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "032",
+    "visual_prompt": "A shot in [LOC_CASTLE] where [CHAR_TOM] catches [CHAR_JERRY] on the tip of his [OBJ_SWORD].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A thin, steel fencing rapier with a hand guard.",
+      "The interior of a stone castle with high ceilings, large curtains, and banquet tables."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "033",
+    "visual_prompt": "A scene in [LOC_KITCHEN] where [CHAR_TOM] is drinking from [OBJ_MILK] bottle while [CHAR_JERRY] and [CHAR_BABY] watch from a counter.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "034",
+    "visual_prompt": "A frame in [LOC_KITCHEN] showing [CHAR_BABY] crawling across the floor unsupervised.",
+    "entities_in_this_scene": [
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "035",
+    "visual_prompt": "A frantic moment in [LOC_KITCHEN] where [CHAR_TOM] rushes to catch [CHAR_BABY] before it falls.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "036",
+    "visual_prompt": "A scene in [LOC_LIVING_ROOM] where [CHAR_JEANNIE] is lying on the floor talking on the telephone, ignoring [CHAR_BABY].",
+    "entities_in_this_scene": [
+      "A teenage human babysitter with blonde hair in a ponytail, wearing a pink top and skirt, often on the phone.",
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "037",
+    "visual_prompt": "A shot in [LOC_BEDROOM] showing [CHAR_BABY] climbing out of its crib while [CHAR_TOM] sleeps nearby.",
+    "entities_in_this_scene": [
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "038",
+    "visual_prompt": "A funny cartoon moment in [LOC_KITCHEN] where [CHAR_BABY] crawls onto a high shelf and [CHAR_JERRY] tries to pull him back by the [OBJ_DIAPER].",
+    "entities_in_this_scene": [
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A white cloth diaper fastened with a safety pin.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "039",
+    "visual_prompt": "A dynamic shot in [LOC_KITCHEN] showing [CHAR_TOM] holding up a shelf to prevent [CHAR_BABY] from falling.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A human baby with a single curl of blonde hair, wearing a white diaper.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "040",
+    "visual_prompt": "A scene in [LOC_BEDROOM] where [CHAR_TOM] gently tucks [CHAR_BABY] back into the crib.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A human baby with a single curl of blonde hair, wearing a white diaper."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "041",
+    "visual_prompt": "A frame in [LOC_KITCHEN] where [CHAR_TOM] pours [OBJ_MILK] into glasses for [CHAR_JERRY] and himself.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "042",
+    "visual_prompt": "A humorous shot in [LOC_KITCHEN] where [CHAR_TOM] sits on a basket, unknowingly trapping [CHAR_JERRY] underneath.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "043",
+    "visual_prompt": "A scene in [LOC_KITCHEN] showing [CHAR_TOM] drinking [OBJ_MILK] and realizing something is wrong.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "044",
+    "visual_prompt": "A gag in [LOC_KITCHEN] where [CHAR_TOM] is launched into the air by an ironing board mechanism.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "045",
+    "visual_prompt": "A shot in [LOC_KITCHEN] of [CHAR_TOM] looking dazed after crashing into the ceiling.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "046",
+    "visual_prompt": "A colorful scene on [LOC_BEACH] showing [CHAR_TOM] carrying beach gear and walking past [CHAR_TOODLES].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "047",
+    "visual_prompt": "A frame on [LOC_BEACH] where [CHAR_JERRY] is sunbathing on a green towel wearing sunglasses.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "048",
+    "visual_prompt": "A shot on [LOC_BEACH] where [CHAR_TOM] sets up a large [OBJ_UMBRELLA] over his spot.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A colorful beach umbrella, often striped.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "049",
+    "visual_prompt": "A funny moment on [LOC_BEACH] where [CHAR_TOM] unknowingly buries [CHAR_JERRY] in the sand while digging.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "050",
+    "visual_prompt": "A scene on [LOC_BEACH] where [CHAR_JERRY] shakes sand off his body and looks annoyed at [CHAR_TOM].",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "051",
+    "visual_prompt": "A romantic cartoon shot on [LOC_BEACH] of [CHAR_TOM] flirting with [CHAR_TOODLES] under the [OBJ_UMBRELLA].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A colorful beach umbrella, often striped.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "052",
+    "visual_prompt": "A frame on [LOC_BEACH] where [CHAR_BUTCH] appears, flexing his muscles to impress [CHAR_TOODLES].",
+    "entities_in_this_scene": [
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "053",
+    "visual_prompt": "A competitive scene on [LOC_BEACH] where [CHAR_TOM] tries to lift heavy [OBJ_WEIGHTS] to outdo [CHAR_BUTCH].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "Heavy lifting weights with blue circular plates.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "054",
+    "visual_prompt": "A gag on [LOC_BEACH] showing [CHAR_TOM] struggling and turning red as he lifts the [OBJ_WEIGHTS].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "Heavy lifting weights with blue circular plates.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "055",
+    "visual_prompt": "A shot on [LOC_BEACH] where [CHAR_BUTCH] effortlessly lifts the [OBJ_WEIGHTS] with one finger.",
+    "entities_in_this_scene": [
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "Heavy lifting weights with blue circular plates.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "056",
+    "visual_prompt": "A funny cartoon moment on [LOC_BEACH] where [CHAR_TOM] gets tangled in a chest expander spring.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "057",
+    "visual_prompt": "A scene on [LOC_BEACH] showing [CHAR_JERRY] eating a banana and tossing the peel onto [CHAR_TOM]'s towel.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "058",
+    "visual_prompt": "A slapstick frame on [LOC_BEACH] where [CHAR_TOM] slips on the banana peel and crashes into the sand.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sandy beach with blue ocean water and bright sunlight."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "059",
+    "visual_prompt": "A scene in [LOC_LIVING_ROOM] showing [CHAR_TOM] putting vanishing cream on his hand, making it disappear.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "060",
+    "visual_prompt": "A shot in [LOC_LIVING_ROOM] where invisible [CHAR_JERRY] cuts off [CHAR_TOM]'s tail fur with scissors.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "061",
+    "visual_prompt": "A funny frame in [LOC_LIVING_ROOM] showing [CHAR_TOM] screaming as he realizes his tail is shaved.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "062",
+    "visual_prompt": "A scene in [LOC_LIVING_ROOM] where [CHAR_TOM] chases an invisible [CHAR_JERRY] around the furniture.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "063",
+    "visual_prompt": "A shot in [LOC_LIVING_ROOM] showing [CHAR_TOM] getting hit in the face by a shovel wielded by an invisible force.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "064",
+    "visual_prompt": "A humorous moment in [LOC_LIVING_ROOM] where [CHAR_TOM] peers into a mouse hole and gets poked in the eye.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "065",
+    "visual_prompt": "A classic cartoon scene in [LOC_LIVING_ROOM] where [CHAR_TOM] runs headfirst into a wall painted to look like a door.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "066",
+    "visual_prompt": "A frame in [LOC_LIVING_ROOM] showing [CHAR_TOM] crumpled on the floor with birds circling his head after the impact.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "067",
+    "visual_prompt": "A romantic scene in [LOC_BACKYARD] where [CHAR_TOM] presents a bouquet of flowers to [CHAR_TOODLES].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "068",
+    "visual_prompt": "A shot in [LOC_BACKYARD] showing a massive heart-shaped floral arrangement from [CHAR_BUTCH] overshadowing [CHAR_TOM]'s flowers.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "069",
+    "visual_prompt": "A funny frame in [LOC_BACKYARD] where [CHAR_TOM] looks defeated holding his tiny wilting flower.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "070",
+    "visual_prompt": "A scene in [LOC_BACKYARD] where [CHAR_TOM] offers a small bottle of perfume to [CHAR_TOODLES].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "071",
+    "visual_prompt": "A comedic shot in [LOC_BACKYARD] of a giant tanker truck driven by [CHAR_BUTCH] labeled 'Perfume'.",
+    "entities_in_this_scene": [
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "Various vehicles, including a small black jalopy and a long red convertible.",
+      "A sunny suburban backyard with a stone patio, brick barbecue pit, and green grass."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "072",
+    "visual_prompt": "A frame in [LOC_LIVING_ROOM] showing [CHAR_TOM] signing a contract with a quill pen, looking depressed.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "073",
+    "visual_prompt": "A close-up in [LOC_LIVING_ROOM] of the contract showing exorbitant terms like 'One Arm' and 'One Leg'.",
+    "entities_in_this_scene": [
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "074",
+    "visual_prompt": "A shot in [LOC_LIVING_ROOM] where [CHAR_TOM] presents a small ring box to [CHAR_TOODLES].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "075",
+    "visual_prompt": "A funny gag in [LOC_LIVING_ROOM] where [CHAR_TOODLES] uses a magnifying glass to see the microscopic diamond on [CHAR_TOM]'s ring.",
+    "entities_in_this_scene": [
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "076",
+    "visual_prompt": "A scene in [LOC_LIVING_ROOM] where [CHAR_BUTCH] dazzles [CHAR_TOODLES] with a huge diamond that requires welding masks to look at.",
+    "entities_in_this_scene": [
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "077",
+    "visual_prompt": "A depressed [CHAR_TOM] driving a tiny, beaten-up [OBJ_CAR] down the road.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "Various vehicles, including a small black jalopy and a long red convertible."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "078",
+    "visual_prompt": "A shot of [CHAR_BUTCH] driving a ridiculously long, luxurious [OBJ_CAR] with [CHAR_TOODLES] inside.",
+    "entities_in_this_scene": [
+      "A black alley cat with white muzzle and paws, acting as Tom's rival.",
+      "A sleek white female cat with blue eyes, usually wearing a ribbon or collar.",
+      "Various vehicles, including a small black jalopy and a long red convertible."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "079",
+    "visual_prompt": "A scene in [LOC_LIVING_ROOM] where [CHAR_JERRY] finds [CHAR_NIBBLES] on his doorstep holding a note.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "080",
+    "visual_prompt": "A close-up in [LOC_LIVING_ROOM] of the note which reads 'He loves to eat'.",
+    "entities_in_this_scene": [
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "081",
+    "visual_prompt": "A shot in [LOC_KITCHEN] where [CHAR_NIBBLES] is eagerly pointing at a bowl of milk.",
+    "entities_in_this_scene": [
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "082",
+    "visual_prompt": "A scene in [LOC_KITCHEN] where [CHAR_TOM] is sleeping next to [OBJ_MILK] and [CHAR_JERRY] tries to sneak past.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "083",
+    "visual_prompt": "A suspenseful frame in [LOC_KITCHEN] where [CHAR_NIBBLES] drinks from the [OBJ_MILK] right under [CHAR_TOM]'s nose.",
+    "entities_in_this_scene": [
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "084",
+    "visual_prompt": "A funny cartoon shot in [LOC_KITCHEN] where [CHAR_TOM] wakes up and drinks the milk, spitting it out when he sees [CHAR_NIBBLES] inside the bowl.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A glass bottle of white milk or a bowl filled with milk.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "085",
+    "visual_prompt": "A scene in [LOC_KITCHEN] where [CHAR_TOM] chases [CHAR_JERRY] and [CHAR_NIBBLES] with a fly swatter.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A tiny grey mouse, smaller than Jerry, wearing a white diaper or occasionally a Musketeer outfit.",
+      "A vintage kitchen with green cabinets, a sink, and linoleum floors."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "086",
+    "visual_prompt": "A frame in [LOC_LIVING_ROOM] showing [CHAR_TOM] running into a door frame and flattening his face.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "087",
+    "visual_prompt": "A shot in [LOC_LIVING_ROOM] where [CHAR_SPIKE] grabs [CHAR_TOM] by the neck, demanding silence.",
+    "entities_in_this_scene": [
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "088",
+    "visual_prompt": "A funny scene in [LOC_LIVING_ROOM] where [CHAR_TOM] tiptoes past [CHAR_SPIKE] holding [CHAR_JERRY].",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A large, muscular grey bulldog with a red spiked collar and a stern or dopey expression.",
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "089",
+    "visual_prompt": "A gag in [LOC_LIVING_ROOM] where [CHAR_JERRY] drops a heavy vase on [CHAR_TOM]'s head.",
+    "entities_in_this_scene": [
+      "A small brown mouse with a tan belly and muzzle, known for his wit and speed.",
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "090",
+    "visual_prompt": "A frame in [LOC_LIVING_ROOM] showing [CHAR_TOM] seeing stars and birds after the impact.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A cozy living room with a fireplace, armchair, and rug."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  },
+  {
+    "id": "091",
+    "visual_prompt": "A scene in [LOC_WITCH_HOUSE] where [CHAR_TOM] rides a magic [OBJ_BROOM] through the air.",
+    "entities_in_this_scene": [
+      "A grey tuxedo cat with white paws, muzzle, and tail tip, often showing expressive facial features.",
+      "A magical wooden broomstick with straw bristles and a purple handle.",
+      "A spooky, dark room with cobwebs, wooden floorboards, and eerie lighting."
+    ],
+    "style_anchor": "1950s MGM hand-drawn cel animation, Technicolor, vibrant saturated colors, gouache painted backgrounds, vintage cinematic film grain."
+  }]

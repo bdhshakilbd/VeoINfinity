@@ -1,0 +1,6 @@
+
+{
+  "name": "Frame Sequencer",
+  "description": "Sequential cinematic deconstruction tool that generates generation-ready visual prompt JSON from videos.",
+  "requestFramePermissions": []
+}

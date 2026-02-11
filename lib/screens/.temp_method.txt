@@ -1,0 +1,43 @@
+
+  /// Update volumes of all playing tracks in real-time
+  void _updatePlaybackVolumes() {
+    // Update video player volume
+    final currentP = _usePrimaryPlayer ? _player : _playerAlt;
+    if (currentP != null && _playbackTimer != null) {
+      final activeClip = _project.videoClips.where((c) {
+        final clipEnd = c.timelineStart + c.effectiveDuration;
+        return _currentPosition >= c.timelineStart && _currentPosition < clipEnd;
+      }).firstOrNull;
+      
+      if (activeClip != null) {
+        final effectiveVolume = (_project.isVideoTrackMuted || activeClip.isMuted || activeClip.volume <= 0) 
+            ? 0.0 
+            : (activeClip.volume * _project.videoMasterVolume * 100);
+        currentP.setVolume(effectiveVolume);
+      }
+    }
+    
+    // Update audio track players
+    for (int i = 0; i < _audioTrackPlayers.length && i < _project.audioClips.length; i++) {
+      final player = _audioTrackPlayers[i];
+      final clip = _project.audioClips[i];
+      if (player.state.playing) {
+        final volume = _project.isAudioTrackMuted || clip.isMuted
+            ? 0.0
+            : (clip.volume * _project.audioMasterVolume * 100);
+        player.setVolume(volume);
+      }
+    }
+    
+    // Update bgmusic players
+    for (int i = 0; i < _bgMusicPlayers.length && i < _project.bgMusicClips.length; i++) {
+      final player = _bgMusicPlayers[i];
+      final clip = _project.bgMusicClips[i];
+      if (player.state.playing) {
+        final volume = _project.isBgMusicTrackMuted || clip.isMuted
+            ? 0.0
+            : (clip.volume * _project.bgMusicMasterVolume * 100);
+        player.setVolume(volume);
+      }
+    }
+  }

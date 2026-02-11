@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEO3 Infinity - License Admin Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div id="app" x-data="adminApp()" x-cloak>
+        <!-- Login Screen -->
+        <div x-show="!isAuthenticated" class="min-h-screen flex items-center justify-center px-4">
+            <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <div class="mx-auto h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900">License Admin Panel</h2>
+                    <p class="text-gray-600 mt-2">VEO3 Infinity</p>
+                </div>
+
+                <form @submit.prevent="login" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" x-model="loginForm.username" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" x-model="loginForm.password" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <button type="submit" :disabled="loading"
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <span x-show="!loading">Sign In</span>
+                        <span x-show="loading">Signing in...</span>
+                    </button>
+                    <p x-show="error" x-text="error" class="text-red-600 text-sm text-center"></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div x-show="isAuthenticated" class="min-h-screen">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">License Management</h1>
+                            <p class="text-sm text-gray-600">VEO3 Infinity Admin Panel</p>
+                        </div>
+                        <button @click="logout" class="px-4 py-2 text-sm text-gray-700 hover:text-gray-900">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Total Licenses</p>
+                                <p class="text-2xl font-bold text-gray-900" x-text="stats.total"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Active</p>
+                                <p class="text-2xl font-bold text-green-600" x-text="stats.active"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-red-100 rounded-md p-3">
+                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Expired</p>
+                                <p class="text-2xl font-bold text-red-600" x-text="stats.expired"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-purple-100 rounded-md p-3">
+                                <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Total Devices</p>
+                                <p class="text-2xl font-bold text-purple-600" x-text="stats.devices"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Settings Card -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-indigo-100 rounded-md p-2">
+                                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900">App Update Settings</h3>
+                        </div>
+                        <button @click="showAppSettingsModal = true"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center gap-2 text-sm">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            Update Settings
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-500 mb-1">Latest Version</p>
+                            <p class="text-lg font-bold text-indigo-600" x-text="appSettings.latest_version || 'Loading...'"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-500 mb-1">Min Required Version</p>
+                            <p class="text-lg font-bold text-gray-700" x-text="appSettings.min_app_version || 'Loading...'"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4 col-span-1 md:col-span-1">
+                            <p class="text-sm text-gray-500 mb-1">Download URL</p>
+                            <p class="text-sm font-medium text-blue-600 truncate" x-text="appSettings.download_url || 'Loading...'" :title="appSettings.download_url"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Bar -->
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex gap-2">
+                            <button @click="showCreateModal = true"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create License
+                            </button>
+                            <button @click="loadLicenses" :disabled="loading"
+                                class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center gap-2">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" x-model="searchQuery" @input="filterLicenses"
+                                placeholder="Search licenses..."
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Licenses Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    License Key</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Customer</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Devices</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Expires</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <template x-for="license in filteredLicenses" :key="license.id">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <span class="font-mono text-sm font-semibold"
+                                                x-text="license.license_key"></span>
+                                            <button @click="copyToClipboard(license.license_key)"
+                                                class="ml-2 text-gray-400 hover:text-gray-600">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900" x-text="license.customer_name"></div>
+                                        <div class="text-sm text-gray-500" x-text="license.customer_email"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span :class="{
+                                            'bg-green-100 text-green-800': license.status === 'active',
+                                            'bg-red-100 text-red-800': license.status === 'expired',
+                                            'bg-gray-100 text-gray-800': license.status === 'deactivated'
+                                        }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                            x-text="license.status"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <span x-text="license.active_devices"></span> / <span
+                                            x-text="license.max_devices"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <div x-text="formatDate(license.expires_at)"></div>
+                                        <div class="text-xs text-gray-500" x-text="license.days_remaining + ' days'">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        <button @click="viewDevices(license)"
+                                            class="text-blue-600 hover:text-blue-900">Devices</button>
+                                        <button @click="editLicense(license)"
+                                            class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                                        <button @click="toggleLicenseStatus(license)"
+                                            :class="license.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                                            x-text="license.is_active ? 'Deactivate' : 'Activate'"></button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div x-show="filteredLicenses.length === 0" class="text-center py-12 text-gray-500">
+                        No licenses found
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create/Edit License Modal -->
+            <div x-show="showCreateModal"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                @click.self="showCreateModal = false">
+                <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <h3 class="text-xl font-bold mb-4" x-text="editingLicense ? 'Edit License' : 'Create New License'">
+                    </h3>
+                    <form @submit.prevent="saveLicense" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Customer Name *</label>
+                                <input type="text" x-model="licenseForm.customer_name" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Customer Email</label>
+                                <input type="email" x-model="licenseForm.customer_email"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Max Devices *</label>
+                                <input type="number" x-model.number="licenseForm.max_devices" min="1" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Duration (Days) *</label>
+                                <input type="number" x-model.number="licenseForm.duration_days" min="1" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                            <textarea x-model="licenseForm.notes" rows="3"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button type="button" @click="showCreateModal = false"
+                                class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                Cancel
+                            </button>
+                            <button type="submit" :disabled="loading"
+                                class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50">
+                                <span x-show="!loading" x-text="editingLicense ? 'Update' : 'Create'"></span>
+                                <span x-show="loading">Saving...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Devices Modal -->
+            <div x-show="showDevicesModal"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                @click.self="showDevicesModal = false">
+                <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-6">
+                    <h3 class="text-xl font-bold mb-4">Registered Devices</h3>
+                    <div class="mb-4" x-show="selectedLicense">
+                        <p class="text-sm text-gray-600">License: <span class="font-mono font-semibold"
+                                x-text="selectedLicense?.license_key"></span></p>
+                    </div>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Device ID
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Platform
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Registered
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Last Seen
+                                </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <template x-for="device in devices" :key="device.id">
+                                <tr>
+                                    <td class="px-4 py-2 text-sm font-mono"
+                                        x-text="device.device_id.substring(0, 16) + '...'"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="device.device_name"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="device.platform"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="formatDate(device.registered_at)"></td>
+                                    <td class="px-4 py-2 text-sm" x-text="formatDate(device.last_seen_at)"></td>
+                                    <td class="px-4 py-2">
+                                        <span
+                                            :class="device.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                                            class="px-2 py-1 text-xs font-semibold rounded-full"
+                                            x-text="device.is_active ? 'Active' : 'Revoked'"></span>
+                                    </td>
+                                    <td class="px-4 py-2">
+                                        <button @click="toggleDeviceStatus(device)"
+                                            :class="device.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'"
+                                            class="text-sm font-medium"
+                                            x-text="device.is_active ? 'Revoke' : 'Activate'"></button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div x-show="devices.length === 0" class="text-center py-8 text-gray-500">
+                        No devices registered
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button @click="showDevicesModal = false"
+                            class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Settings Modal -->
+            <div x-show="showAppSettingsModal"
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+                @click.self="showAppSettingsModal = false">
+                <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="bg-indigo-100 rounded-md p-2">
+                            <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Update App Settings</h3>
+                    </div>
+                    <form @submit.prevent="saveAppSettings" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Latest Version *</label>
+                                <input type="text" x-model="appSettingsForm.latest_version" required
+                                    placeholder="e.g., 2.0.0"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <p class="text-xs text-gray-500 mt-1">The newest app version available for download</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Required Version</label>
+                                <input type="text" x-model="appSettingsForm.min_app_version"
+                                    placeholder="e.g., 1.0.0"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <p class="text-xs text-gray-500 mt-1">Users below this version will be forced to update</p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Download URL *</label>
+                            <input type="url" x-model="appSettingsForm.download_url" required
+                                placeholder="https://github.com/yourrepo/releases/download/v2.0.0/setup.exe"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Direct link to the installer file</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Release Notes</label>
+                            <textarea x-model="appSettingsForm.release_notes" rows="3"
+                                placeholder="What's new in this version..."
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-start gap-3">
+                                <svg class="h-5 w-5 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-blue-800">Quick Tip</p>
+                                    <p class="text-xs text-blue-700 mt-1">For GitHub releases, use the direct download link format:<br>
+                                    <code class="bg-blue-100 px-1 rounded">https://github.com/user/repo/releases/download/vX.X.X/filename.exe</code></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-2">
+                            <button type="button" @click="showAppSettingsModal = false"
+                                class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                                Cancel
+                            </button>
+                            <button type="submit" :disabled="loading"
+                                class="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2">
+                                <span x-show="!loading">Save Settings</span>
+                                <span x-show="loading">Saving...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - UPDATE THESE VALUES
+        // ============================================
+        const SUPABASE_URL = 'https://qtftpfzcmiwxleehlmmr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0ZnRwZnpjbWl3eGxlZWhsbW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMTQzNTIsImV4cCI6MjA4Mzc5MDM1Mn0.N4wO0-9FiQNPf7fF7CCf1GNQ55xxXDJGDz-tJ8QenhE';
+
+        // Initialize Supabase client
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function adminApp() {
+            return {
+                // State
+                isAuthenticated: false,
+                loading: false,
+                error: null,
+                searchQuery: '',
+
+                // Data
+                licenses: [],
+                filteredLicenses: [],
+                devices: [],
+                stats: { total: 0, active: 0, expired: 0, devices: 0 },
+                appSettings: { latest_version: '', min_app_version: '', download_url: '', release_notes: '' },
+
+                // Forms
+                loginForm: { username: '', password: '' },
+                licenseForm: { customer_name: '', customer_email: '', max_devices: 1, duration_days: 365, notes: '' },
+                appSettingsForm: { latest_version: '', min_app_version: '', download_url: '', release_notes: '' },
+
+                // Modals
+                showCreateModal: false,
+                showDevicesModal: false,
+                showAppSettingsModal: false,
+                editingLicense: null,
+                selectedLicense: null,
+
+                // Initialize
+                async init() {
+                    // Check if already authenticated (simple session storage for demo)
+                    const authToken = sessionStorage.getItem('admin_auth');
+                    if (authToken) {
+                        this.isAuthenticated = true;
+                        await this.loadLicenses();
+                        await this.loadAppSettings();
+                    }
+                },
+
+                // Authentication
+                async login() {
+                    this.loading = true;
+                    this.error = null;
+
+                    // In production, implement proper authentication
+                    // For now, simple hardcoded check (CHANGE THIS!)
+                    if (this.loginForm.username === 'admin' && this.loginForm.password === 'admin123') {
+                        sessionStorage.setItem('admin_auth', 'true');
+                        this.isAuthenticated = true;
+                        await this.loadLicenses();
+                        await this.loadAppSettings();
+                    } else {
+                        this.error = 'Invalid username or password';
+                    }
+
+                    this.loading = false;
+                },
+
+                logout() {
+                    sessionStorage.removeItem('admin_auth');
+                    this.isAuthenticated = false;
+                    this.licenses = [];
+                    this.filteredLicenses = [];
+                },
+
+                // Load licenses
+                async loadLicenses() {
+                    this.loading = true;
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('license_overview')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+
+                        console.log('Load Licenses Response:', data, error);
+                        if (error) throw error;
+
+                        this.licenses = data || [];
+                        this.filteredLicenses = this.licenses;
+                        this.updateStats();
+                    } catch (err) {
+                        console.error('Error loading licenses:', err);
+                        alert('Failed to load licenses: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // Update statistics
+                updateStats() {
+                    this.stats.total = this.licenses.length;
+                    this.stats.active = this.licenses.filter(l => l.status === 'active').length;
+                    this.stats.expired = this.licenses.filter(l => l.status === 'expired').length;
+                    this.stats.devices = this.licenses.reduce((sum, l) => sum + (l.active_devices || 0), 0);
+                },
+
+                // Filter licenses
+                filterLicenses() {
+                    const query = this.searchQuery.toLowerCase();
+                    this.filteredLicenses = this.licenses.filter(l =>
+                        l.license_key.toLowerCase().includes(query) ||
+                        (l.customer_name && l.customer_name.toLowerCase().includes(query)) ||
+                        (l.customer_email && l.customer_email.toLowerCase().includes(query))
+                    );
+                },
+
+                // Create/Edit license
+                async saveLicense() {
+                    this.loading = true;
+                    try {
+                        if (this.editingLicense) {
+                            // Update existing license
+                            const expiresAt = new Date();
+                            expiresAt.setDate(expiresAt.getDate() + this.licenseForm.duration_days);
+
+                            const { error } = await supabaseClient
+                                .from('licenses')
+                                .update({
+                                    customer_name: this.licenseForm.customer_name,
+                                    customer_email: this.licenseForm.customer_email,
+                                    max_devices: this.licenseForm.max_devices,
+                                    expires_at: expiresAt.toISOString(),
+                                    notes: this.licenseForm.notes,
+                                })
+                                .eq('id', this.editingLicense.id);
+
+                            if (error) throw error;
+                            alert('License updated successfully');
+                        } else {
+                            // Create new license
+                            const { data, error } = await supabaseClient.rpc('create_license', {
+                                p_customer_name: this.licenseForm.customer_name,
+                                p_customer_email: this.licenseForm.customer_email || null,
+                                p_max_devices: this.licenseForm.max_devices,
+                                p_duration_days: this.licenseForm.duration_days,
+                                p_notes: this.licenseForm.notes || null,
+                            });
+
+                            console.log('RPC Response:', data, error);
+                            if (error) throw error;
+
+                            const licenseKey = typeof data === 'string' ? JSON.parse(data).license_key : data.license_key;
+                            alert('License created successfully!\nLicense Key: ' + licenseKey);
+                        }
+
+                        this.showCreateModal = false;
+                        this.resetLicenseForm();
+                        await this.loadLicenses();
+                    } catch (err) {
+                        console.error('Error saving license:', err);
+                        alert('Failed to save license: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // Edit license
+                editLicense(license) {
+                    this.editingLicense = license;
+                    this.licenseForm = {
+                        customer_name: license.customer_name || '',
+                        customer_email: license.customer_email || '',
+                        max_devices: license.max_devices,
+                        duration_days: license.days_remaining || 365,
+                        notes: license.notes || '',
+                    };
+                    this.showCreateModal = true;
+                },
+
+                // Reset form
+                resetLicenseForm() {
+                    this.editingLicense = null;
+                    this.licenseForm = { customer_name: '', customer_email: '', max_devices: 1, duration_days: 365, notes: '' };
+                },
+
+                // Toggle license status
+                async toggleLicenseStatus(license) {
+                    if (!confirm(`Are you sure you want to ${license.is_active ? 'deactivate' : 'activate'} this license?`)) return;
+
+                    this.loading = true;
+                    try {
+                        const { error } = await supabaseClient
+                            .from('licenses')
+                            .update({ is_active: !license.is_active })
+                            .eq('id', license.id);
+
+                        if (error) throw error;
+                        await this.loadLicenses();
+                    } catch (err) {
+                        console.error('Error toggling license status:', err);
+                        alert('Failed to update license: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // View devices
+                async viewDevices(license) {
+                    this.selectedLicense = license;
+                    this.loading = true;
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('license_devices')
+                            .select('*')
+                            .eq('license_id', license.id)
+                            .order('registered_at', { ascending: false });
+
+                        if (error) throw error;
+                        this.devices = data || [];
+                        this.showDevicesModal = true;
+                    } catch (err) {
+                        console.error('Error loading devices:', err);
+                        alert('Failed to load devices: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // Toggle device status
+                async toggleDeviceStatus(device) {
+                    if (!confirm(`Are you sure you want to ${device.is_active ? 'revoke' : 'activate'} this device?`)) return;
+
+                    this.loading = true;
+                    try {
+                        const { error } = await supabaseClient
+                            .from('license_devices')
+                            .update({ is_active: !device.is_active })
+                            .eq('id', device.id);
+
+                        if (error) throw error;
+
+                        // Reload devices
+                        await this.viewDevices(this.selectedLicense);
+                        await this.loadLicenses();
+                    } catch (err) {
+                        console.error('Error toggling device status:', err);
+                        alert('Failed to update device: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // Load App Settings
+                async loadAppSettings() {
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('app_settings')
+                            .select('key, value');
+
+                        if (error) throw error;
+
+                        // Convert array to object
+                        const settings = {};
+                        (data || []).forEach(item => {
+                            settings[item.key] = item.value;
+                        });
+
+                        this.appSettings = {
+                            latest_version: settings.latest_version || '',
+                            min_app_version: settings.min_app_version || '',
+                            download_url: settings.download_url || '',
+                            release_notes: settings.release_notes || ''
+                        };
+
+                        // Pre-fill the form
+                        this.appSettingsForm = { ...this.appSettings };
+                    } catch (err) {
+                        console.error('Error loading app settings:', err);
+                    }
+                },
+
+                // Save App Settings
+                async saveAppSettings() {
+                    this.loading = true;
+                    try {
+                        const updates = [
+                            { key: 'latest_version', value: this.appSettingsForm.latest_version },
+                            { key: 'min_app_version', value: this.appSettingsForm.min_app_version },
+                            { key: 'download_url', value: this.appSettingsForm.download_url },
+                            { key: 'release_notes', value: this.appSettingsForm.release_notes }
+                        ];
+
+                        for (const setting of updates) {
+                            if (setting.value) {
+                                const { error } = await supabaseClient
+                                    .from('app_settings')
+                                    .upsert({ 
+                                        key: setting.key, 
+                                        value: setting.value,
+                                        updated_at: new Date().toISOString()
+                                    }, { onConflict: 'key' });
+
+                                if (error) throw error;
+                            }
+                        }
+
+                        alert('App settings updated successfully!\n\nLatest Version: ' + this.appSettingsForm.latest_version + '\nDownload URL: ' + this.appSettingsForm.download_url);
+                        this.showAppSettingsModal = false;
+                        await this.loadAppSettings();
+                    } catch (err) {
+                        console.error('Error saving app settings:', err);
+                        alert('Failed to save app settings: ' + err.message);
+                    }
+                    this.loading = false;
+                },
+
+                // Utilities
+                formatDate(dateStr) {
+                    if (!dateStr) return 'N/A';
+                    return new Date(dateStr).toLocaleDateString();
+                },
+
+                copyToClipboard(text) {
+                    navigator.clipboard.writeText(text);
+                    alert('Copied to clipboard!');
+                },
+            };
+        }
+
+        // Register with Alpine before it starts
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('adminApp', adminApp);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+
+</html>

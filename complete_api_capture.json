@@ -1,0 +1,43 @@
+{
+  "request": {
+    "type": "request",
+    "requestId": "5AAB7AA369311A3CBBFC45501B634E13",
+    "url": "https://appsgenaiserver-pa.clients6.google.com/v1/genai/generate?key=AIzaSyA-njTXslyyMKk1VOogRfVP59F6fNGeNW8",
+    "method": "OPTIONS",
+    "headers": {
+      "Accept": "*/*",
+      "Access-Control-Request-Headers": "authorization,content-type,x-goog-authuser",
+      "Access-Control-Request-Method": "POST",
+      "Origin": "https://docs.google.com",
+      "Sec-Fetch-Mode": "cors",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+    },
+    "postData": null,
+    "timestamp": 150440.394507
+  },
+  "response": {
+    "type": "response",
+    "requestId": "5AAB7AA369311A3CBBFC45501B634E13",
+    "url": "https://appsgenaiserver-pa.clients6.google.com/v1/genai/generate?key=AIzaSyA-njTXslyyMKk1VOogRfVP59F6fNGeNW8",
+    "status": 200,
+    "headers": {
+      "access-control-allow-credentials": "true",
+      "access-control-allow-headers": "authorization,content-type,x-goog-authuser",
+      "access-control-allow-methods": "DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT",
+      "access-control-allow-origin": "https://docs.google.com",
+      "access-control-max-age": "3600",
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "content-length": "0",
+      "content-type": "text/html",
+      "date": "Sat, 24 Jan 2026 02:41:08 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "vary": "origin\nreferer\nx-origin",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "SAMEORIGIN",
+      "x-xss-protection": "0"
+    },
+    "timestamp": 150440.852191
+  },
+  "video_url": null,
+  "video_path": null
+}

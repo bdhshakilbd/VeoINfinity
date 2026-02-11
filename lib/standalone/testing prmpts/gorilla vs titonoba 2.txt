@@ -1,0 +1,395 @@
+[
+  {
+    "id": "001",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) are engaged in a fierce battle in a wide river surrounded by a dense tropical prehistoric jungle.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "002",
+    "visual_prompt": "A wide shot shows (A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) swimming parallel through a river valley lined with giant baobab-like trees.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "003",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) lunge at each other with open jaws, creating large white splashes in the narrow river.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "004",
+    "visual_prompt": "An overhead view of (A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) as they rise high out of the water to confront each other aggressively.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "005",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) clash repeatedly in the middle of the river under a bright jungle sun.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "006",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) slithers past a massive tree trunk near the riverbank as it continues its fight with (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.).",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "007",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) sits on the shell of (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.), protectively holding (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) as the giant turtle swims through a wide river.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "008",
+    "visual_prompt": "A rear view of (A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) and (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) on the shell of (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.) as it navigates the water toward a forest edge.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "009",
+    "visual_prompt": "(A terror bird (Phorusrhacid) with dark, shaggy plumage, powerful long legs ending in sharp claws, and a massive, hooked beak designed for hunting.) watches from the riverbank as (A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) and (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) ride on the back of (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.).",
+    "char_in_this_scene": [
+      "A terror bird (Phorusrhacid) with dark, shaggy plumage, powerful long legs ending in sharp claws, and a massive, hooked beak designed for hunting.",
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "010",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) continue their duel in the river with a sunbeam filtering through the prehistoric trees.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "011",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) secures his grip on (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) while riding (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.) across a calm stretch of the river.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "012",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) and (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) continue their journey on the back of (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.) through the swampy landscape.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "013",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) dismounts from (A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers.) onto the muddy riverbank while still holding (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.).",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A colossal prehistoric sea turtle with a thick, ridged dark-brown shell and wrinkled grey leathery skin on its head and flippers."
+    ]
+  },
+  {
+    "id": "014",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks through a sun-drenched prehistoric forest, carrying (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) under one arm.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "015",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) carries (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) through a grove of ancient, fern-like plants and massive trees.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "016",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) encounters a giant bird in the forest while carrying (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) toward their shelter.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "A terror bird (Phorusrhacid) with dark, shaggy plumage, powerful long legs ending in sharp claws, and a massive, hooked beak designed for hunting."
+    ]
+  },
+  {
+    "id": "017",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks toward a primitive hut made of branches and large leaves in a jungle clearing.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "018",
+    "visual_prompt": "Inside the primitive hut, (A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) sits down and comforts a distressed (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.).",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "019",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) places (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) on a bed of dry grass and leaves inside the hut shelter.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "020",
+    "visual_prompt": "A group of (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) grazes in a clearing near a swampy area filled with ancient trees.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "021",
+    "visual_prompt": "(An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) rooting in the mud and ground for food within the prehistoric jungle.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "022",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks through the forest near his hut camp, alert for any threats.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "023",
+    "visual_prompt": "(An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) running through the tall grass in a sunlit prehistoric clearing.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "024",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) moves through dense vegetation and prehistoric ferns in the heart of the forest.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "025",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) pauses and looks around the massive trees of the prehistoric jungle.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "026",
+    "visual_prompt": "Several (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) are playing and fighting in a muddy pond in the middle of a clearing.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "027",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) begins breaking down a dead tree to gather wood for his fire.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "028",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) uses his massive strength to strike a large log and break it into pieces.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "029",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) organizes a pile of broken wood on the forest floor in preparation for carrying it.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "030",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks through the forest carrying a massive bundle of logs tied together over his shoulder.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "031",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks back toward his hut with the large bundle of firewood.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "032",
+    "visual_prompt": "A (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) splashes around in a mud wallow near a swampy area.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "033",
+    "visual_prompt": "Close-up of a (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) grunting and moving through the muddy ground.",
+    "char_in_this_scene": [
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "034",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) approaches the mud wallow with a heavy wooden club in his hand.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face."
+    ]
+  },
+  {
+    "id": "035",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) strikes one of the (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) with his wooden club in the mud pond.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "036",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) chases the fleeing group of (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) through the dense prehistoric forest.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "037",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) attacks a large (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) with his wooden club during the hunt.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "038",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) pursues the remaining (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) through a sunlit jungle clearing.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "039",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) chases the (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) into a shallow river with rushing water.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "040",
+    "visual_prompt": "In another part of the river, (A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) are still engaged in their titanic struggle.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "041",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) catches a small (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) in the rushing rapids of the river.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "042",
+    "visual_prompt": "Wide shot of (A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) and (An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body.) swimming aggressively through a jungle river bend.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "An albino giant Titanoboa snake, colossal in size with shimmering white or pale-grey scales and distinctive red or pinkish eyes that stand out against its light-colored body."
+    ]
+  },
+  {
+    "id": "043",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) carries his kill, a dead (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.), out of the river onto the bank.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "044",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) walks through the prehistoric forest carrying the dead (An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth.) on his shoulder.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "045",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) slithers through the jungle undergrowth near the river, searching for prey.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw."
+    ]
+  },
+  {
+    "id": "046",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) carries the boar carcass back to his primitive hut camp.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "047",
+    "visual_prompt": "(A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) moves rapidly through a grove of trees, knocking several of them down.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw."
+    ]
+  },
+  {
+    "id": "048",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) and (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) sit by an open campfire where the boar is roasting on a spit.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.",
+      "An Entelodont, a large prehistoric boar-like creature with dark bristly fur, a heavy snout, and large tusks protruding from its muscular mouth."
+    ]
+  },
+  {
+    "id": "049",
+    "visual_prompt": "(A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) eats pieces of the roasted meat while (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.) playfully tries to take some.",
+    "char_in_this_scene": [
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  },
+  {
+    "id": "050",
+    "visual_prompt": "Suddenly, (A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.) lunges at (A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.) and (A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw.), who grab their things and flee their camp.",
+    "char_in_this_scene": [
+      "A massive prehistoric Titanoboa snake featuring thick, muscular coils covered in a camouflage-like pattern of brownish-green and black scales. It has a triangular head with predatory yellow eyes and a wide-stretching jaw.",
+      "A powerful adult male Gigantopithecus, resembling a massive gorilla with thick black fur, a broad muscular chest, long heavy arms, and a prominent sagittal crest on its dark-fleshed face.",
+      "A juvenile saber-toothed cat with yellowish-tan fur marked by dark stripes and spots. It has small but visible saber fangs protruding from its upper jaw."
+    ]
+  }
+]

@@ -1,0 +1,729 @@
+[
+  {
+    "id": "001",
+    "visual_prompt": "A photorealistic CGI scene of the exterior of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) which is heavily overgrown with green vines and surrounded by dense ferns.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "002",
+    "visual_prompt": "A photorealistic CGI scene showing a close-up of the wooden roof of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) covered in thick (Vibrant green slabs of living moss harvested from the forest floor.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.",
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "003",
+    "visual_prompt": "A photorealistic CGI wide shot of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) nestled among tall evergreen trees in a sunlit forest.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "004",
+    "visual_prompt": "A photorealistic CGI scene where (A man in outdoor attire including a beige jacket and grey pants.) is seen jumping on the mossy roof of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) to clear away overgrowth.",
+    "entities_in_this_scene": [
+      "A man in outdoor attire including a beige jacket and grey pants.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "005",
+    "visual_prompt": "A photorealistic CGI scene of (A man in outdoor attire including a beige jacket and grey pants.) throwing large clumps of (Vibrant green slabs of living moss harvested from the forest floor.) down from the roof of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A man in outdoor attire including a beige jacket and grey pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "006",
+    "visual_prompt": "A photorealistic CGI scene of (A man in outdoor attire including a beige jacket and grey pants.) using a tool to scrape (Vibrant green slabs of living moss harvested from the forest floor.) off the exterior wooden walls of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A man in outdoor attire including a beige jacket and grey pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "007",
+    "visual_prompt": "A photorealistic CGI scene showing (A man in outdoor attire including a beige jacket and grey pants.) standing on the porch of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) after clearing the moss.",
+    "entities_in_this_scene": [
+      "A man in outdoor attire including a beige jacket and grey pants.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "008",
+    "visual_prompt": "A photorealistic CGI scene of the cleaned exterior of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) with its rich wood finish fully visible.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "009",
+    "visual_prompt": "A photorealistic CGI drone shot hovering over (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) in the middle of the dense forest.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "010",
+    "visual_prompt": "A photorealistic CGI scene of a clear stream flowing over mossy stones in (A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns.).",
+    "entities_in_this_scene": [
+      "A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns."
+    ]
+  },
+  {
+    "id": "011",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) crouching on a mossy log next to the stream in (A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns.).",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns."
+    ]
+  },
+  {
+    "id": "012",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) walking along the rocky bank of the stream in (A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns.).",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns."
+    ]
+  },
+  {
+    "id": "013",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) carefully picking up pieces of (Vibrant green slabs of living moss harvested from the forest floor.) from a rock in (A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns.).",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns."
+    ]
+  },
+  {
+    "id": "014",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) placing slabs of (Vibrant green slabs of living moss harvested from the forest floor.) into a wooden crate by the stream.",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "015",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) filling a large canvas bag with fresh (Vibrant green slabs of living moss harvested from the forest floor.) from the forest floor.",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "016",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) continuing to fill bags with (Vibrant green slabs of living moss harvested from the forest floor.) in the forest.",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "017",
+    "visual_prompt": "A photorealistic CGI scene where (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) is digging up small tree saplings in (A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns.).",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "A serene forest location featuring a clear, bubbling stream surrounded by mossy rocks and ferns."
+    ]
+  },
+  {
+    "id": "018",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) collecting various small forest plants and placing them in a container.",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants."
+    ]
+  },
+  {
+    "id": "019",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) loading the wooden crates and (Various potted ferns and small succulents in brown plastic pots.) onto (A sturdy metal gardening cart with four wheels and a flat platform for transporting materials.).",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "Various potted ferns and small succulents in brown plastic pots.",
+      "A sturdy metal gardening cart with four wheels and a flat platform for transporting materials."
+    ]
+  },
+  {
+    "id": "020",
+    "visual_prompt": "A photorealistic CGI scene of (A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.) pushing (A sturdy metal gardening cart with four wheels and a flat platform for transporting materials.) loaded with plants through the forest.",
+    "entities_in_this_scene": [
+      "A young woman with blonde hair tied back, wearing a green outdoor jacket and brown utility pants.",
+      "A sturdy metal gardening cart with four wheels and a flat platform for transporting materials."
+    ]
+  },
+  {
+    "id": "021",
+    "visual_prompt": "A photorealistic CGI scene inside (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) where (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) are cleaning the concrete floor.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "022",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) shovelling piles of dirt and debris from the floor of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "023",
+    "visual_prompt": "A photorealistic CGI scene showing (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) removing old floor boards in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "024",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) sweeping the bare concrete floor in the center of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "025",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) clearing out the remaining debris in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "026",
+    "visual_prompt": "A photorealistic CGI scene of the empty living room in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) with its clean concrete floor.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "027",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) using rollers to apply a black (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) base to the floor of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "028",
+    "visual_prompt": "A photorealistic CGI close-up of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) rolling a thick layer of black (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) onto the floor.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "029",
+    "visual_prompt": "A photorealistic CGI scene showing half of the floor in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) covered in glossy black (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.).",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "030",
+    "visual_prompt": "A photorealistic CGI scene where the entire floor of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) is covered in smooth, black (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.).",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "031",
+    "visual_prompt": "A photorealistic CGI scene showing (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.), (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.), (A third construction worker wearing a yellow hard hat and a bright orange reflective safety vest.), and (A fourth construction worker wearing a yellow hard hat and a bright orange reflective safety vest.) kneeling on the floor of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) to lay out (Vibrant green slabs of living moss harvested from the forest floor.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A third construction worker wearing a yellow hard hat and a bright orange reflective safety vest.",
+      "A fourth construction worker wearing a yellow hard hat and a bright orange reflective safety vest.",
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "032",
+    "visual_prompt": "A photorealistic CGI scene of the workers building intricate patches of (Vibrant green slabs of living moss harvested from the forest floor.) on the black floor.",
+    "entities_in_this_scene": [
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "033",
+    "visual_prompt": "A photorealistic CGI scene of the floor of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) nearly covered with a landscape of (Vibrant green slabs of living moss harvested from the forest floor.) and small ferns.",
+    "entities_in_this_scene": [
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "034",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) pouring buckets of clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) over the moss layout in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "035",
+    "visual_prompt": "A photorealistic CGI scene showing the clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) spreading and submerging the (Vibrant green slabs of living moss harvested from the forest floor.) on the floor.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "036",
+    "visual_prompt": "A photorealistic CGI scene of the workers using a squeegee to level the clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) across the floor.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "037",
+    "visual_prompt": "A photorealistic CGI scene of the floor in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) completely submerged under a thick layer of clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.).",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "038",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) using (A handheld blowtorch used to remove air bubbles from wet resin.) to remove bubbles from the wet resin in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A handheld blowtorch used to remove air bubbles from wet resin.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "039",
+    "visual_prompt": "A photorealistic CGI close-up of the flames from (A handheld blowtorch used to remove air bubbles from wet resin.) passing over the surface of the (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.).",
+    "entities_in_this_scene": [
+      "A handheld blowtorch used to remove air bubbles from wet resin.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "040",
+    "visual_prompt": "A photorealistic CGI scene showing the (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) surface becoming perfectly clear as bubbles are removed.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "041",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) using (An industrial floor polishing machine with dual rotating heads.) to polish the hardened (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) floor in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "An industrial floor polishing machine with dual rotating heads.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "042",
+    "visual_prompt": "A photorealistic CGI close-up of the rotating heads of (An industrial floor polishing machine with dual rotating heads.) polishing the floor.",
+    "entities_in_this_scene": [
+      "An industrial floor polishing machine with dual rotating heads."
+    ]
+  },
+  {
+    "id": "043",
+    "visual_prompt": "A photorealistic CGI scene of the finished floor in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.), looking smooth and highly reflective.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "044",
+    "visual_prompt": "A photorealistic CGI scene of workers bringing wooden bookcases into the living room of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "045",
+    "visual_prompt": "A photorealistic CGI scene of workers hanging framed paintings on the walls of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "046",
+    "visual_prompt": "A photorealistic CGI scene of workers unrolling a large patterned rug over the center of the finished floor.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "047",
+    "visual_prompt": "A photorealistic CGI scene where (Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table.) is being arranged on the rug in the living room of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "048",
+    "visual_prompt": "A photorealistic CGI wide shot of the finished living room in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) with the 3D moss floor.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "049",
+    "visual_prompt": "A photorealistic CGI close-up showing the detail of the (Vibrant green slabs of living moss harvested from the forest floor.) and stones under the clear floor in (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "Vibrant green slabs of living moss harvested from the forest floor.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "050",
+    "visual_prompt": "A photorealistic CGI wide exterior shot of the completed (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) in the forest.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "051",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) laying stones to create a path leading to the entrance of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "052",
+    "visual_prompt": "A photorealistic CGI scene showing the progress of the curved stone path around (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "053",
+    "visual_prompt": "A photorealistic CGI cinematic shot of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.) with its new garden and stone path.",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "054",
+    "visual_prompt": "A photorealistic CGI scene showing the finished stone path and flower beds around (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "055",
+    "visual_prompt": "A photorealistic CGI cinematic shot of the blooming flowers in the garden of (A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest.).",
+    "entities_in_this_scene": [
+      "A rustic wooden cabin with large windows, nestled deep within a lush, sun-drenched forest."
+    ]
+  },
+  {
+    "id": "056",
+    "visual_prompt": "A photorealistic CGI scene showing the modern exterior of a villa by the sea.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "057",
+    "visual_prompt": "A photorealistic CGI scene inside (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.) looking out through the large windows at the ocean.",
+    "entities_in_this_scene": [
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "058",
+    "visual_prompt": "A photorealistic CGI close-up of the finished floor in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.) featuring a detailed 3D waterfall effect.",
+    "entities_in_this_scene": [
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "059",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) sweeping the large concrete living room floor in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "060",
+    "visual_prompt": "A photorealistic CGI scene where workers are marking a rectangular section in the center of the floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "061",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) using concrete saws to cut out the marked section in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "062",
+    "visual_prompt": "A photorealistic CGI scene of the workers removing the cut-out section of concrete from the floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "063",
+    "visual_prompt": "A photorealistic CGI scene showing the excavated rectangular area in the middle of the living room floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "064",
+    "visual_prompt": "A photorealistic CGI scene of workers filling the excavated area with gravel.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "065",
+    "visual_prompt": "A photorealistic CGI scene showing the gravel being levelled in the cutout.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "066",
+    "visual_prompt": "A photorealistic CGI scene of workers painting the inside of the floor cutout black.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "067",
+    "visual_prompt": "A photorealistic CGI scene showing the cutout area now fully painted in a matte black finish.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "068",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) building a central mountain structure using (Smooth, varied-sized river stones and rocks used for decorative landscaping.) in the cutout.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "Smooth, varied-sized river stones and rocks used for decorative landscaping."
+    ]
+  },
+  {
+    "id": "069",
+    "visual_prompt": "A photorealistic CGI scene showing the mountain landscape taking shape within the floor cutout.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "070",
+    "visual_prompt": "A photorealistic CGI scene of workers adding sand and smaller stones around the base of the rock mountain.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "071",
+    "visual_prompt": "A photorealistic CGI scene where workers are placing miniature trees and plants onto the rock structure.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "072",
+    "visual_prompt": "A photorealistic CGI scene showing the complete miniature mountain landscape inside the living room floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "073",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) pouring clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) into the floor cutout.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "074",
+    "visual_prompt": "A photorealistic CGI scene showing blue-tinted (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) being carefully added to create water effects around the mountain.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "075",
+    "visual_prompt": "A photorealistic CGI scene where the resin in the floor cutout has set, creating a 3D waterfall and pool effect.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "076",
+    "visual_prompt": "A photorealistic CGI scene of workers using (An industrial floor polishing machine with dual rotating heads.) to polish the entire living room floor in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.).",
+    "entities_in_this_scene": [
+      "An industrial floor polishing machine with dual rotating heads.",
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "077",
+    "visual_prompt": "A photorealistic CGI scene showing the reveal of the perfectly smooth and glossy floor with the 3D landscape.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "078",
+    "visual_prompt": "A photorealistic CGI scene of workers bringing in modern (Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table.) and placing it in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.).",
+    "entities_in_this_scene": [
+      "Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table.",
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "079",
+    "visual_prompt": "A photorealistic CGI scene showing the arrangement of the sofa and chairs around the indoor waterfall.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "080",
+    "visual_prompt": "A photorealistic CGI final wide shot of the finished living room in (A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline.) overlooking the sea.",
+    "entities_in_this_scene": [
+      "A luxurious modern villa living room featuring floor-to-ceiling glass windows that provide a panoramic view of the ocean coastline."
+    ]
+  },
+  {
+    "id": "081",
+    "visual_prompt": "A photorealistic CGI exterior shot of the modern seaside villa at sunset.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "082",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) sweeping the floor in (A spacious modern bedroom with minimalist decor and large windows overlooking a forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A spacious modern bedroom with minimalist decor and large windows overlooking a forest."
+    ]
+  },
+  {
+    "id": "083",
+    "visual_prompt": "A photorealistic CGI scene of workers applying a glossy black (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) base to the bedroom floor.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "084",
+    "visual_prompt": "A photorealistic CGI scene where workers are laying long, natural wood slabs on the black bedroom floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "085",
+    "visual_prompt": "A photorealistic CGI scene of workers placing large (Smooth, varied-sized river stones and rocks used for decorative landscaping.) between the wood slabs to create a riverbed effect.",
+    "entities_in_this_scene": [
+      "Smooth, varied-sized river stones and rocks used for decorative landscaping."
+    ]
+  },
+  {
+    "id": "086",
+    "visual_prompt": "A photorealistic CGI scene of the workers carefully arranging the stones for the decorative river.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "087",
+    "visual_prompt": "A photorealistic CGI scene showing the progress of the intricate 3D river feature on the bedroom floor.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "088",
+    "visual_prompt": "A photorealistic CGI scene of workers adding patches of (Vibrant green slabs of living moss harvested from the forest floor.) and small plants to the river landscape.",
+    "entities_in_this_scene": [
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "089",
+    "visual_prompt": "A photorealistic CGI scene showing the finished decorative landscape layout ready for the resin pour.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "090",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) pouring clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) over the entire bedroom floor.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "091",
+    "visual_prompt": "A photorealistic CGI scene showing the clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) flowing over the wood slabs, stones, and moss.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "092",
+    "visual_prompt": "A photorealistic CGI scene of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) and (A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.) using (A handheld blowtorch used to remove air bubbles from wet resin.) to remove bubbles from the bedroom floor.",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A second construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a dark blue shirt, blue jeans, and brown work boots.",
+      "A handheld blowtorch used to remove air bubbles from wet resin."
+    ]
+  },
+  {
+    "id": "093",
+    "visual_prompt": "A photorealistic CGI close-up of (A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.) torching the resin surface in (A spacious modern bedroom with minimalist decor and large windows overlooking a forest.).",
+    "entities_in_this_scene": [
+      "A construction worker wearing a yellow hard hat, a bright orange reflective safety vest over a grey long-sleeved shirt, blue jeans, and brown work boots.",
+      "A spacious modern bedroom with minimalist decor and large windows overlooking a forest."
+    ]
+  },
+  {
+    "id": "094",
+    "visual_prompt": "A photorealistic CGI scene of workers using (An industrial floor polishing machine with dual rotating heads.) to give the bedroom floor a high-gloss finish.",
+    "entities_in_this_scene": [
+      "An industrial floor polishing machine with dual rotating heads."
+    ]
+  },
+  {
+    "id": "095",
+    "visual_prompt": "A photorealistic CGI scene where workers are placing a large wooden bed frame (Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table.) onto the finished floor.",
+    "entities_in_this_scene": [
+      "Modern wooden furniture set including a sofa with beige cushions, matching armchairs, and a low coffee table."
+    ]
+  },
+  {
+    "id": "096",
+    "visual_prompt": "A photorealistic CGI wide shot of the finished bedroom in (A spacious modern bedroom with minimalist decor and large windows overlooking a forest.) with the 3D river floor.",
+    "entities_in_this_scene": [
+      "A spacious modern bedroom with minimalist decor and large windows overlooking a forest."
+    ]
+  },
+  {
+    "id": "097",
+    "visual_prompt": "A photorealistic CGI close-up of the 3D river floor showing stones and (Vibrant green slabs of living moss harvested from the forest floor.) under the resin.",
+    "entities_in_this_scene": [
+      "Vibrant green slabs of living moss harvested from the forest floor."
+    ]
+  },
+  {
+    "id": "098",
+    "visual_prompt": "A photorealistic CGI scene showing workers starting another floor project with stones and moss.",
+    "entities_in_this_scene": []
+  },
+  {
+    "id": "099",
+    "visual_prompt": "A photorealistic CGI scene of workers pouring clear (Transparent and tinted epoxy resin used to create a glossy, deep floor finish.) over a new stone and moss floor layout.",
+    "entities_in_this_scene": [
+      "Transparent and tinted epoxy resin used to create a glossy, deep floor finish."
+    ]
+  },
+  {
+    "id": "100",
+    "visual_prompt": "A photorealistic CGI final cinematic shot of a completed luxury villa interior with a custom 3D floor.",
+    "entities_in_this_scene": []
+  }
+]

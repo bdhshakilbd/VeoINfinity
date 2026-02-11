@@ -1,0 +1,96 @@
+import asyncio
+import websockets
+import json
+import base64
+import wave
+import sys
+
+# API Key provided by user in previous context
+API_KEY = "AIzaSyDDRMIGrg9uUSh714gRgbHmJIsgWfxdlaY" 
+WS_URL = f"wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateMusic?key={API_KEY}"
+OUTPUT_FILE = "lyria_raw_test.wav"
+
+async def extract_and_save_music():
+    print(f"Connecting to {WS_URL}...")
+    try:
+        async with websockets.connect(WS_URL) as ws:
+            print("Connected!")
+
+            # 1. Setup
+            setup_msg = {
+                "setup": {
+                    "model": "models/lyria-realtime-exp"
+                }
+            }
+            await ws.send(json.dumps(setup_msg))
+            print("Sent setup")
+            
+            # Wait for setup complete or just proceed (usually good to wait for first msg)
+            resp = await ws.recv()
+            print(f"Setup Response: {resp}")
+
+            # 2. Send Prompt
+            prompt_msg = {
+                "clientContent": {
+                    "weightedPrompts": [
+                        {
+                            "text": "Upbeat synthwave with retro gaming vibes",
+                            "weight": 1.0
+                        }
+                    ]
+                }
+            }
+            await ws.send(json.dumps(prompt_msg))
+            print("Sent prompt")
+
+            # 3. Start Playback
+            play_msg = {
+                "playbackControl": "PLAY"
+            }
+            await ws.send(json.dumps(play_msg))
+            print("Sent PLAY command")
+            
+            # 4. Receive and Save Audio
+            wav_file = wave.open(OUTPUT_FILE, "wb")
+            wav_file.setnchannels(2)
+            wav_file.setsampwidth(2) # 16-bit
+            wav_file.setframerate(48000)
+
+            print(f"Recording to {OUTPUT_FILE} for 10 seconds...")
+            
+            chunk_count = 0
+            try:
+                # Run for roughly 10 seconds worth of chunks or until error
+                # Note: This loop depends on server pushing data.
+                while chunk_count < 200: # Arbitrary limit to stop
+                    msg = await ws.recv()
+                    data = json.loads(msg)
+                    
+                    if "serverContent" in data and "audioChunks" in data["serverContent"]:
+                        for chunk in data["serverContent"]["audioChunks"]:
+                            if "data" in chunk:
+                                raw_audio = base64.b64decode(chunk["data"])
+                                wav_file.writeframes(raw_audio)
+                                chunk_count += 1
+                                sys.stdout.write(f"\rReceived chunk {chunk_count}")
+                                sys.stdout.flush()
+                    
+                    if "setupComplete" in data:
+                         print("\nServer confirmed setup complete.")
+            
+            except asyncio.TimeoutError:
+                print("\nTimeout waiting for data.")
+            except Exception as e:
+                print(f"\nError receiving data: {e}")
+            finally:
+                wav_file.close()
+                print(f"\nFinished. Audio saved to {OUTPUT_FILE}")
+
+    except Exception as e:
+        print(f"Connection failed: {e}")
+
+if __name__ == "__main__":
+    if sys.version_info < (3, 7):
+        print("Python 3.7+ required")
+    else:
+        asyncio.run(extract_and_save_music())

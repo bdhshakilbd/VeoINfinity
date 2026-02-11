@@ -18,6 +18,13 @@ build/
 Thumbs.db
 desktop.ini
 
+# macOS
+.DS_Store
+*.xcuserstate
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+Pods/
+
 # Build artifacts (except the final installer)
 *.dll
 *.exe
@@ -35,11 +42,48 @@ ffprobe.exe
 # WebView2 installer (download separately)
 MicrosoftEdgeWebview2Setup.exe
 
-# User data
+# Large archives (too big for GitHub)
+*.rar
+*.zip
+*.7z
+veo3_another.rar
+
+# User data & profiles
 profiles/
 v_output/
 story_frames/
+Profile*/
+User Data/
+StoryUserData/
+characters/
+downloads_videos/
 
 # Inno Setup temp files
 installer_output/*.tmp
 installer_output/*.bak
+
+# Python virtual environments
+.venv/
+__pycache__/
+*.pyc
+
+# Network captures & debug logs
+network_events.json
+network_logs.json
+captured_api_requests.json
+analyze_output.txt
+logs.txt
+
+# Media files
+*.wav
+*.mp4
+*.mp3
+
+# API Keys & Credentials
+gemini_api_keys.txt
+whisk_credentials.json
+*.key
+*.pem
+credentials.json
+auth.json
+token.json

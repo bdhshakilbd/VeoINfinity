@@ -1,0 +1,542 @@
+# YouTube Video to VEO3 Story Prompt Generator (ENHANCED DETAILED VERSION)
+
+## Instructions for AI (Claude/Gemini/GPT)
+
+Analyze the content of the YouTube video at the following link: **[Insert YouTube Video Link Here]**
+
+Your task is to deconstruct the video into a structured JSON format optimized for VEO3 video generation with DETAILED prompts covering all cinematic elements.
+
+---
+
+## 🔴 STRICT FRAME REUSE RULE
+
+**MANDATORY: Every clip's first frame MUST reuse the previous clip's last frame!**
+
+The ONLY exception is the very first frame of the entire video (frame_001).
+
+### Generation Pattern:
+- **Clip 1:** Generate BOTH frames (first and last)
+- **Clip 2+:** Generate ONLY last frame (first frame reuses previous clip's last)
+
+**Result: For N clips, generate only N+1 images instead of 2N!**
+
+---
+
+## 🎬 VEO3 PROMPT WRITING GUIDE
+
+### Prompt Structure Template:
+```
+[SCENE STYLE] | [ACTION DESCRIPTION] | [CAMERA MOVEMENT] | [AUDIO LAYER]
+```
+
+### 1. SCENE STYLE Elements
+Include these visual descriptors:
+
+| Element | Examples |
+|---------|----------|
+| **Lighting** | golden hour, harsh midday sun, neon-lit, candlelit, moonlit, rim lighting, volumetric fog |
+| **Atmosphere** | misty, hazy, clear, stormy, dusty, snowy, rainy |
+| **Color Grade** | warm orange tones, cool blue grade, desaturated, high contrast, vintage sepia |
+| **Visual Style** | photorealistic, cinematic film grain, anime-style, noir, documentary style |
+| **Time of Day** | dawn, morning, midday, golden hour, dusk, night, twilight |
+
+### 2. ACTION DESCRIPTION Elements
+Be SPECIFIC about:
+
+| Element | Description |
+|---------|-------------|
+| **Subject Actions** | Walk, run, turn, reach, grab, push, pull, jump, fall, climb, crawl |
+| **Facial Expressions** | Smiles slowly, frowns, eyes widen, tears form, jaw drops, looks shocked |
+| **Body Language** | Shoulders tense, relaxes, slouches, stands tall, crosses arms, clenches fists |
+| **Movement Speed** | Slowly, quickly, abruptly, gradually, in slow motion, at normal speed |
+| **Direction** | Left to right, right to left, toward camera, away from camera, circular |
+| **Interaction** | With objects, with other characters, with environment |
+
+### 3. CAMERA MOVEMENT Types
+
+| Movement | Description | Use Case |
+|----------|-------------|----------|
+| **Static** | Camera doesn't move | Dialogue, dramatic moments |
+| **Pan Left/Right** | Horizontal rotation | Reveal, follow action |
+| **Tilt Up/Down** | Vertical rotation | Reveal height, show scale |
+| **Dolly In/Out** | Move toward/away from subject | Intensify or release tension |
+| **Truck Left/Right** | Lateral movement | Follow walking subject |
+| **Crane Up/Down** | Vertical movement | Grand reveals, establishing |
+| **Orbit** | Circle around subject | Hero shots, 360° reveal |
+| **Handheld** | Slight natural shake | Realism, tension, documentary |
+| **Steadicam** | Smooth following | Chase scenes, walk and talk |
+| **Zoom In/Out** | Optical zoom | Focus attention, comedic effect |
+| **Whip Pan** | Fast pan creating blur | Fast transitions, action |
+
+### Camera Angle Terminology:
+- **Eye Level**: Natural, neutral
+- **Low Angle**: Subject appears powerful/dominant
+- **High Angle**: Subject appears vulnerable/small
+- **Dutch Angle**: Tilted, creates unease
+- **Bird's Eye**: Directly overhead
+- **Worm's Eye**: From ground looking up
+- **Over-the-shoulder (OTS)**: Character perspective
+- **POV Shot**: First person view
+
+### 4. AUDIO LAYER Components
+
+#### Sound Effects (SFX)
+| Category | Examples |
+|----------|----------|
+| **Foley** | Footsteps on wood, fabric rustling, keys jingling, paper shuffling |
+| **Ambient** | Wind howling, rain pattering, crowd murmuring, traffic noise, birds chirping |
+| **Impact** | Punches landing, doors slamming, glass breaking, explosions, crashes |
+| **Mechanical** | Engine revving, gears clicking, machines whirring, computer beeps |
+| **Elemental** | Fire crackling, water splashing, thunder rumbling, ice cracking |
+| **Creature** | Growling, roaring, hissing, wings flapping, hooves clopping |
+
+#### Background Music (BGM)
+| Element | Description |
+|---------|-------------|
+| **Genre** | Orchestral, electronic, jazz, rock, ambient, folk, cinematic |
+| **Mood** | Tense, uplifting, melancholic, mysterious, heroic, romantic, comedic |
+| **Instruments** | Strings swelling, piano melody, percussion building, synth pads |
+| **Dynamic** | Soft underscore, building intensity, crescendo, diminuendo |
+| **Tempo** | Slow and deliberate, moderate pace, fast-paced, accelerating |
+
+#### Speech/Dialogue
+| Element | Format |
+|---------|--------|
+| **Direct Dialogue** | "What are you doing here?" spoken in whispered, fearful tone |
+| **Narration** | Deep male voiceover: "The journey had only begun..." |
+| **Vocal Quality** | Raspy, clear, echoing, muffled, trembling, confident |
+| **Emotion** | Anger, sadness, excitement, fear, confusion, determination |
+| **Volume** | Whispered, normal speaking, shouting, barely audible |
+
+---
+
+## 📋 ENHANCED JSON SCHEMA
+
+```json
+{
+  "story": {
+    "title": "Story Title",
+    "description": "Brief synopsis",
+    "visual_style": {
+      "art_style": "photorealistic cinematic",
+      "color_palette": "dominant colors and mood",
+      "lighting": "primary lighting style",
+      "aspect_ratio": "16:9",
+      "quality": "8K, cinematic, film grain"
+    },
+    "audio_style": {
+      "music_genre": "orchestral cinematic",
+      "overall_tone": "emotional descriptor",
+      "ambient_base": "default environment sounds"
+    },
+    "characters": [
+      {
+        "id": "char_id",
+        "name": "Name",
+        "description": "Detailed appearance with clothing, hair, features",
+        "voice_description": "Voice quality and accent if speaking",
+        "size_index": 5,
+        "size_reference": "height reference"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_id",
+        "name": "Location Name",
+        "description": "Environment description",
+        "ambient_sounds": "Default sounds for this location"
+      }
+    ]
+  },
+  
+  "frames": [
+    {
+      "frame_id": "frame_001",
+      "video_clip_id": "video_001",
+      "frame_position": "first",
+      "location_id": "loc_id",
+      "characters_in_scene": ["char_id"],
+      "prompt": "Detailed visual description",
+      "camera": "shot type and angle",
+      "lighting_detail": "specific lighting for this frame",
+      "generate_image": true
+    }
+  ],
+  
+  "video_clips": [
+    {
+      "clip_id": "video_001",
+      "first_frame": "frame_001",
+      "last_frame": "frame_002",
+      "duration_seconds": 8,
+      "veo3_prompt": "FULL DETAILED PROMPT - see structure below",
+      "audio_description": {
+        "sfx": ["specific sound effect 1", "specific sound effect 2"],
+        "bgm": "music description with mood and instruments",
+        "speech": "dialogue or narration with delivery style",
+        "ambient": "environmental sounds"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## 🎬 VEO3 PROMPT EXAMPLES (Detailed Format)
+
+### Example 1: Action Scene
+```
+veo3_prompt: "Cinematic action, high contrast lighting. Young warrior in leather armor sprints through torch-lit stone corridor, dodging falling debris. Runs left to right frame, jumping over obstacles, cape flowing behind. Face shows determination mixed with fear. CAMERA: Steadicam following shot, slight low angle, tracking at running speed. Movement becomes intensely handheld as explosion rocks the corridor behind her."
+
+audio_description: {
+  "sfx": ["Boots pounding on stone floor", "Distant explosions", "Stones crumbling and falling", "Cape fabric whooshing", "Heavy breathing"],
+  "bgm": "Intense orchestral percussion building, brass staccato hits, strings tremolo creating urgency, tempo accelerating",
+  "speech": "Woman gasping: 'Almost there... just a little further!' - breathless, determined tone",
+  "ambient": "Echo chamber acoustics, fire crackling in background, wind from corridors"
+}
+```
+
+### Example 2: Emotional Dialogue Scene
+```
+veo3_prompt: "Intimate drama, soft diffused lighting through window. Elderly father sits in worn armchair, wrinkled hands clasped. Adult daughter kneels beside him, reaching for his hand. Both have tears forming. Scene is still except for subtle breathing. Warm golden hour light creates rim lighting on their silhouettes. CAMERA: Static medium two-shot, eye level, holds position to let emotion breathe. Slight dolly in as hands touch."
+
+audio_description: {
+  "sfx": ["Clock ticking softly", "Chair leather creaking", "Fabric rustling as daughter moves", "Soft sobbing"],
+  "bgm": "Solo piano, melancholic minor key, simple melody, very soft dynamic level, played with rubato and emotional pauses",
+  "speech": "Father (trembling voice): 'I should have told you sooner...' / Daughter (whispered, tearful): 'It's okay, Dad. I'm here now.'",
+  "ambient": "Quiet room tone, distant birds outside, soft wind against windows"
+}
+```
+
+### Example 3: Epic Reveal Scene
+```
+veo3_prompt: "Epic fantasy, volumetric god rays through clouds. Massive dragon (50 meters wingspan) emerges from mountain peak, wings unfurling in slow motion. Scales shimmer iridescent purple-gold. Hero figure small in foreground looks up in awe. Snow and debris scatter from wingbeats. CAMERA: Starts on hero close-up, dramatic crane up and out to reveal full dragon scale, continues pulling back to show size comparison. Dutch angle adds drama."
+
+audio_description: {
+  "sfx": ["Massive wings unfurling like sails", "Deep resonant roar shaking the air", "Rocks crumbling from mountain", "Wind rush from wingbeats", "Snow and ice scattering"],
+  "bgm": "Full orchestra fortissimo, brass fanfare, choir singing 'ahh' in awe, timpani rolls, crescendo to peak as dragon fully revealed",
+  "speech": "Hero (awestruck whisper): 'By the gods...' - voice barely audible against the spectacle",
+  "ambient": "Mountain wind howling, distant thunder, echo off mountain peaks"
+}
+```
+
+### Example 4: Horror/Suspense Scene
+```
+veo3_prompt: "Psychological horror, chiaroscuro lighting with deep shadows. Woman alone in Victorian bedroom, candle only light source. Shadows move unnaturally on walls behind her - she doesn't notice. Slowly turns head, sensing something. Eyes widen in terror as she sees reflection in mirror that doesn't match her movement. CAMERA: Static wide shot holding unnervingly long, then slow zoom into mirror reflection. Handheld shake increases with tension."
+
+audio_description: {
+  "sfx": ["Floorboards creaking with no footsteps", "Candle flame flickering", "Something scratching behind walls", "Sharp intake of breath", "Mirror glass vibrating subtly"],
+  "bgm": "Atonal strings, dissonant cello drones, sudden silence for maximum impact, single piano note struck when horror revealed",
+  "speech": "Woman (terrified whisper): 'Who... who's there?' - voice cracking, barely controlled panic",
+  "ambient": "Oppressive silence, distant house settling, wind moaning through gaps in windows"
+}
+```
+
+### Example 5: Comedy Scene
+```
+veo3_prompt: "Bright comedy, flat even lighting like sitcom. Clumsy chef in white uniform navigates busy restaurant kitchen. Slips on banana peel in slow motion, arms windmilling, expression transforming from confidence to panic to resignation. Knocks over stack of pots in domino effect. Falls into giant wedding cake. CAMERA: Wide shot to capture chaos, whip pan following flying pots, crash zoom on face before impact with cake."
+
+audio_description: {
+  "sfx": ["Cartoon slip sound", "Cascading metal pots clanging", "Splat into frosting", "Comedic whistle during fall", "Kitchen staff gasping then laughing"],
+  "bgm": "Upbeat jazz percussion, pizzicato strings during slip, trombone 'wah-wah' for impact, returns to cheerful melody",
+  "speech": "Chef (during fall, drawn out): 'Nooooooooo!' / Other chef (laughing): 'Not again, Pierre!'",
+  "ambient": "Busy kitchen atmosphere, orders being called, sizzling pans, kitchen chatter"
+}
+```
+
+---
+
+## 📖 COMPLETE ENHANCED EXAMPLE (5 Clips)
+
+```json
+{
+  "story": {
+    "title": "The Last Guardian",
+    "description": "A young girl discovers a dying forest spirit and must restore its power before sunrise",
+    "visual_style": {
+      "art_style": "photorealistic CGI with fantasy elements",
+      "color_palette": "Deep forest greens transitioning to magical bioluminescent blues and golds",
+      "lighting": "Volumetric moonlight with bioluminescent accents, transitioning to warm sunrise",
+      "aspect_ratio": "16:9",
+      "quality": "8K, cinematic film grain, anamorphic lens flares"
+    },
+    "audio_style": {
+      "music_genre": "orchestral fantasy with ethereal choir",
+      "overall_tone": "Wonder, urgency, hope",
+      "ambient_base": "Ancient forest at night, magical energy hums"
+    },
+    "characters": [
+      {
+        "id": "char_lily",
+        "name": "Lily",
+        "description": "10-year-old girl, wild auburn hair with leaves tangled in it, pale freckled skin, oversized green hooded cloak, bare feet dirty from forest, carries a cracked crystal lantern that pulses with fading light",
+        "voice_description": "Young, innocent but determined, slight Irish accent, speaks in whispers mostly",
+        "size_index": 2,
+        "size_reference": "4 feet tall"
+      },
+      {
+        "id": "char_guardian",
+        "name": "Elderoot",
+        "description": "Ancient tree spirit, 15 feet tall, body of twisted oak bark and moss, face formed from natural knots and whorls, eyes like amber gems that flicker weakly, branches for arms with leaves that glow faintly, roots emerge from lower body trailing into ground",
+        "voice_description": "Deep, resonant like wind through hollow trees, slow and deliberate, wise but weakening",
+        "size_index": 8,
+        "size_reference": "15 feet tall"
+      }
+    ],
+    "locations": [
+      {
+        "id": "loc_dying_grove",
+        "name": "The Dying Grove",
+        "description": "Once-magical forest clearing now withering, ancient oak at center (Elderoot's home), bioluminescent flowers dimming, magical particles fading in air, fog creeping in from edges",
+        "ambient_sounds": "Weak magical hum fading, distant wind, occasional leaf falling, Elderoot's labored breathing like creaking wood"
+      },
+      {
+        "id": "loc_heart_pool",
+        "name": "The Heart Pool",
+        "description": "Hidden spring beneath giant oak roots, water glows with concentrated magic, reflects starlight, crystals line the edges, source of forest's power",
+        "ambient_sounds": "Water trickling, crystals humming, magical energy pulsing like heartbeat"
+      }
+    ]
+  },
+  
+  "frames": [
+    {
+      "frame_id": "frame_001",
+      "video_clip_id": "video_001",
+      "frame_position": "first",
+      "location_id": "loc_dying_grove",
+      "characters_in_scene": ["char_lily"],
+      "prompt": "Lily stands at the edge of the dying grove, lantern raised, casting weak amber light. Her face shows mixture of fear and determination. Fog creeps around her bare feet. Dead leaves float in foreground. Moonlight breaks through dying canopy above, creating dramatic rim lighting on her silhouette. Background shows the massive silhouette of the dying oak tree.",
+      "camera": "Wide establishing shot, slightly low angle to show scale of forest",
+      "lighting_detail": "Moonlight from above-right, lantern warm glow on face, cool blue fog at ground level",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_002",
+      "video_clip_id": "video_001",
+      "frame_position": "last",
+      "location_id": "loc_dying_grove",
+      "characters_in_scene": ["char_lily", "char_guardian"],
+      "prompt": "Lily now kneeling at the base of the giant oak. Elderoot's face visible in the bark, eyes flickering weakly like dying embers. One of Elderoot's branch-arms reaches down toward Lily. Her hand reaches up. Gap between their hands prominent. Magical particles drift weakly between them. Her face wet with tears reflecting the fading bioluminescence.",
+      "camera": "Medium two-shot, eye level with Lily, emphasis on the reaching hands",
+      "lighting_detail": "Dying amber glow from Elderoot's eyes, lantern on ground beside Lily, moonlight dimmer as clouds pass",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_003",
+      "video_clip_id": "video_002",
+      "frame_position": "first",
+      "generate_image": false,
+      "reuse_frame": "frame_002",
+      "notes": "STRICT REUSE: Previous clip's last frame"
+    },
+    {
+      "frame_id": "frame_004",
+      "video_clip_id": "video_002",
+      "frame_position": "last",
+      "location_id": "loc_dying_grove",
+      "characters_in_scene": ["char_lily", "char_guardian"],
+      "prompt": "Their hands have touched. Golden energy flows from Elderoot's hand into Lily's arm, visible as glowing veins under her skin. Lily's eyes closed, face peaceful despite energy coursing through her. Elderoot's eyes brightened slightly. Small burst of magic spreading outward from their touch, nearby flowers beginning to glow again.",
+      "camera": "Close-up on joined hands with faces visible in background, shallow depth of field",
+      "lighting_detail": "Golden energy glow as primary light source, spreading warm light on both faces",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_005",
+      "video_clip_id": "video_003",
+      "frame_position": "first",
+      "generate_image": false,
+      "reuse_frame": "frame_004",
+      "notes": "STRICT REUSE: Previous clip's last frame"
+    },
+    {
+      "frame_id": "frame_006",
+      "video_clip_id": "video_003",
+      "frame_position": "last",
+      "location_id": "loc_heart_pool",
+      "characters_in_scene": ["char_lily"],
+      "prompt": "Lily descending ancient stone steps into the Heart Pool chamber. The pool glows vibrant blue in center frame. Crystals along edges pulse with light. Her reflection visible in the still water. She holds her now-glowing hand forward, matching the pool's color. Roots of the great oak visible as ceiling of cave. Expression shows awe and purpose.",
+      "camera": "Over-shoulder following shot, revealing the magical pool ahead",
+      "lighting_detail": "Blue magical glow from pool reflecting on everything, no other light sources needed",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_007",
+      "video_clip_id": "video_004",
+      "frame_position": "first",
+      "generate_image": false,
+      "reuse_frame": "frame_006",
+      "notes": "STRICT REUSE: Previous clip's last frame"
+    },
+    {
+      "frame_id": "frame_008",
+      "video_clip_id": "video_004",
+      "frame_position": "last",
+      "location_id": "loc_heart_pool",
+      "characters_in_scene": ["char_lily"],
+      "prompt": "Lily stands in the center of the pool, water at her waist. Both arms raised above her head, palms up. Massive column of blue-gold energy erupts upward from the pool through her and through the roof of roots. Her hair floating upward. Eyes closed, serene smile. Crystals around pool now blazing with light. Water rippling outward from her in circular waves.",
+      "camera": "Low angle wide shot, emphasizing vertical energy column, Lily small but central",
+      "lighting_detail": "Blinding blue-gold light from center, lens flares, everything overexposed with magic",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_009",
+      "video_clip_id": "video_005",
+      "frame_position": "first",
+      "generate_image": false,
+      "reuse_frame": "frame_008",
+      "notes": "STRICT REUSE: Previous clip's last frame"
+    },
+    {
+      "frame_id": "frame_010",
+      "video_clip_id": "video_005",
+      "frame_position": "last",
+      "location_id": "loc_dying_grove",
+      "characters_in_scene": ["char_lily", "char_guardian"],
+      "prompt": "Dawn breaks over the restored grove. Elderoot now standing tall, bark renewed and green, eyes bright amber, leaves full and vibrant. Lily rides on his shoulder, laughing. Flowers bloom everywhere. Bioluminescent particles dance in the morning light. Animals peek from restored foliage. The crystal lantern now blazes with pure light. Both looking toward the rising sun. Wide shot showing the full restored forest.",
+      "camera": "Crane up establishing shot, sunrise backlighting the scene, wide to show restored forest",
+      "lighting_detail": "Warm sunrise golden hour light from behind, magical sparkles throughout, no shadows",
+      "generate_image": true
+    }
+  ],
+  
+  "video_clips": [
+    {
+      "clip_id": "video_001",
+      "first_frame": "frame_001",
+      "last_frame": "frame_002",
+      "duration_seconds": 12,
+      "veo3_prompt": "Atmospheric fantasy, volumetric moonlight through dying forest canopy. Young girl in green cloak walks slowly into dying grove, lantern raised, bare feet stepping carefully over dead leaves. Face shows determination overcoming fear. Walks toward massive dying oak tree. Fog swirls around her feet. As she approaches, ancient face becomes visible in bark - the guardian spirit. She kneels, reaching up toward him. CAMERA: Starts wide establishing shot, slow dolly in following her movement, ends on medium two-shot as she kneels. Slight handheld adds vulnerability.",
+      "audio_description": {
+        "sfx": ["Bare feet on dead leaves crunching", "Lantern glass clinking softly", "Wind through dead branches", "Wood creaking as guardian awakens", "Lily's soft gasp of recognition"],
+        "bgm": "Low strings drone establishing unease, solo oboe melody emerges with her approach - melancholic but hopeful, builds slightly as guardian appears, soft choir hum on final shot",
+        "speech": "Lily (whispered, trembling): 'Elderoot? Can you hear me? I came like you asked...' / Elderoot (weak, creaking voice): 'Child... you came... there is... little time...'",
+        "ambient": "Dying magical hum, occasional distant owl, leaves falling, Elderoot's labored breathing like ancient wood settling"
+      }
+    },
+    {
+      "clip_id": "video_002",
+      "first_frame": "frame_003",
+      "last_frame": "frame_004",
+      "duration_seconds": 10,
+      "veo3_prompt": "Intimate fantasy moment, fading bioluminescence and dying amber glow. Lily and guardian's hands reaching toward each other - gap closing slowly. Both trembling. When fingers touch, golden energy bursts forth, flowing as visible veins up Lily's arm. Her eyes close peacefully. Guardian's eyes brighten. Small magical explosion spreads outward, nearby flowers instantly begin glowing again. CAMERA: Close-up centered on hands, shallow depth of field with faces soft in background, slight dolly in as hands meet, holds on connection moment.",
+      "audio_description": {
+        "sfx": ["Energy transfer pulse building", "Magical electricity crackling softly", "Flower petals rustling as magic reaches them", "Lily's peaceful exhale", "Wood groaning as guardian strengthens"],
+        "bgm": "Strings tremolo building anticipation, harp glissando at moment of touch, full warm strings as energy flows, choir enters singing sustained 'ahh' as magic spreads, hopeful resolution",
+        "speech": "Elderoot (stronger now): 'Take my remaining power... find the Heart Pool... restore what was lost...' / Lily (eyes closed, receiving power): 'I can feel it... I can feel the forest...'",
+        "ambient": "Magical hum growing in strength, forest sounds returning faintly - distant birds, leaves rustling"
+      }
+    },
+    {
+      "clip_id": "video_003",
+      "first_frame": "frame_005",
+      "last_frame": "frame_006",
+      "duration_seconds": 8,
+      "veo3_prompt": "Transition to underground wonder, blue magical lighting. Lily descends ancient moss-covered stone steps, one hand trailing on root-covered wall, other hand glowing with borrowed power. Steps carefully but with purpose. Ahead, the Heart Pool reveals itself - glowing blue water in crystal-lined cave. Her reflection appears in the still surface. Expression shifts from determination to pure childlike awe. CAMERA: Over-shoulder following shot down stairs, reveals pool dramatically as she reaches bottom, slight crane up to show full scope of magical pool.",
+      "audio_description": {
+        "sfx": ["Bare feet on stone steps", "Water dripping in cave", "Crystals chiming softly", "Magical pulse from pool like heartbeat", "Lily's amazed gasp"],
+        "bgm": "Woodwinds descending motif for stairs, building anticipation, swells to full strings and choir as pool revealed, celeste adds magical sparkle, warm major key resolution",
+        "speech": "Lily (breathless whisper as pool revealed): 'It's beautiful... Elderoot, I can see why you love this place...' / (to herself, determined): 'I won't let you down.'",
+        "ambient": "Water echoing in cave, crystals humming in harmony, deep magical pulse like heartbeat every 2 seconds"
+      }
+    },
+    {
+      "clip_id": "video_004",
+      "first_frame": "frame_007",
+      "last_frame": "frame_008",
+      "duration_seconds": 10,
+      "veo3_prompt": "Epic magical transformation, overwhelming blue-gold light. Lily wades into glowing pool, water at waist. Raises both arms skyward. Massive column of energy erupts upward through her, through the roots above, into the sky. Her hair floats upward. Face serene with eyes closed. Crystals around pool blazing. Water ripples outward in perfect circles. Light intensifies until almost blinding. CAMERA: Low angle wide shot emphasizing verticality of energy column, slight Dutch angle for drama, Lily centered but small against column of power, lens flares dance across frame.",
+      "audio_description": {
+        "sfx": ["Water rushing upward", "Energy column roaring like contained thunder", "Crystals resonating at high frequency", "Lily's robes and hair whipping in magical wind", "Surge of power crescendo"],
+        "bgm": "Full orchestra fortissimo, brass fanfare, timpani rolls, full choir singing in crescendo, all instruments building to overwhelming climax, sustained peak as energy maxes out",
+        "speech": "Lily (channeling, echoing voice): 'By the roots that bind... by the leaves that breathe... by the magic that flows through all living things... I RESTORE YOU!'",
+        "ambient": "All ambient sounds drowned out by overwhelming magical energy, gradual return of distant forest sounds during climax suggests restoration spreading"
+      }
+    },
+    {
+      "clip_id": "video_005",
+      "first_frame": "frame_009",
+      "last_frame": "frame_010",
+      "duration_seconds": 12,
+      "veo3_prompt": "Triumphant resolution, warm sunrise golden hour. Cut to surface - energy column fades as sunrise breaks. Forest restored to vibrant life. Elderoot now standing tall, bark green and new, eyes bright. He lifts a laughing Lily onto his shoulder. Flowers bloom around them in time-lapse speed. Animals emerge from restored foliage. Bioluminescent particles dance in sunbeams. Crystal lantern on Lily's belt now blazes pure white. Both look toward rising sun, silhouetted against warm light. CAMERA: Wide establishing shot, crane up slowly to reveal full restored forest, ends as true crane rising to capture scope of resurrection, lens flares from sun.",
+      "audio_description": {
+        "sfx": ["Birds singing morning chorus", "Flowers popping open", "Leaves unfurling", "Elderoot's strong wooden footsteps", "Lily's delighted laughter", "Forest animals calls - deer, squirrels, songbirds"],
+        "bgm": "Resolution theme in major key, warm strings carrying main melody, French horn heroic countermelody, full orchestra playing with hope and triumph, choir singing wordless joy, ends on sustained major chord with celeste twinkle",
+        "speech": "Elderoot (voice now strong, resonant): 'You did it, child. The forest will live another thousand years because of you.' / Lily (laughing with joy): 'We did it together, Elderoot. We're family now.' / Elderoot: 'Yes... family.'",
+        "ambient": "Full forest soundscape restored - birdsong, insects humming, leaves rustling, water flowing in streams, magical sparkle undertone"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## 🎯 PROMPT QUALITY CHECKLIST
+
+For each `veo3_prompt`, verify it includes:
+
+- [ ] **Scene Style**: Lighting, atmosphere, visual quality
+- [ ] **Action Breakdown**: What exactly happens, in what order
+- [ ] **Subject Directionality**: Which way subjects move, face, look
+- [ ] **Speed/Timing**: Slow motion, normal, fast, when things happen
+- [ ] **Camera Movement**: Full description of camera behavior
+- [ ] **Emotional Beat**: What feeling the shot conveys
+
+For each `audio_description`, verify it includes:
+
+- [ ] **Specific SFX**: 3-5 distinct sounds, not generic categories
+- [ ] **BGM Detail**: Instruments, mood, dynamics, when changes occur
+- [ ] **Speech**: Exact dialogue with delivery notes (emotion, volume, quality)
+- [ ] **Ambient**: Location-specific background sounds
+
+---
+
+## 🔧 AUDIO PROMPT FORMATTING TIPS
+
+### Good SFX Examples:
+❌ "Sound effects"
+❌ "Walking sounds"
+✅ "Heavy boots crunching on gravel, then splashing through puddle"
+✅ "Keys jingling in pocket, followed by metallic door lock clicking open"
+
+### Good BGM Examples:
+❌ "Dramatic music"
+❌ "Orchestral soundtrack"
+✅ "Low cello sustain building tension, sudden silence, then full brass and percussion impact"
+✅ "Playful xylophone melody over pizzicato strings, tempo quickening with character's excitement"
+
+### Good Speech Examples:
+❌ "Character speaks"
+❌ "Dialogue happens"
+✅ "Man (gruff, Brooklyn accent): 'You think this is a game?' - spoken through clenched teeth"
+✅ "Child (excited, slightly out of breath): 'Mom, mom, look what I found!' - volume increasing with excitement"
+
+---
+
+## 📌 GENERATION RULES
+
+1. **ONLY frame_001 gets `"generate_image": true` as a first frame**
+2. **ALL other first frames get `"generate_image": false, "reuse_frame": "frame_XXX"`**
+3. **ALL last frames get `"generate_image": true`**
+4. **Each last frame must show meaningful visual CHANGE from its first frame**
+5. **veo3_prompt must describe the ACTION/TRANSITION between first and last frame**
+6. **audio_description must sync with visual action timing**
+
+---
+
+## 🎬 Now Analyze This Video
+
+**YouTube Video URL:** [Paste URL Here]
+
+Generate the complete JSON following this ENHANCED schema with detailed prompts including:
+- Specific scene style and lighting
+- Detailed action choreography with timing
+- Exact camera movements and angles
+- Complete SFX list with specifics
+- BGM with instruments, mood, and dynamics
+- All dialogue/narration with delivery style
+- Ambient sounds matching location
+
+Output ONLY valid JSON - no markdown, no explanations.

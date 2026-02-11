@@ -1,0 +1,62 @@
+{
+    "story": {
+        "title": "Story Title Here",
+        "visual_style": {
+            "art_style": "photorealistic cinematic",
+            "color_palette": "warm golden hour tones with deep shadows",
+            "lighting": "natural dramatic lighting with volumetric rays",
+            "aspect_ratio": "16:9",
+            "quality": "8K, ultra detailed, film grain"
+        },
+        "characters": [
+            {
+                "id": "char_hero",
+                "name": "Character Name",
+                "description": "Detailed appearance: age, build, hair, eyes, clothing, distinguishing features",
+                "size_index": 5,
+                "size_reference": "average adult height (5'10\")"
+            }
+        ],
+        "locations": [
+            {
+                "id": "loc_main",
+                "name": "Location Name",
+                "description": "Rich environment description with atmosphere, lighting, key features"
+            }
+        ]
+    },
+    "frames": [
+        {
+            "frame_id": "frame_001",
+            "video_clip_id": "video_001",
+            "frame_position": "first",
+            "location_id": "loc_main",
+            "characters_in_scene": [
+                "char_hero"
+            ],
+            "prompt": "Detailed scene description for image generation - character action, expression, environment details",
+            "camera": "shot type (wide/medium/close), angle (eye level/low/high), movement (static/tracking/pan)"
+        },
+        {
+            "frame_id": "frame_002",
+            "video_clip_id": "video_001",
+            "frame_position": "last",
+            "location_id": "loc_main",
+            "characters_in_scene": [
+                "char_hero"
+            ],
+            "prompt": "End state of the scene - where character ends up, final action/pose",
+            "camera": "shot type, angle, movement"
+        }
+    ],
+    "video_clips": [
+        {
+            "clip_id": "video_001",
+            "first_frame": "frame_001",
+            "last_frame": "frame_002",
+            "duration_seconds": 8,
+            "veo3_prompt": "Concise action description from first frame to last frame for video generation",
+            "audio_description": "Sound effects, music mood, dialogue if any"
+        }
+    ]
+}

@@ -1,0 +1,352 @@
+# YouTube Video to VEO3 Story Prompt Generator
+
+## Instructions for AI (Claude/Gemini/GPT)
+
+Analyze the content of the YouTube video at the following link: **[Insert YouTube Video Link Here]**
+
+Your task is to deconstruct the video's narrative and visual elements into a structured JSON format for story and video generation. Create a detailed "story bible" and shot list capturing the visual style, characters, locations, and sequence of events.
+
+---
+
+## JSON Schema Structure
+
+```json
+{
+  "story": {
+    "title": "Story Title",
+    "description": "Brief story synopsis",
+    "visual_style": {
+      "art_style": "cinematic style description",
+      "color_palette": "dominant colors and tones",
+      "lighting": "lighting style description",
+      "aspect_ratio": "16:9",
+      "quality": "quality descriptors (8K, film grain, etc.)"
+    },
+    
+    "characters": [
+      {
+        "id": "char_unique_id",
+        "name": "Character Name",
+        "description": "Detailed appearance description including age, clothing, features",
+        "size_index": 5,
+        "size_reference": "height reference (e.g., average adult 5'10\")"
+      }
+    ],
+    
+    "locations": [
+      {
+        "id": "loc_unique_id",
+        "name": "Location Name",
+        "description": "Rich environment description"
+      }
+    ]
+  },
+  
+  "frames": [
+    {
+      "frame_id": "frame_001",
+      "video_clip_id": "video_001",
+      "frame_position": "first",
+      "location_id": "loc_id",
+      "characters_in_scene": ["char_id1", "char_id2"],
+      "prompt": "Detailed scene description for image generation",
+      "camera": "shot type, angle, movement",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_002",
+      "video_clip_id": "video_001",
+      "frame_position": "last",
+      "location_id": "loc_id",
+      "characters_in_scene": ["char_id1", "char_id2"],
+      "prompt": "Detailed scene description for image generation",
+      "camera": "shot type, angle, movement",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_003",
+      "video_clip_id": "video_002",
+      "frame_position": "first",
+      "location_id": "loc_id",
+      "characters_in_scene": ["char_id1", "char_id2"],
+      "prompt": "Same as frame_002 - scene continues from same position",
+      "camera": "same as frame_002",
+      "generate_image": false,
+      "reuse_frame": "frame_002",
+      "notes": "Reusing last frame of previous clip as starting frame"
+    }
+  ],
+  
+  "video_clips": [
+    {
+      "clip_id": "video_001",
+      "first_frame": "frame_001",
+      "last_frame": "frame_002",
+      "duration_seconds": 8,
+      "veo3_prompt": "Action description from first to last frame",
+      "audio_description": "Sound, music, dialogue description"
+    },
+    {
+      "clip_id": "video_002",
+      "first_frame": "frame_003",
+      "last_frame": "frame_004",
+      "duration_seconds": 8,
+      "veo3_prompt": "Action description continuing from previous clip",
+      "audio_description": "Sound, music, dialogue description"
+    }
+  ]
+}
+```
+
+---
+
+## Key Rules for Frame Generation
+
+### 1. First & Last Frame Per Clip
+- Each video clip has exactly **2 frames**: `first` (start) and `last` (end)
+- VEO3 will generate video interpolating between these keyframes
+
+### 2. Frame Reuse Logic (IMPORTANT!)
+**When the next clip starts from the same position as the previous clip ended:**
+
+- Set `"generate_image": false` on the first frame of the new clip
+- Add `"reuse_frame": "frame_XXX"` pointing to the last frame of the previous clip
+- This saves image generation and ensures perfect continuity
+
+**Example:**
+- Clip 1 ends with frame_002 (character standing in doorway)
+- Clip 2 starts with frame_003 (same character, same doorway, slight pose change)
+- Result: `frame_003` should have `"generate_image": false, "reuse_frame": "frame_002"`
+
+**When to reuse frames:**
+- Same location and camera angle
+- Same character positions
+- Only subtle movement or expression changes
+- Continuous action flow
+
+**When NOT to reuse frames:**
+- Location change
+- Camera angle change (wide → close-up)
+- Major character repositioning
+- Scene cuts or transitions
+
+### 3. Camera Angle Variations
+When describing the same scene from different angles, use descriptive camera terms:
+
+| Angle Type | Description |
+|------------|-------------|
+| **Wide/Establishing** | Shows full environment, characters small in frame |
+| **Medium Shot** | Waist-up, good for dialogue and action |
+| **Close-up** | Face/detail focus, emotional emphasis |
+| **Over-the-shoulder** | From behind one character looking at another |
+| **Low Angle** | Camera below eye level, makes subject imposing |
+| **High Angle** | Camera above, makes subject vulnerable/small |
+| **Dutch Angle** | Tilted camera for tension/disorientation |
+| **POV** | First-person perspective of a character |
+| **Tracking** | Camera follows moving subject |
+| **Pan/Tilt** | Camera rotates on axis |
+
+### 4. Size Index Reference
+```
+1: very small (toddler/pet ~2-3 feet)
+2: small (child ~4 feet)
+3: below average (~5 feet)
+4: slightly below average (~5'6")
+5: average (~5'10")
+6: above average (~6'2")
+7: tall (~6'5")
+8: very tall (~7 feet)
+9: giant (8+ feet)
+10: massive (building-sized)
+```
+
+---
+
+## Example Output with Frame Reuse
+
+```json
+{
+  "story": {
+    "title": "The Guardian's Journey",
+    "description": "A young girl discovers an ancient forest spirit and embarks on a magical quest",
+    "visual_style": {
+      "art_style": "photorealistic CGI, nature documentary style",
+      "color_palette": "lush greens, warm golden sunlight, deep forest shadows",
+      "lighting": "natural volumetric lighting, god rays through canopy",
+      "aspect_ratio": "16:9",
+      "quality": "8K, ultra-detailed, cinematic depth of field"
+    },
+    
+    "characters": [
+      {
+        "id": "char_guardian",
+        "name": "The Forest Guardian",
+        "description": "Ancient tree spirit with bark-like skin, glowing green eyes, moss growing on shoulders, humanoid form made of twisted wood and vines",
+        "size_index": 8,
+        "size_reference": "very tall, towers over humans at 12 feet"
+      },
+      {
+        "id": "char_child",
+        "name": "Maya",
+        "description": "8-year-old girl with curly brown hair, wearing a simple green dress and bare feet, carrying a small lantern",
+        "size_index": 2,
+        "size_reference": "child height, 4 feet tall"
+      }
+    ],
+    
+    "locations": [
+      {
+        "id": "loc_ancient_forest",
+        "name": "Ancient Forest",
+        "description": "Primordial forest with massive trees hundreds of feet tall, bioluminescent mushrooms on the forest floor, misty atmosphere, shafts of golden light piercing through"
+      },
+      {
+        "id": "loc_clearing",
+        "name": "Sacred Clearing",
+        "description": "Circular clearing in the forest with a ancient stone altar in the center, ring of standing stones, wildflowers, soft ethereal light"
+      }
+    ]
+  },
+  
+  "frames": [
+    {
+      "frame_id": "frame_001",
+      "video_clip_id": "video_001",
+      "frame_position": "first",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child"],
+      "prompt": "Maya walking alone through the ancient forest, holding her lantern up, looking around with wonder and slight fear, massive trees towering above her, bioluminescent mushrooms glowing at her feet",
+      "camera": "wide shot, slightly high angle showing her small against the massive forest",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_002",
+      "video_clip_id": "video_001",
+      "frame_position": "last",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child"],
+      "prompt": "Maya stopping suddenly, lantern raised, staring up at something off-screen with awe, golden light beginning to filter through the trees ahead",
+      "camera": "medium shot, low angle emphasizing her looking upward",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_003",
+      "video_clip_id": "video_002",
+      "frame_position": "first",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child"],
+      "prompt": "Maya standing still with lantern raised, eyes wide looking upward (same position as frame_002)",
+      "camera": "medium shot, low angle",
+      "generate_image": false,
+      "reuse_frame": "frame_002",
+      "notes": "Continues from previous clip's ending - Guardian is about to appear"
+    },
+    {
+      "frame_id": "frame_004",
+      "video_clip_id": "video_002",
+      "frame_position": "last",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child", "char_guardian"],
+      "prompt": "The Forest Guardian now fully emerged between the trees, towering over Maya who looks up in wonder, guardian's green eyes glowing, bark-skin catching the golden light",
+      "camera": "wide shot, low angle from Maya's perspective showing the guardian's imposing height",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_005",
+      "video_clip_id": "video_003",
+      "frame_position": "first",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child", "char_guardian"],
+      "prompt": "The Guardian towering over Maya in the forest (continuing from frame_004 perspective)",
+      "camera": "wide shot, low angle",
+      "generate_image": false,
+      "reuse_frame": "frame_004",
+      "notes": "Same scene continues - Guardian will begin kneeling"
+    },
+    {
+      "frame_id": "frame_006",
+      "video_clip_id": "video_003",
+      "frame_position": "last",
+      "location_id": "loc_ancient_forest",
+      "characters_in_scene": ["char_child", "char_guardian"],
+      "prompt": "The Guardian kneeling down to Maya's level, extending a wooden hand gently, Maya reaching out hesitantly, their hands about to touch, soft magical glow between them",
+      "camera": "medium two-shot, eye level, intimate framing of the connection moment",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_007",
+      "video_clip_id": "video_004",
+      "frame_position": "first",
+      "location_id": "loc_clearing",
+      "characters_in_scene": ["char_child", "char_guardian"],
+      "prompt": "Maya riding on the Guardian's shoulder as they walk toward the sacred clearing entrance, ancient trees parting to reveal the clearing ahead",
+      "camera": "wide shot from behind, following them",
+      "generate_image": true
+    },
+    {
+      "frame_id": "frame_008",
+      "video_clip_id": "video_004",
+      "frame_position": "last",
+      "location_id": "loc_clearing",
+      "characters_in_scene": ["char_child", "char_guardian"],
+      "prompt": "Guardian and Maya entering the clearing, stone altar visible in the center, standing stones surrounding them, wildflowers swaying, ethereal light from above",
+      "camera": "wide establishing shot showing the full clearing",
+      "generate_image": true
+    }
+  ],
+  
+  "video_clips": [
+    {
+      "clip_id": "video_001",
+      "first_frame": "frame_001",
+      "last_frame": "frame_002",
+      "duration_seconds": 8,
+      "veo3_prompt": "A young girl walks through an ancient bioluminescent forest holding a lantern, stops and looks up in awe as golden light breaks through the trees ahead",
+      "audio_description": "Mysterious forest ambience, gentle footsteps, soft magical chimes building"
+    },
+    {
+      "clip_id": "video_002",
+      "first_frame": "frame_003",
+      "last_frame": "frame_004",
+      "duration_seconds": 10,
+      "veo3_prompt": "A massive tree spirit guardian emerges from between the ancient trees, towering over the awestruck girl who stares up at the glowing-eyed entity",
+      "audio_description": "Deep rumbling footsteps, wood creaking, swelling orchestral music, magical shimmer sound"
+    },
+    {
+      "clip_id": "video_003",
+      "first_frame": "frame_005",
+      "last_frame": "frame_006",
+      "duration_seconds": 10,
+      "veo3_prompt": "The towering guardian slowly kneels down to the girl's level and extends its wooden hand toward her in a gentle greeting gesture",
+      "audio_description": "Wood creaking as guardian kneels, soft emotional music, magical energy hum"
+    },
+    {
+      "clip_id": "video_004",
+      "first_frame": "frame_007",
+      "last_frame": "frame_008",
+      "duration_seconds": 12,
+      "veo3_prompt": "The guardian carries the girl on its shoulder through the forest into a sacred clearing with standing stones and a central altar, bathed in ethereal light",
+      "audio_description": "Ethereal choir, wind through standing stones, magical energy crescendo"
+    }
+  ]
+}
+```
+
+---
+
+## Now Analyze This Video
+
+**YouTube Video URL:** [Paste URL Here]
+
+Generate the complete JSON following this schema. Be thorough in:
+
+1. **Identifying all distinct characters** with detailed appearances
+2. **Describing all locations** with rich environmental details
+3. **Breaking down the video into logical clips** with clear first/last frame descriptions
+4. **Using frame reuse strategically** - when clip N+1 starts exactly where clip N ended, mark `"generate_image": false` and reference the previous frame
+5. **Including camera angles** that match the original video's cinematography
+6. **Writing prompts** that would allow accurate image generation
+
+**CRITICAL: Use "generate_image": false and "reuse_frame" whenever possible to save resources and ensure perfect continuity between clips!**
+
+Output ONLY valid JSON - no markdown code blocks, no explanations, just the raw JSON object.

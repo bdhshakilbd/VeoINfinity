@@ -1,0 +1,281 @@
+Analyze the content of the YouTube video at the following link: [Insert YouTube Video Link Here]
+
+Your task is to deconstruct the video's narrative and visual elements into a structured JSON format that can be used for story and video generation. The JSON output should conform to the schema I will describe.
+
+The goal is to create a detailed "story bible" and shot list from the video, capturing the essence of its visual style, characters, locations, and the sequence of events.
+
+**JSON Structure and Instructions:**
+
+1.  **`story`**:
+    *   **`title`**: Provide a concise, descriptive title for the story of the video.
+    *   **`visual_style`**:
+        *   **`art_style`**: Describe the overall visual aesthetic (e.g., "cinematic fantasy," "gritty sci-fi," "documentary style").
+        *   **`color_palette`**: Detail the dominant colors and tones (e.g., "vibrant neon colors," "muted earthy tones").
+        *   **`lighting`**: Describe the lighting style (e.g., "high-contrast, dramatic lighting," "soft, natural light").
+        *   **`aspect_ratio`**: Specify the video's aspect ratio (e.g., "16:9," "2.35:1").
+        *   **`quality`**: Note any distinct visual qualities (e.g., "film grain," "sharp 4K").
+
+2.  **`characters`**:
+    *   Identify the main characters in the video.
+    *   For each character, create an object with:
+        *   **`id`**: A unique identifier (e.g., "char\_hero," "char\_mentor").
+        *   **`name`**: The character's name, if known. If not, use a descriptive title (e.g., "The Traveler").
+        *   **`description`**: A detailed description of their appearance, including clothing, age, and key features.
+
+3.  **`locations`**:
+    *   Identify the distinct locations or settings in the video.
+    *   For each location, create an object with:
+        *   **`id`**: A unique identifier (e.g., "loc\_forest," "loc\_city\_downtown").
+        *   **`name`**: A descriptive name for the location.
+        *   **`description`**: A rich description of the environment.
+
+4.  **`frames`**:
+    *   Break down the video into a series of key scenes or shots.
+    *   Each key moment should be represented by a "first" and "last" frame within a `video_clip`.
+    *   For each frame, create an object with:
+        *   **`frame_id`**: A unique identifier (e.g., "frame\_001").
+        *   **`video_clip_id`**: The ID of the video clip this frame belongs to.
+        *   **`frame_position`**: "first" or "last".
+        *   **`location_id`**: The ID of the location where this frame takes place.
+        *   **`characters_in_scene`**: A list of character IDs present in the frame.
+        *   **`prompt`**: A detailed description of the action, character expressions, and composition of this specific frame. This should be written as a prompt for an image generation model.
+        *   **`camera`**: A description of the camera shot (e.g., "medium shot, eye level," "wide establishing shot").
+
+5.  **`video_clips`**:
+    *   Group the frames into logical video clips that represent continuous actions or scenes.
+    *   For each clip, create an object with:
+        *   **`clip_id`**: A unique identifier (e.g., "video\_001").
+        *   **`first_frame`**: The `frame_id` that starts this clip.
+        *   **`last_frame`**: The `frame_id` that ends this clip.
+        *   **`duration_seconds`**: Estimate the duration of this clip in seconds.
+        *   **`veo3_prompt`**: A concise prompt that describes the overall action and transition from the first frame to the last frame, suitable for a video generation model.
+        *   **`audio_description`**: A brief description of the sound, music, and dialogue in this clip.
+
+Now, based on this structure, analyze the provided YouTube video and generate the complete JSON output.  {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VEO3 Infinity Story Prompt Schema",
+  "description": "JSON structure for generating consistent character and scene imagery across video clips",
+  
+  "story": {
+    "title": "The Adventure Begins",
+    "visual_style": {
+      "art_style": "photorealistic cinematic",
+      "color_palette": "warm golden hour tones with deep shadows",
+      "lighting": "natural dramatic lighting with volumetric rays",
+      "aspect_ratio": "16:9",
+      "quality": "8K, ultra detailed, film grain"
+    },
+    
+    "characters": [
+      {
+        "id": "char_hero",
+        "name": "Marcus",
+        "description": "30-year-old man with short brown hair, stubble beard, green eyes, athletic build, wearing brown leather jacket over white t-shirt",
+        "size_index": 5,
+        "size_reference": "average adult male height (5'10\")"
+      },
+      {
+        "id": "char_companion",
+        "name": "Luna",
+        "description": "25-year-old woman with long black hair in ponytail, brown eyes, slender build, wearing blue denim jacket and black jeans",
+        "size_index": 4,
+        "size_reference": "slightly shorter than Marcus (5'6\")"
+      },
+      {
+        "id": "char_villain",
+        "name": "Viktor",
+        "description": "45-year-old man with bald head, scar over left eye, muscular intimidating build, wearing all black suit",
+        "size_index": 6,
+        "size_reference": "taller and larger than Marcus (6'2\")"
+      },
+      {
+        "id": "char_child",
+        "name": "Tommy",
+        "description": "8-year-old boy with curly red hair, freckles, wearing striped shirt and shorts",
+        "size_index": 2,
+        "size_reference": "child height, comes up to Marcus's waist (4'2\")"
+      }
+    ],
+    
+    "size_index_map": {
+      "1": "very small (toddler/pet ~2-3 feet)",
+      "2": "small (child ~4 feet)",
+      "3": "below average (~5 feet)",
+      "4": "slightly below average (~5'6\")",
+      "5": "average (~5'10\")",
+      "6": "above average (~6'2\")",
+      "7": "tall (~6'5\")",
+      "8": "very tall (~7 feet)",
+      "9": "giant (8+ feet)",
+      "10": "massive (building-sized)"
+    },
+    
+    "locations": [
+      {
+        "id": "loc_forest",
+        "name": "Enchanted Forest",
+        "description": "Dense ancient forest with towering oak trees, moss-covered ground, shafts of golden sunlight piercing through canopy, mystical fog"
+      },
+      {
+        "id": "loc_city",
+        "name": "Neon City",
+        "description": "Futuristic cyberpunk cityscape at night, neon signs, wet reflective streets, flying vehicles, towering skyscrapers"
+      },
+      {
+        "id": "loc_cave",
+        "name": "Crystal Cave",
+        "description": "Underground cavern with glowing blue crystals, underground lake, stalactites, bioluminescent plants"
+      }
+    ]
+  },
+  
+  "frames": [
+    {
+      "frame_id": "frame_001",
+      "video_clip_id": "video_001",
+      "frame_position": "first",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero"],
+      "prompt": "Marcus standing at the edge of an ancient forest, looking into the dense trees with determination, morning golden light illuminating his face, forest mist in background",
+      "camera": "medium shot, eye level, shallow depth of field",
+      "ref_image": null,
+      "generate_image": true,
+      "notes": "Opening scene - establish hero and setting"
+    },
+    {
+      "frame_id": "frame_002",
+      "video_clip_id": "video_001",
+      "frame_position": "last",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero"],
+      "prompt": "Marcus walking deeper into the forest, back partially to camera, same forest setting, light filtering through trees ahead",
+      "camera": "medium-wide shot, slight low angle, tracking",
+      "ref_image": "frame_001",
+      "generate_image": true,
+      "notes": "End of clip 1 - hero enters forest"
+    },
+    {
+      "frame_id": "frame_003",
+      "video_clip_id": "video_002",
+      "frame_position": "first",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero"],
+      "prompt": null,
+      "camera": null,
+      "ref_image": "frame_002",
+      "generate_image": false,
+      "reuse_frame": "frame_002",
+      "notes": "REUSE - Same location, continuous action from previous clip"
+    },
+    {
+      "frame_id": "frame_004",
+      "video_clip_id": "video_002",
+      "frame_position": "last",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero", "char_companion"],
+      "prompt": "Marcus encountering Luna in a forest clearing, both facing each other, surprised expressions, mystical fog around them, golden light",
+      "camera": "two-shot, medium, eye level",
+      "ref_image": "frame_002",
+      "generate_image": true,
+      "notes": "End of clip 2 - hero meets companion"
+    },
+    {
+      "frame_id": "frame_005",
+      "video_clip_id": "video_003",
+      "frame_position": "first",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero", "char_companion"],
+      "prompt": null,
+      "camera": null,
+      "ref_image": "frame_004",
+      "generate_image": false,
+      "reuse_frame": "frame_004",
+      "notes": "REUSE - Continuous from previous meeting scene"
+    },
+    {
+      "frame_id": "frame_006",
+      "video_clip_id": "video_003",
+      "frame_position": "last",
+      "location_id": "loc_forest",
+      "characters_in_scene": ["char_hero", "char_companion"],
+      "prompt": "Marcus and Luna walking together through forest, side by side, talking, establishing their partnership, dappled sunlight",
+      "camera": "medium-wide tracking shot, follows characters",
+      "ref_image": "frame_004",
+      "generate_image": true,
+      "notes": "End of clip 3 - heroes traveling together"
+    },
+    {
+      "frame_id": "frame_007",
+      "video_clip_id": "video_004",
+      "frame_position": "first",
+      "location_id": "loc_cave",
+      "characters_in_scene": ["char_hero", "char_companion"],
+      "prompt": "Marcus and Luna standing at the entrance of a crystal cave, looking inside with wonder, blue crystal glow illuminating their faces from inside",
+      "camera": "wide shot, slight low angle, dramatic lighting",
+      "ref_image": "frame_006",
+      "generate_image": true,
+      "notes": "NEW LOCATION - Transition to cave, need new image"
+    },
+    {
+      "frame_id": "frame_008",
+      "video_clip_id": "video_004",
+      "frame_position": "last",
+      "location_id": "loc_cave",
+      "characters_in_scene": ["char_hero", "char_companion", "char_villain"],
+      "prompt": "Marcus and Luna inside crystal cave confronting Viktor, tension in the air, Viktor emerging from shadows, blue crystal light creating dramatic shadows",
+      "camera": "wide shot, low angle on villain, dramatic",
+      "ref_image": "frame_007",
+      "generate_image": true,
+      "notes": "End of clip 4 - villain reveal"
+    }
+  ],
+  
+  "video_clips": [
+    {
+      "clip_id": "video_001",
+      "first_frame": "frame_001",
+      "last_frame": "frame_002",
+      "duration_seconds": 8,
+      "veo3_prompt": "Marcus walks from the forest edge into the dense ancient forest, morning light filtering through trees, cinematic movement",
+      "audio_description": "forest ambience, footsteps on leaves, birds chirping"
+    },
+    {
+      "clip_id": "video_002",
+      "first_frame": "frame_003",
+      "last_frame": "frame_004",
+      "duration_seconds": 6,
+      "veo3_prompt": "Marcus continues walking through forest and encounters Luna in a clearing, both stop and face each other in surprise",
+      "audio_description": "forest ambience, dramatic music sting on encounter"
+    },
+    {
+      "clip_id": "video_003",
+      "first_frame": "frame_005",
+      "last_frame": "frame_006",
+      "duration_seconds": 7,
+      "veo3_prompt": "Marcus and Luna begin walking together through forest, talking and establishing trust, tracking shot following them",
+      "audio_description": "soft adventure music, forest ambience, muffled conversation"
+    },
+    {
+      "clip_id": "video_004",
+      "first_frame": "frame_007",
+      "last_frame": "frame_008",
+      "duration_seconds": 10,
+      "veo3_prompt": "Marcus and Luna enter crystal cave, explore the glowing interior, then Viktor appears from the shadows confronting them",
+      "audio_description": "cave echoes, crystal hums, tense music, villain footsteps"
+    }
+  ],
+  
+  "_processing_logic": {
+    "description": "How to programmatically process this JSON for VEO3 generation",
+    "steps": [
+      "1. Load story visual_style for all image generations",
+      "2. For each frame where generate_image=true, construct full prompt by combining: visual_style + location description + character descriptions (with size context) + frame prompt",
+      "3. If ref_image is specified, use the generated image from that frame_id as reference input",
+      "4. If generate_image=false, use reuse_frame to get the image path",
+      "5. For VEO3 video generation, use video_clips array: load first_frame image and last_frame image as keyframes",
+      "6. Build mapping: frame_id -> generated_image_path after each generation"
+    ],
+    
+    "pseudocode": "```\ngenerated_images = {}\n\nfor frame in frames:\n    if frame.generate_image:\n        ref_img = generated_images.get(frame.ref_image) if frame.ref_image else None\n        full_prompt = build_prompt(story.visual_style, frame, story.characters, story.locations)\n        generated_images[frame.frame_id] = generate_image(full_prompt, ref_img)\n    else:\n        generated_images[frame.frame_id] = generated_images[frame.reuse_frame]\n\nfor clip in video_clips:\n    first_img = generated_images[clip.first_frame]\n    last_img = generated_images[clip.last_frame]\n    generate_veo3_video(clip.veo3_prompt, first_img, last_img)\n```"
+  }
+}

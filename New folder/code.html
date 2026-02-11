@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SceneBuilder | AI Story Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1E40AF", // Royal Blue
+              "background-light": "#F7F9FC", // Ivory/Soft Grey
+              "background-dark": "#0F172A", // Dark Slate
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#1E293B",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem",
+              'lg': "1rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen flex flex-col transition-colors duration-200">
+<header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-surface-light dark:bg-surface-dark flex items-center justify-between px-6 sticky top-0 z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 cursor-pointer">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons-outlined text-white text-xl">auto_awesome</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">SceneBuilder</span>
+</div>
+<nav class="hidden md:flex items-center gap-1">
+<button class="px-4 py-2 rounded-md bg-slate-100 dark:bg-slate-800 text-primary font-medium flex items-center gap-2">
+<span class="material-icons-outlined text-sm">edit_note</span> Prompts
+                </button>
+<button class="px-4 py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 flex items-center gap-2 transition-all">
+<span class="material-icons-outlined text-sm">image</span> Images
+                </button>
+<button class="px-4 py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 flex items-center gap-2 transition-all">
+<span class="material-icons-outlined text-sm">movie</span> Video
+                </button>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center gap-3 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-1.5 text-xs font-mono">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-emerald-600 dark:text-emerald-400">67.3 Kbps</span>
+</div>
+<div class="w-px h-3 bg-slate-300 dark:bg-slate-600"></div>
+<div class="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
+<span class="material-icons-outlined text-[14px]">bolt</span> 1.2s
+                </div>
+</div>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined">dark_mode</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACc5_1-fsk8jfrkOGkQHhd9Hw2RiAWDesO3YnBCJ-3AlnvvGoAwO3pPzm-nydouZyZE6I-4qCxz1l2V0UgeHiato86HRlL6-7IANSTk2EzEWhdcUVq-CoT_ksieBrVwAd6VGOy9eFHp2J2-vpiWqUMEIcoKPxm75odyjDOx0aZnbHUOrylVHubTXXm2BMu7ktPrtLoHJg_YKiQcH2piCFSUNvGOlUuPnqfKmP4CsbrxPDHPl7186VpISvu64OVikwR0gWE-giew-E"/>
+</div>
+</div>
+</header>
+<main class="flex flex-1 overflow-hidden">
+<aside class="w-80 border-r border-slate-200 dark:border-slate-800 bg-surface-light dark:bg-surface-dark flex flex-col transition-all">
+<div class="p-5 border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+<h2 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="material-icons-outlined text-primary">auto_stories</span>
+                    Story Input
+                </h2>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-icons-outlined text-sm">settings</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
+<div class="space-y-4">
+<label class="flex items-center gap-3 p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 cursor-pointer hover:border-primary/30 transition-all">
+<input checked="" class="w-4 h-4 text-primary rounded border-slate-300 dark:border-slate-700 focus:ring-primary" type="checkbox"/>
+<span class="text-sm font-medium">Use Template</span>
+</label>
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">Structure Mode</label>
+<select class="w-full bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+<option>CHARACTER CONSISTENT MASTERPROMPT</option>
+<option>DYNAMIC SCENE FLOW</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">Model Engine</label>
+<div class="flex gap-2">
+<select class="flex-1 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary">
+<option>GEMINI 3 FLASH PREVIEW</option>
+<option>GPT-4o STUDIO</option>
+</select>
+<div class="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2.5 rounded-lg border border-emerald-100 dark:border-emerald-900/50 text-xs font-bold">
+<span class="material-icons-outlined text-xs">key</span> 7
+                            </div>
+</div>
+</div>
+<div class="flex items-center justify-between px-1">
+<span class="text-sm text-slate-600 dark:text-slate-400">Prompts to generate:</span>
+<input class="w-16 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg text-sm text-center focus:ring-primary" type="number" value="10"/>
+</div>
+<label class="flex items-center gap-3 p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 cursor-pointer">
+<input checked="" class="w-4 h-4 text-primary rounded border-slate-300 dark:border-slate-700 focus:ring-primary" type="checkbox"/>
+<span class="text-sm font-medium">Structured Output (JSON)</span>
+</label>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">Story Concept</label>
+<textarea class="w-full h-48 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl p-4 text-sm resize-none focus:ring-primary focus:border-primary placeholder-slate-400" placeholder="Describe your story here...">a boy and a crow</textarea>
+</div>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+<div class="flex justify-between text-[11px] text-slate-500 font-medium px-1">
+<span>5 words</span>
+<span class="text-primary">Ready</span>
+</div>
+<div class="flex gap-2">
+<button class="flex-[2] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-sm animate-spin">refresh</span>
+                        Generating...
+                    </button>
+<button class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-sm">stop</span>
+                        Stop
+                    </button>
+</div>
+</div>
+</aside>
+<section class="flex-1 flex flex-col bg-slate-50/50 dark:bg-slate-900/20 overflow-hidden">
+<div class="h-14 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm">
+<div class="flex items-center gap-3">
+<span class="material-icons-outlined text-primary">code</span>
+<h3 class="font-semibold text-slate-700 dark:text-slate-300">AI Response</h3>
+<span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500">3583 CHARS</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">
+<span class="material-icons-outlined text-sm">content_copy</span> Copy JSON
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-primary hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+<span class="material-icons-outlined text-sm">save</span> Save JSON
+                    </button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
+<span class="material-icons-outlined text-sm">send</span> Add to Studio
+                    </button>
+<div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+<button class="p-1.5 text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-icons-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex-1 p-6 overflow-y-auto custom-scrollbar">
+<div class="mb-8 p-1.5 bg-gradient-to-r from-primary to-blue-600 rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-between">
+<div class="flex items-center gap-4 pl-4 py-2">
+<div class="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-md flex items-center justify-center">
+<span class="material-icons-outlined text-white animate-pulse">auto_fix_high</span>
+</div>
+<div>
+<p class="text-white font-bold tracking-tight text-lg">Generating Your Story Prompts</p>
+<p class="text-blue-100 text-xs font-medium">Agent is refining character consistency...</p>
+</div>
+</div>
+<div class="mr-1 h-full flex items-center">
+<div class="bg-white/10 px-6 py-4 rounded-xl backdrop-blur-lg border border-white/20 flex flex-col items-center">
+<span class="text-white text-2xl font-black">6 <span class="text-blue-200 text-sm">/ 10</span></span>
+</div>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl blur opacity-30"></div>
+<div class="relative bg-white dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+<div class="flex gap-1.5">
+<div class="w-2.5 h-2.5 rounded-full bg-red-400/50"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-amber-400/50"></div>
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-400/50"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-2">JSON OUTPUT</span>
+</div>
+<pre class="p-8 font-mono text-[14px] leading-relaxed text-slate-600 dark:text-slate-300 overflow-x-auto selection:bg-primary selection:text-white"><span class="text-purple-500 dark:text-purple-400">{</span>
+  <span class="text-blue-600 dark:text-blue-400">"video_action_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"Leo_outfit_001 feeds small bits of bread to corvus_outfit_001, who cautiously takes the food and swallows it."</span>,
+  <span class="text-blue-600 dark:text-blue-400">"characters_in_scene"</span>: <span class="text-slate-400">[</span>
+    <span class="text-emerald-600 dark:text-emerald-400">"leo_outfit_001"</span>,
+    <span class="text-emerald-600 dark:text-emerald-400">"corvus_outfit_001"</span>
+  <span class="text-slate-400">]</span>,
+  <span class="text-blue-600 dark:text-blue-400">"negative_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"do not alter character appearances, no extra characters, no distorted features, avoid text in image"</span>
+<span class="text-purple-500 dark:text-purple-400">}</span>,
+<span class="text-purple-500 dark:text-purple-400">{</span>
+  <span class="text-blue-600 dark:text-blue-400">"scene_number"</span>: <span class="text-amber-600 dark:text-amber-400">4</span>,
+  <span class="text-blue-600 dark:text-blue-400">"prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"A sunlit porch outside the cottage, leo_outfit_001 sitting on the steps with corvus_outfit_001 hopping nearby on the wooden floor."</span>,
+  <span class="text-blue-600 dark:text-blue-400">"video_action_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"corvus_outfit_001 tests its strength by hopping closer to leo_outfit_001, who laughs and claps his hands softly."</span>,
+  <span class="text-blue-600 dark:text-blue-400">"characters_in_scene"</span>: <span class="text-slate-400">[</span>
+    <span class="text-emerald-600 dark:text-emerald-400">"leo_outfit_001"</span>,
+    <span class="text-emerald-600 dark:text-emerald-400">"corvus_outfit_001"</span>
+  <span class="text-slate-400">]</span>,
+  <span class="text-blue-600 dark:text-blue-400">"negative_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"do not alter character appearances, no extra characters, no distorted features, avoid text in image"</span>
+<span class="text-purple-500 dark:text-purple-400">}</span>,
+<span class="text-purple-500 dark:text-purple-400">{</span>
+  <span class="text-blue-600 dark:text-blue-400">"scene_number"</span>: <span class="text-amber-600 dark:text-amber-400">5</span>,
+  <span class="text-blue-600 dark:text-blue-400">"prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"Beside a large oak tree in the garden, leo_outfit_001 and corvus_outfit_001 facing each other."</span>,
+  <span class="text-blue-600 dark:text-blue-400">"video_action_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"leo_outfit_001 whistles a melody, and corvus_outfit_001 mimics the sound with a series of rhythmic clicks and caws."</span>,
+  <span class="text-blue-600 dark:text-blue-400">"characters_in_scene"</span>: <span class="text-slate-400">[</span>
+    <span class="text-emerald-600 dark:text-emerald-400">"leo_outfit_001"</span>,
+    <span class="text-emerald-600 dark:text-emerald-400">"corvus_outfit_001"</span>
+  <span class="text-slate-400">]</span>,
+  <span class="text-blue-600 dark:text-blue-400">"negative_prompt"</span>: <span class="text-emerald-600 dark:text-emerald-400">"do not alter character appearances, no extra characters, no distorted features, avoid text in image"</span>
+<span class="text-purple-500 dark:text-purple-400">}</span></pre>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="h-10 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 text-[10px] text-slate-400 uppercase tracking-widest font-bold">
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connected to VEO3 Cluster</span>
+<span>Version 2.4.0-build.82</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="hover:text-primary" href="#">Docs</a>
+<a class="hover:text-primary" href="#">Support</a>
+</div>
+</footer>
+
+</body></html>

@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-01-24 08:09:05",
+  "page_info": {
+    "title": "Google Vids",
+    "url": "https://docs.google.com/videos/u/0/?pli=1",
+    "readyState": "complete"
+  },
+  "api_dna": {
+    "videoAPIs": [],
+    "vidsAPIs": [],
+    "veoAPIs": [],
+    "googleAPIs": [
+      "DOCS_homescreen_one_google_html",
+      "googleapis"
+    ],
+    "hasRecaptcha": false,
+    "recaptchaKeys": [],
+    "buttons": [
+      "Template gallery",
+      "Owned by anyone",
+      "Owned by anyone"
+    ],
+    "scripts": [
+      "https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.AKdz2vhcyW0.O/m=client/exm=gapi_iframes,googleapis_client/rt=j/sv=1/d=1/ed=1/rs=AHpOoo_GPfyZPmTuYcbMXzJr0yr8Akk4Tw/cb=gapi.loaded_1",
+      "https://apis.google.com/_/scs/abc-static/_/js/k=gapi.gapi.en.AKdz2vhcyW0.O/m=gapi_iframes,googleapis_client/rt=j/sv=1/d=1/ed=1/rs=AHpOoo_GPfyZPmTuYcbMXzJr0yr8Akk4Tw/cb=gapi.loaded_0",
+      "https://www.gstatic.com/og/_/js/k=og.qtm.en_US.Ih1AtrY7PQI.2019.O/rt=j/m=qgl,q_dnp,q_sf_gm3,qmd,qcwid,qbd,qapid,qads,qrcd,q_dg,qrbg/exm=qaaw,qabr,qadd,qaid,qalo,qebr,qein,qhaw,qhawgm3,qhba,qhbr,qhbrgm3,qhch,qhchgm3,qhga,qhid,qhidgm3,qhin,qhlo,qhlogm3,qhmn,qhpc,qhsf,qhsfgm3,qhtt/d=1/ed=1/rs=AA2YrTvSVfhQDtuoxvJGapfm71hG_jFqJg"
+    ],
+    "endpoints": [
+      "https://youtube.googleapis.com/iframe_api"
+    ]
+  },
+  "generation_info": {
+    "hasCreateButton": false,
+    "hasPromptInput": true,
+    "hasVideoPlayer": false,
+    "createButtons": [],
+    "inputFields": [
+      {
+        "type": "INPUT",
+        "id": "",
+        "placeholder": "Search"
+      }
+    ]
+  },
+  "comparison": {
+    "isVideoFX": false,
+    "isGoogleVids": true,
+    "hasPinholeTextArea": false,
+    "hasVeo3References": true
+  }
+}

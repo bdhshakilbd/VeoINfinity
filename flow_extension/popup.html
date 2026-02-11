@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Video Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 380px;
+      min-height: 400px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #e8e8e8;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    .header-text h1 {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #e94560, #f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-text p {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .status-bar {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.disconnected {
+      background: #ef4444;
+      animation: none;
+    }
+
+    .status-dot.generating {
+      background: #f59e0b;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: 13px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+      font-size: 13px;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #e94560;
+    }
+
+    select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #e94560;
+    }
+
+    option {
+      background: #1a1a2e;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #e94560, #f39c12);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .generation-list {
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .generation-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .generation-item .prompt {
+      color: #fff;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .generation-item .meta {
+      color: #666;
+      font-size: 11px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .footer a {
+      color: #e94560;
+      text-decoration: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .progress-bar.active {
+      display: block;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #f39c12);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-icon" style="width: 40px; height: 40px; background: linear-gradient(135deg, #e94560, #f39c12); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎬</div>
+      <div class="header-text">
+        <h1>Flow Generator</h1>
+        <p>CDP-Enabled Video Automation</p>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Ready</span>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Video Generation</div>
+      
+      <div class="input-group">
+        <label for="prompt">Prompt</label>
+        <textarea id="prompt" placeholder="Describe the video you want to generate..."></textarea>
+      </div>
+
+      <div class="input-group">
+        <label for="aspectRatio">Aspect Ratio</label>
+        <select id="aspectRatio">
+          <option value="16:9">Landscape (16:9)</option>
+          <option value="9:16">Portrait (9:16)</option>
+          <option value="1:1">Square (1:1)</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="model">Model</label>
+        <select id="model">
+          <option value="Veo 3.1 - Fast">Veo 3.1 - Fast</option>
+          <option value="Veo 3.1 - Quality">Veo 3.1 - Quality</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="generateBtn">
+        <span>🚀</span>
+        <span>Generate Video</span>
+      </button>
+
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+
+      <button class="btn btn-secondary" id="openFlowBtn">
+        <span>🌐</span>
+        <span>Open Google Flow</span>
+      </button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Recent Generations</div>
+      <div class="generation-list" id="generationList">
+        <div class="generation-item">
+          <div class="prompt">No generations yet</div>
+          <div class="meta">Generate your first video above</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Controlled via CDP | <a href="#" id="cdpInfo">View API Docs</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
