@@ -6,3 +6,4 @@ installer_output/VEO3_Infinity_Setup_3.7.2.exe filter=lfs diff=lfs merge=lfs -te
 installer_output/VEO3_Infinity_Setup_3.8.0.exe filter=lfs diff=lfs merge=lfs -text
 installer_output/VEO3_Infinity_Setup_3.8.8.exe filter=lfs diff=lfs merge=lfs -text
 installer_output/VEO3_Infinity_Setup_3.9.5.exe filter=lfs diff=lfs merge=lfs -text
+installer_output/VEO3_Infinity_Setup_3.9.8.exe filter=lfs diff=lfs merge=lfs -text
