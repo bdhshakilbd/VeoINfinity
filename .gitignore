@@ -1,9 +1,14 @@
 # Ignore everything
 *
 
-# Except installer output
+# Only track the "upload final" installer folder
 !installer_output/
-!installer_output/*.exe
+!installer_output/upload final/
+!installer_output/upload final/*.exe
+
+# Ignore backup/notyet folders (old installers — not needed in repo)
+installer_output/backup/
+installer_output/notyet/
 
 # Keep gitignore and gitattributes
 !.gitignore
