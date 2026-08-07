@@ -64,94 +64,10 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter packages pub get
-      
-      - name: Build Playwright server for macOS
-        script: |
-          cd playwright_server
-          npm install --production
-          
-          # Build ARM64 (Apple Silicon)
-          npx -y @yao-pkg/pkg . --targets node18-macos-arm64 --output playwright_server_macos_arm64 --compress GZip
-          
-          # Build x64 (Intel)
-          npx -y @yao-pkg/pkg . --targets node18-macos-x64 --output playwright_server_macos_x64 --compress GZip
-          
-          chmod +x playwright_server_macos_arm64 || true
-          chmod +x playwright_server_macos_x64 || true
-          
-          echo "Playwright server binaries built:"
-          ls -lah playwright_server_macos_*
-          cd ..
-
       - name: Build macOS app
         script: |
           flutter build macos --release
       
-      - name: Fix Homebrew dylib dependencies
-        script: |
-          APP_PATH="build/macos/Build/Products/Release/veo3_another.app"
-          FRAMEWORKS_DIR="$APP_PATH/Contents/Frameworks"
-          
-          echo "=== Fixing Homebrew dynamic library references ==="
-          
-          # Find all frameworks/dylibs that reference /opt/homebrew
-          find "$FRAMEWORKS_DIR" -type f \( -name "*.dylib" -o ! -name "*.*" \) | while read binary; do
-            # Skip directories and non-Mach-O files
-            file "$binary" | grep -q "Mach-O" || continue
-            
-            echo "Checking: $binary"
-            
-            # Get all Homebrew references from this binary
-            otool -L "$binary" 2>/dev/null | grep "/opt/homebrew" | awk '{print $1}' | while read homebrew_lib; do
-              LIB_NAME=$(basename "$homebrew_lib")
-              echo "  Found Homebrew reference: $homebrew_lib ($LIB_NAME)"
-              
-              # Copy the library into Frameworks if it exists and isn't already there
-              if [ ! -f "$FRAMEWORKS_DIR/$LIB_NAME" ]; then
-                # Resolve the actual path (the crash log uses * as glob placeholder)
-                ACTUAL_PATH=$(find /opt/homebrew -name "$LIB_NAME" -type f 2>/dev/null | head -1)
-                if [ -n "$ACTUAL_PATH" ]; then
-                  echo "  Copying $ACTUAL_PATH -> $FRAMEWORKS_DIR/$LIB_NAME"
-                  cp "$ACTUAL_PATH" "$FRAMEWORKS_DIR/$LIB_NAME"
-                  chmod 755 "$FRAMEWORKS_DIR/$LIB_NAME"
-                  
-                  # Recursively check this newly copied lib for its own Homebrew deps
-                  otool -L "$FRAMEWORKS_DIR/$LIB_NAME" 2>/dev/null | grep "/opt/homebrew" | awk '{print $1}' | while read nested_lib; do
-                    NESTED_NAME=$(basename "$nested_lib")
-                    if [ ! -f "$FRAMEWORKS_DIR/$NESTED_NAME" ]; then
-                      NESTED_PATH=$(find /opt/homebrew -name "$NESTED_NAME" -type f 2>/dev/null | head -1)
-                      if [ -n "$NESTED_PATH" ]; then
-                        echo "    Copying nested dep: $NESTED_PATH -> $FRAMEWORKS_DIR/$NESTED_NAME"
-                        cp "$NESTED_PATH" "$FRAMEWORKS_DIR/$NESTED_NAME"
-                        chmod 755 "$FRAMEWORKS_DIR/$NESTED_NAME"
-                      fi
-                    fi
-                    # Rewrite the nested reference
-                    install_name_tool -change "$nested_lib" "@executable_path/../Frameworks/$NESTED_NAME" "$FRAMEWORKS_DIR/$LIB_NAME" 2>/dev/null || true
-                  done
-                  
-                  # Fix the install name of the copied library itself
-                  install_name_tool -id "@executable_path/../Frameworks/$LIB_NAME" "$FRAMEWORKS_DIR/$LIB_NAME" 2>/dev/null || true
-                else
-                  echo "  WARNING: Could not find $LIB_NAME in /opt/homebrew!"
-                fi
-              fi
-              
-              # Rewrite the reference in the original binary
-              install_name_tool -change "$homebrew_lib" "@executable_path/../Frameworks/$LIB_NAME" "$binary" 2>/dev/null || true
-              echo "  Relinked: $homebrew_lib -> @executable_path/../Frameworks/$LIB_NAME"
-            done
-          done
-          
-          # Re-sign all modified binaries (ad-hoc signing)
-          echo "=== Re-signing modified binaries ==="
-          find "$FRAMEWORKS_DIR" -type f | while read binary; do
-            file "$binary" | grep -q "Mach-O" || continue
-            codesign --force --sign - "$binary" 2>/dev/null || true
-          done
-          
-          echo "=== Homebrew dylib fix complete ==="
-
       - name: Bundle Playwright server into app
         script: |
           APP_PATH="build/macos/Build/Products/Release/veo3_another.app"
@@ -172,25 +88,6 @@ workflows:
           echo "Bundled Playwright server:"
           ls -lah "$PW_DIR"/
 
-      - name: Create DMG installer (optional)
-        script: |
-          # Install create-dmg tool
-          brew install create-dmg
-          
-          # Create DMG
-          cd build/macos/Build/Products/Release
-          
-          # Rename output app to match desired name
-          mv veo3_another.app "$APP_NAME.app" || true
-          
-          create-dmg \
-            --volname "$APP_NAME Installer" \
-            --window-pos 200 120 \
-            --window-size 800 400 \
-            --icon-size 100 \
-            --app-drop-link 600 185 \
-            "$APP_NAME.dmg" \
-            "$APP_NAME.app" || true
       
       - name: Create ZIP archive
         script: |
@@ -203,7 +100,6 @@ workflows:
     
     artifacts:
       - build/macos/Build/Products/Release/*.app
-      - build/macos/Build/Products/Release/*.dmg
       - build/macos/Build/Products/Release/*.zip
     
     publishing:
@@ -249,6 +145,26 @@ workflows:
       - name: Build macOS
         script: |
           flutter build macos --release
+      
+      - name: Bundle Playwright server into app
+        script: |
+          APP_PATH="build/macos/Build/Products/Release/veo3_another.app"
+          PW_DIR="$APP_PATH/Contents/Resources/playwright_server"
+          mkdir -p "$PW_DIR"
+          
+          # Copy the appropriate binary based on architecture
+          ARCH=$(uname -m)
+          if [ "$ARCH" = "arm64" ]; then
+            cp playwright_server/playwright_server_macos_arm64 "$PW_DIR/playwright_server_macos_arm64"
+            cp playwright_server/playwright_server_macos_x64 "$PW_DIR/playwright_server_macos_x64"
+          else
+            cp playwright_server/playwright_server_macos_x64 "$PW_DIR/playwright_server_macos_x64"
+            cp playwright_server/playwright_server_macos_arm64 "$PW_DIR/playwright_server_macos_arm64" || true
+          fi
+          
+          chmod +x "$PW_DIR"/* || true
+          echo "Bundled Playwright server:"
+          ls -lah "$PW_DIR"/
       
       - name: Package macOS
         script: |

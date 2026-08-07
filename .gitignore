@@ -1,10 +1,10 @@
 # Ignore everything
 *
 
-# Only track the "upload final" installer folder
+# Only track EXEs directly inside installer_output
 !installer_output/
-!installer_output/upload final/
-!installer_output/upload final/*.exe
+!installer_output/*.exe
+!installer_output/upload_installer.bat
 
 # Ignore backup/notyet folders (old installers — not needed in repo)
 installer_output/backup/
