@@ -1,0 +1,9 @@
+{
+  "application": "flowdesk",
+  "version": "1.15.1",
+  "platform": "windows-x64",
+  "installer": "FlowDesk_1.15.1.exe",
+  "bytes": 163784417,
+  "sha256": "dc72f70f205e2b8b744211bb718e7abf4a77456e91ff11f58d77f68d9ec37a91",
+  "builtAtUtc": "2026-11-22T03:53:17.725590+00:00"
+}
